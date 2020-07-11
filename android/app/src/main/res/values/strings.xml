@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flutvote</string>
+    <string name="facebook_app_id">1150744565301391</string>
+    <string name="fb_login_protocol_scheme">fb1150744565301391</string>
+</resources>

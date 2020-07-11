@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "953604480666",
+    "firebase_url": "https://flutvote.firebaseio.com",
+    "project_id": "flutvote",
+    "storage_bucket": "flutvote.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953604480666:android:27c29f7a3fbd9d045d8923",
+        "android_client_info": {
+          "package_name": "app.web.flutvote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "953604480666-gdcg9210u75famdt0hkp6jfe5saafcc0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.web.flutvote",
+            "certificate_hash": "7bf53ff13ec3dc597ddc726df1dd6f4a7f3f6f55"
+          }
+        },
+        {
+          "client_id": "953604480666-55cg1169q1g72jiaqceervfa7lq0j94t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHjh-M1GN63ksGKkl6hlEMFwM6X39JHp8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "953604480666-55cg1169q1g72jiaqceervfa7lq0j94t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
