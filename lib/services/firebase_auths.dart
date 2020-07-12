@@ -3,7 +3,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 abstract class BaseAuth {
   Future<FirebaseUser> signInWithEmailPassword(String email, String password);
-  Future<FirebaseUser> signUpWithEmailPassword(String email, String password);
+  Future<FirebaseUser> signUpWithEmailAndPassword(String email, String password);
   Future<FirebaseUser> getCurrentUser();
   Future<void> sendEmailVerification();
   Future<void> signOut();
@@ -30,7 +30,7 @@ class FirebaseAuths implements BaseAuth {
     }
   }
 
-  Future<FirebaseUser> signUpWithEmailPassword(
+  Future<FirebaseUser> signUpWithEmailAndPassword(
     String email,
     String password,
   ) async {

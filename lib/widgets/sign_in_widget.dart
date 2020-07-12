@@ -5,9 +5,11 @@ class SignInWidget {
   final BuildContext _context;
   final Color _color;
   final String _text;
+  final bool _isFacebook;
   final Function _function;
 
-  SignInWidget(this._context, this._color, this._text, this._function);
+  SignInWidget(
+      this._context, this._color, this._text, this._isFacebook, this._function);
 
   Material createSignInWidget() {
     return Material(
@@ -25,6 +27,17 @@ class SignInWidget {
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            !_isFacebook
+                ? Container()
+                : Image.asset(
+                    "assets/logos/facebook_logo.png",
+                    width: ContentSizes.height(_context) * 0.04,
+                    height: ContentSizes.height(_context) * 0.04,
+                    alignment: Alignment.bottomLeft,
+                  ),
+            SizedBox(
+              width: ContentSizes.height(_context) * 0.01,
+            ),
             Text(
               _text,
               textDirection: TextDirection.ltr,

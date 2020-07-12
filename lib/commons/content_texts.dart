@@ -9,4 +9,8 @@ class ContentTexts {
   static const String dontHaveAccount = 'Don\'t have an account ? ';
   static const String signUp = 'Sign Up';
   static const String signInWithFacebook = 'Sign in with facebook';
+  static const String or = 'Or';
+  static const String alreadyHaveAccount = 'Already have an account ? ';
+  static const String showConfirmPassword = 'Show confirm password';
+  static const String hideConfirmPassword = 'Hide confirm password';
 }

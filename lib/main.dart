@@ -34,9 +34,11 @@ class Flutvote extends StatelessWidget {
         '/': (context) => SplashRoute(),
         '/welcomeRoute': (context) => WelcomeRoute(),
         '/signInRoute': (context) => SignInRoute(),
+        '/signUpRoute': (context) => SignUpRoute(),
         '/homeRoute': (context) => HomeRoute(),
       },
       theme: ThemeData(
+        primaryColor: Colors.white,
         fontFamily: 'Poppins',
         textTheme: TextTheme(
           headline1: TextStyle(

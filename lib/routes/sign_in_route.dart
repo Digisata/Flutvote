@@ -10,6 +10,7 @@ class SignInRoute extends StatelessWidget {
       _textEditingControllerPassword = TextEditingController();
   final FacebookAuths _facebookAuths = FacebookAuths();
   final FirebaseAuths _firebaseAuths = FirebaseAuths();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -17,34 +18,43 @@ class SignInRoute extends StatelessWidget {
       context,
       _textEditingControllerEmail,
       'Email',
+      true,
       Icons.email,
     );
+
     final TextFieldWidget _textFieldPasswordWidget = TextFieldWidget(
       context,
       _textEditingControllerPassword,
       'Password',
+      true,
       Icons.lock,
     );
+
     final SignInWidget _signInEmailAndPaswordWidget = SignInWidget(
       context,
       ColorPalettes.orange,
       ContentTexts.signIn,
+      false,
       () async {
-        try {
-          await _firebaseAuths.signInWithEmailPassword(
-            _textEditingControllerEmail.text,
-            _textEditingControllerPassword.text,
-          );
-          Navigator.pushReplacementNamed(context, '/homeRoute');
-        } catch (error) {
-          throw 'sign in with email and password error: $error';
+        if (_formKey.currentState.validate()) {
+          try {
+            await _firebaseAuths.signInWithEmailPassword(
+              _textEditingControllerEmail.text.trim(),
+              _textEditingControllerPassword.text.trim(),
+            );
+            Navigator.pushReplacementNamed(context, '/homeRoute');
+          } catch (error) {
+            throw 'sign in with email and password error: $error';
+          }
         }
       },
     );
+
     final SignInWidget _signInFacebookWidget = SignInWidget(
       context,
       ColorPalettes.facebook,
       ContentTexts.signInWithFacebook,
+      true,
       () async {
         try {
           await _facebookAuths.signInWithFacebook();
@@ -53,6 +63,17 @@ class SignInRoute extends StatelessWidget {
           throw 'sign in with facebook error: $error';
         }
       },
+    );
+
+    final Text _signInText = Text(
+      ContentTexts.signIn,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+      style: Theme.of(context).textTheme.headline1.copyWith(
+            fontSize: ContentSizes.dp24(context),
+          ),
     );
 
     final Row _forgotText = Row(
@@ -76,7 +97,7 @@ class SignInRoute extends StatelessWidget {
       ],
     );
 
-    final Row _registerText = Row(
+    final Row _signUpText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,7 +120,10 @@ class SignInRoute extends StatelessWidget {
                       color: ColorPalettes.orange,
                       fontSize: ContentSizes.dp12(context),
                     ),
-                recognizer: TapGestureRecognizer()..onTap = () {},
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    Navigator.pushNamed(context, '/signUpRoute');
+                  },
               ),
             ],
           ),
@@ -113,7 +137,7 @@ class SignInRoute extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          'Or',
+          ContentTexts.or,
           style: Theme.of(context).textTheme.headline2.copyWith(
                 fontSize: ContentSizes.dp12(context),
               ),
@@ -136,24 +160,25 @@ class SignInRoute extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text(
-                  ContentTexts.signIn,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  textDirection: TextDirection.ltr,
-                  style: Theme.of(context).textTheme.headline1.copyWith(
-                        fontSize: ContentSizes.dp24(context),
-                      ),
-                ),
+                _signInText,
                 SizedBox(
                   height: ContentSizes.height(context) * 0.05,
                 ),
-                _textFieldEmailWidget.createTextFieldWidget(),
-                SizedBox(
-                  height: ContentSizes.height(context) * 0.03,
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      _textFieldEmailWidget.createTextFieldWidget(),
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.03,
+                      ),
+                      _textFieldPasswordWidget.createTextFieldWidget(),
+                    ],
+                  ),
                 ),
-                _textFieldPasswordWidget.createTextFieldWidget(),
                 SizedBox(
                   height: ContentSizes.height(context) * 0.02,
                 ),
@@ -165,11 +190,34 @@ class SignInRoute extends StatelessWidget {
                 SizedBox(
                   height: ContentSizes.height(context) * 0.05,
                 ),
-                _registerText,
+                _signUpText,
                 SizedBox(
                   height: ContentSizes.height(context) * 0.02,
                 ),
-                _orText,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: Divider(
+                        color: ColorPalettes.grey,
+                        height: ContentSizes.height(context) * 0.01,
+                        thickness: 1.0,
+                        endIndent: 10.0,
+                      ),
+                    ),
+                    _orText,
+                    Expanded(
+                      child: Divider(
+                        color: ColorPalettes.grey,
+                        height: ContentSizes.height(context) * 0.01,
+                        thickness: 1.0,
+                        indent: 10.0,
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(
                   height: ContentSizes.height(context) * 0.05,
                 ),
