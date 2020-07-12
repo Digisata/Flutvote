@@ -18,7 +18,7 @@ class HomeRoute extends StatelessWidget {
               onPressed: () async {
                 try {
                   await _firebaseAuths.signOut();
-                  Navigator.pushReplacementNamed(context, '/');
+                  Navigator.pushReplacementNamed(context, '/signInRoute');
                 } catch (error) {
                   throw 'Sign out error: $error';
                 }

@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutvote/services/services.dart';
+import 'package:flutvote/commons/commons.dart';
+import 'package:flutvote/services/firebase_auths.dart';
 
-class SplashRoute extends StatelessWidget {
-  final FacebookAuths _facebookAuths = FacebookAuths();
+class SplashRoute extends StatefulWidget {
+  @override
+  _SplashRouteState createState() => _SplashRouteState();
+}
+
+class _SplashRouteState extends State<SplashRoute> {
+  final FirebaseAuths _firebaseAuths = FirebaseAuths();
+
+  _navigateRoute() async {
+    if (await _firebaseAuths.getCurrentUser() == null) {
+      Navigator.pushReplacementNamed(context, '/welcomeRoute');
+    } else {
+      Navigator.pushReplacementNamed(context, '/homeRoute');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _navigateRoute();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: RaisedButton(
-          child: Text('Login'),
-          onPressed: () async {
-            try {
-              await _facebookAuths.signInWithFacebook();
-              Navigator.pushReplacementNamed(context, '/homeRoute');
-            } catch (error) {
-              throw 'facebook sign in error: $error';
-            }
-          },
+      body: SafeArea(
+        child: Container(
+          color: ColorPalettes.white,
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/routes/routes.dart';
 import 'package:provider/provider.dart';
@@ -9,8 +10,8 @@ void main() {
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runApp(
-    ChangeNotifierProvider<AppProvider>(
-      create: (context) => AppProvider(),
+    ChangeNotifierProvider<AppProviders>(
+      create: (context) => AppProviders(),
       child: Flutvote(),
     ),
   );
@@ -31,30 +32,32 @@ class Flutvote extends StatelessWidget {
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (context) => SplashRoute(),
+        '/welcomeRoute': (context) => WelcomeRoute(),
+        '/signInRoute': (context) => SignInRoute(),
         '/homeRoute': (context) => HomeRoute(),
       },
       theme: ThemeData(
         fontFamily: 'Poppins',
         textTheme: TextTheme(
           headline1: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
+            color: ColorPalettes.darkGrey,
+            fontSize: 25.0,
             fontStyle: FontStyle.normal,
-            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
           headline2: TextStyle(
+            color: ColorPalettes.grey,
             fontSize: 20.0,
             fontStyle: FontStyle.normal,
-            color: Colors.grey,
           ),
           headline3: TextStyle(
+            color: ColorPalettes.white,
             fontSize: 20.0,
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
           ),
           headline4: TextStyle(
-            color: Colors.black,
+            color: ColorPalettes.black,
             fontSize: 25.0,
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.bold,

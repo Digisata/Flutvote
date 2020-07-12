@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ContentSize {
+class ContentSizes {
   static height(BuildContext context) {
     return MediaQuery.of(context).size.height;
   }

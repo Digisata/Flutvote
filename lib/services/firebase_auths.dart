@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
 abstract class BaseAuth {
-  Future<String> signInWithEmailPassword(String email, String password);
-  Future<String> signUpWithEmailPassword(String email, String password);
+  Future<FirebaseUser> signInWithEmailPassword(String email, String password);
+  Future<FirebaseUser> signUpWithEmailPassword(String email, String password);
   Future<FirebaseUser> getCurrentUser();
   Future<void> sendEmailVerification();
   Future<void> signOut();
@@ -14,27 +14,45 @@ class FirebaseAuths implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FacebookLogin _facebookLogin = FacebookLogin();
 
-  Future<String> signInWithEmailPassword(String email, String password) async {
-    AuthResult _result = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
-    assert(_result != null);
-    FirebaseUser _user = _result.user;
-    assert(_user != null);
-    return _user.uid;
+  Future<FirebaseUser> signInWithEmailPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final AuthResult _result = await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+      assert(_result != null);
+      FirebaseUser _user = _result.user;
+      assert(_user != null);
+      return _user;
+    } catch (error) {
+      throw 'sign in with email and password error: $error';
+    }
   }
 
-  Future<String> signUpWithEmailPassword(String email, String password) async {
-    AuthResult _result = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    assert(_result != null);
-    FirebaseUser _user = _result.user;
-    assert(_user != null);
-    return _user.uid;
+  Future<FirebaseUser> signUpWithEmailPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final AuthResult _result = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      assert(_result != null);
+      FirebaseUser _user = _result.user;
+      assert(_user != null);
+      return _user;
+    } catch (error) {
+      throw 'sign up with email and password error: $error';
+    }
   }
 
   Future<FirebaseUser> getCurrentUser() async {
-    FirebaseUser _user = await _firebaseAuth.currentUser();
-    return _user;
+    try {
+      final FirebaseUser _user = await _firebaseAuth.currentUser();
+      return _user;
+    } catch (error) {
+      throw 'get current user error: $error';
+    }
   }
 
   Future<void> signOut() async {
@@ -42,19 +60,27 @@ class FirebaseAuths implements BaseAuth {
       await _firebaseAuth.signOut();
       await _facebookLogin.logOut();
     } catch (error) {
-      throw 'catch error: $error';
+      throw 'sign out error: $error';
     }
   }
 
   Future<void> sendEmailVerification() async {
-    FirebaseUser _user = await _firebaseAuth.currentUser();
-    assert(_user != null);
-    _user.sendEmailVerification();
+    try {
+      final FirebaseUser _user = await _firebaseAuth.currentUser();
+      assert(_user != null);
+      _user.sendEmailVerification();
+    } catch (error) {
+      throw 'send email verfication error: $error';
+    }
   }
 
   Future<bool> isEmailVerified() async {
-    FirebaseUser _user = await _firebaseAuth.currentUser();
-    assert(_user != null);
-    return _user.isEmailVerified;
+    try {
+      final FirebaseUser _user = await _firebaseAuth.currentUser();
+      assert(_user != null);
+      return _user.isEmailVerified;
+    } catch (error) {
+      throw 'is email verified error: $error';
+    }
   }
 }
