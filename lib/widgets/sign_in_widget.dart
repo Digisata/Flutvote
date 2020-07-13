@@ -9,7 +9,12 @@ class SignInWidget {
   final Function _function;
 
   SignInWidget(
-      this._context, this._color, this._text, this._isFacebook, this._function);
+    this._context,
+    this._color,
+    this._text,
+    this._isFacebook,
+    this._function,
+  );
 
   Material createSignInWidget() {
     return Material(
@@ -40,8 +45,10 @@ class SignInWidget {
             ),
             Text(
               _text,
-              textDirection: TextDirection.ltr,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
+              textDirection: TextDirection.ltr,
               style: Theme.of(_context).textTheme.headline2.copyWith(
                     color: Colors.white,
                     fontSize: ContentSizes.dp18(_context),

@@ -1,8 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
+import 'package:flutvote/providers/app_providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class SignUpRoute extends StatelessWidget {
   final TextEditingController _textEditingControllerEmail =
@@ -14,10 +16,16 @@ class SignUpRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppProviders _appProviders =
+        Provider.of<AppProviders>(context, listen: false);
+
+    final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
+
     final TextFieldWidget _textFieldEmailWidget = TextFieldWidget(
       context,
       _textEditingControllerEmail,
       'Email',
+      false,
       false,
       Icons.email,
     );
@@ -27,6 +35,7 @@ class SignUpRoute extends StatelessWidget {
       _textEditingControllerPassword,
       'Password',
       false,
+      false,
       Icons.lock,
     );
 
@@ -35,16 +44,14 @@ class SignUpRoute extends StatelessWidget {
       _textEditingControllerConfirmPassword,
       'Confirm password',
       false,
+      false,
       Icons.lock,
     );
 
-    final IconButton _backButton = IconButton(
-      icon: Image.asset(
-        'assets/buttons/back_button.png',
-        height: ContentSizes.height(context) * 0.03,
-        width: ContentSizes.height(context) * 0.03,
-      ),
-      onPressed: () {
+    final BackButtonWidget _backButtonWidget = BackButtonWidget(
+      context,
+      ContentTexts.backToSignInRoute,
+      () {
         Navigator.pop(context);
       },
     );
@@ -60,22 +67,53 @@ class SignUpRoute extends StatelessWidget {
           ),
     );
 
+    final Form _signUpForm = Form(
+      key: _formlKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _textFieldEmailWidget.createTextFieldWidget(),
+          SizedBox(
+            height: ContentSizes.height(context) * 0.03,
+          ),
+          _textFieldPasswordWidget.createTextFieldWidget(),
+          SizedBox(
+            height: ContentSizes.height(context) * 0.03,
+          ),
+          _textFieldConfirmPasswordWidget.createTextFieldWidget(),
+        ],
+      ),
+    );
+
     final SignInWidget _signUpEmailAndPaswordWidget = SignInWidget(
       context,
       ColorPalettes.orange,
       ContentTexts.signUp,
       false,
       () async {
-        // TODO ADD DIDNT MATCH MESSAGE
+        _appProviders.passwordInput =
+            _textEditingControllerPassword.text.trim();
+        _appProviders.confirmPasswordInput =
+            _textEditingControllerConfirmPassword.text.trim();
         if (_formlKey.currentState.validate()) {
           try {
             await _firebaseAuths.signUpWithEmailAndPassword(
               _textEditingControllerEmail.text.trim(),
               _textEditingControllerPassword.text.trim(),
             );
-            Navigator.pushReplacementNamed(context, '/homeRoute');
+            _alertDialogWidget.createAlertDialogWidget(
+              ContentTexts.yeay,
+              ContentTexts.registeredSuccessfully,
+              ContentTexts.signIn,
+            );
           } catch (error) {
-            throw 'sign up with email and password error: $error';
+            _alertDialogWidget.createAlertDialogWidget(
+              ContentTexts.oops,
+              error,
+              ContentTexts.ok,
+            );
           }
         }
       },
@@ -117,7 +155,7 @@ class SignUpRoute extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: _backButton,
+        leading: _backButtonWidget.createBackButton(),
         backgroundColor: Theme.of(context).primaryColor,
         elevation: 0.0,
       ),
@@ -139,25 +177,7 @@ class SignUpRoute extends StatelessWidget {
                 SizedBox(
                   height: ContentSizes.height(context) * 0.05,
                 ),
-                Form(
-                  key: _formlKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      _textFieldEmailWidget.createTextFieldWidget(),
-                      SizedBox(
-                        height: ContentSizes.height(context) * 0.03,
-                      ),
-                      _textFieldPasswordWidget.createTextFieldWidget(),
-                      SizedBox(
-                        height: ContentSizes.height(context) * 0.03,
-                      ),
-                      _textFieldConfirmPasswordWidget.createTextFieldWidget(),
-                    ],
-                  ),
-                ),
+                _signUpForm,
                 SizedBox(
                   height: ContentSizes.height(context) * 0.05,
                 ),

@@ -14,11 +14,14 @@ class SignInRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
+
     final TextFieldWidget _textFieldEmailWidget = TextFieldWidget(
       context,
       _textEditingControllerEmail,
       'Email',
       true,
+      false,
       Icons.email,
     );
 
@@ -26,6 +29,7 @@ class SignInRoute extends StatelessWidget {
       context,
       _textEditingControllerPassword,
       'Password',
+      true,
       true,
       Icons.lock,
     );
@@ -42,9 +46,13 @@ class SignInRoute extends StatelessWidget {
               _textEditingControllerEmail.text.trim(),
               _textEditingControllerPassword.text.trim(),
             );
-            Navigator.pushReplacementNamed(context, '/homeRoute');
+            Navigator.pushReplacementNamed(context, '/introductionRoute');
           } catch (error) {
-            throw 'sign in with email and password error: $error';
+            _alertDialogWidget.createAlertDialogWidget(
+              ContentTexts.oops,
+              error,
+              ContentTexts.ok,
+            );
           }
         }
       },
@@ -58,9 +66,13 @@ class SignInRoute extends StatelessWidget {
       () async {
         try {
           await _facebookAuths.signInWithFacebook();
-          Navigator.pushReplacementNamed(context, '/homeRoute');
+          Navigator.pushReplacementNamed(context, '/introductionRoute');
         } catch (error) {
-          throw 'sign in with facebook error: $error';
+          _alertDialogWidget.createAlertDialogWidget(
+            ContentTexts.oops,
+            error,
+            ContentTexts.ok,
+          );
         }
       },
     );
@@ -74,6 +86,22 @@ class SignInRoute extends StatelessWidget {
       style: Theme.of(context).textTheme.headline1.copyWith(
             fontSize: ContentSizes.dp24(context),
           ),
+    );
+
+    final Form _signInForm = Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _textFieldEmailWidget.createTextFieldWidget(),
+          SizedBox(
+            height: ContentSizes.height(context) * 0.03,
+          ),
+          _textFieldPasswordWidget.createTextFieldWidget(),
+        ],
+      ),
     );
 
     final Row _forgotText = Row(
@@ -136,11 +164,27 @@ class SignInRoute extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
+        Expanded(
+          child: Divider(
+            color: ColorPalettes.grey,
+            height: ContentSizes.height(context) * 0.01,
+            thickness: 1.0,
+            endIndent: 10.0,
+          ),
+        ),
         Text(
           ContentTexts.or,
           style: Theme.of(context).textTheme.headline2.copyWith(
                 fontSize: ContentSizes.dp12(context),
               ),
+        ),
+        Expanded(
+          child: Divider(
+            color: ColorPalettes.grey,
+            height: ContentSizes.height(context) * 0.01,
+            thickness: 1.0,
+            indent: 10.0,
+          ),
         ),
       ],
     );
@@ -164,21 +208,7 @@ class SignInRoute extends StatelessWidget {
                 SizedBox(
                   height: ContentSizes.height(context) * 0.05,
                 ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      _textFieldEmailWidget.createTextFieldWidget(),
-                      SizedBox(
-                        height: ContentSizes.height(context) * 0.03,
-                      ),
-                      _textFieldPasswordWidget.createTextFieldWidget(),
-                    ],
-                  ),
-                ),
+                _signInForm,
                 SizedBox(
                   height: ContentSizes.height(context) * 0.02,
                 ),
@@ -194,30 +224,7 @@ class SignInRoute extends StatelessWidget {
                 SizedBox(
                   height: ContentSizes.height(context) * 0.02,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: Divider(
-                        color: ColorPalettes.grey,
-                        height: ContentSizes.height(context) * 0.01,
-                        thickness: 1.0,
-                        endIndent: 10.0,
-                      ),
-                    ),
-                    _orText,
-                    Expanded(
-                      child: Divider(
-                        color: ColorPalettes.grey,
-                        height: ContentSizes.height(context) * 0.01,
-                        thickness: 1.0,
-                        indent: 10.0,
-                      ),
-                    ),
-                  ],
-                ),
+                _orText,
                 SizedBox(
                   height: ContentSizes.height(context) * 0.05,
                 ),

@@ -35,6 +35,7 @@ class Flutvote extends StatelessWidget {
         '/welcomeRoute': (context) => WelcomeRoute(),
         '/signInRoute': (context) => SignInRoute(),
         '/signUpRoute': (context) => SignUpRoute(),
+        '/introductionRoute': (context) => IntroductionRoute(),
         '/homeRoute': (context) => HomeRoute(),
       },
       theme: ThemeData(

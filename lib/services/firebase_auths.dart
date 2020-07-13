@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutvote/commons/commons.dart';
 
 abstract class BaseAuth {
   Future<FirebaseUser> signInWithEmailPassword(String email, String password);
-  Future<FirebaseUser> signUpWithEmailAndPassword(String email, String password);
+  Future<FirebaseUser> signUpWithEmailAndPassword(
+      String email, String password);
   Future<FirebaseUser> getCurrentUser();
   Future<void> sendEmailVerification();
   Future<void> signOut();
@@ -26,7 +28,28 @@ class FirebaseAuths implements BaseAuth {
       assert(_user != null);
       return _user;
     } catch (error) {
-      throw 'sign in with email and password error: $error';
+      switch (error.code) {
+        case 'ERROR_INVALID_EMAIL':
+          throw ContentTexts.errorInvalidEmail;
+          break;
+        case 'ERROR_WRONG_PASSWORD':
+          throw ContentTexts.errorWrongPassword;
+          break;
+        case 'ERROR_USER_NOT_FOUND':
+          throw ContentTexts.errorUserNotFound;
+          break;
+        case 'ERROR_USER_DISABLED':
+          throw ContentTexts.errorUserDisabled;
+          break;
+        case 'ERROR_TOO_MANY_REQUESTS':
+          throw ContentTexts.errorTooManyRequest;
+          break;
+        case 'ERROR_OPERATION_NOT_ALLOWED':
+          throw ContentTexts.errorOperationNotAllowed;
+          break;
+        default:
+          throw ContentTexts.errorUnknown;
+      }
     }
   }
 
@@ -42,7 +65,19 @@ class FirebaseAuths implements BaseAuth {
       assert(_user != null);
       return _user;
     } catch (error) {
-      throw 'sign up with email and password error: $error';
+      switch (error.code) {
+        case 'ERROR_WEAK_PASSWORD':
+          throw ContentTexts.errorWeakPassword;
+          break;
+        case 'ERROR_INVALID_EMAIL':
+          throw ContentTexts.errorInvalidEmailFormatted;
+          break;
+        case 'ERROR_EMAIL_ALREADY_IN_USE':
+          throw ContentTexts.errorEmailAlreadyInUse;
+          break;
+        default:
+          throw ContentTexts.errorUnknown;
+      }
     }
   }
 

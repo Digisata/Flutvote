@@ -3,9 +3,14 @@ import 'package:flutvote/commons/commons.dart';
 
 class BackButtonWidget {
   final BuildContext _context;
+  final String _tooltip;
   final Function _function;
 
-  BackButtonWidget(this._context, this._function);
+  BackButtonWidget(
+    this._context,
+    this._tooltip,
+    this._function,
+  );
 
   IconButton createBackButton() {
     return IconButton(
@@ -14,7 +19,10 @@ class BackButtonWidget {
         height: ContentSizes.height(_context) * 0.03,
         width: ContentSizes.height(_context) * 0.03,
       ),
-      onPressed: _function(),
+      onPressed: () {
+        _function();
+      },
+      tooltip: _tooltip,
     );
   }
 }

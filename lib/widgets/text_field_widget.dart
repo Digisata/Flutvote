@@ -8,7 +8,7 @@ class TextFieldWidget {
   final BuildContext _context;
   final TextEditingController _textEditingController;
   final String _hint;
-  final bool _isSignIn;
+  final bool _isSignIn, _isPasswordSignIn;
   final IconData _icon;
 
   TextFieldWidget(
@@ -16,6 +16,7 @@ class TextFieldWidget {
     this._textEditingController,
     this._hint,
     this._isSignIn,
+    this._isPasswordSignIn,
     this._icon,
   );
 
@@ -36,9 +37,11 @@ class TextFieldWidget {
                 _isEmail ? TextInputType.emailAddress : TextInputType.text,
             obscureText: _isEmail
                 ? false
-                : _isPassword
-                    ? !value.isPasswordVisible
-                    : !value.isConfirmPasswordVisible,
+                : _isPasswordSignIn
+                    ? !value.isPasswordSignInVisible
+                    : _isPassword
+                        ? !value.isPasswordSignUpVisible
+                        : !value.isConfirmPasswordVisible,
             validator: _isSignIn
                 ? (input) {
                     if (input.isEmpty) {
@@ -52,14 +55,17 @@ class TextFieldWidget {
                     } else {
                       if (_isEmail) {
                         if (!EmailValidator.validate(input)) {
-                          return 'Invalid email address';
+                          return ContentTexts.invalidEmailAddress;
                         }
                       } else if (_isPassword || _isConfirmPassword) {
                         Pattern pattern =
                             r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
                         RegExp regex = new RegExp(pattern);
+                        if (value.passwordInput != value.confirmPasswordInput) {
+                          return ContentTexts.passwordDidntMatch;
+                        }
                         if (!regex.hasMatch(input)) {
-                          return 'Password must contain at least one letter, one number, and longer than six charaters!';
+                          return ContentTexts.invalidPassword;
                         }
                       }
                     }
@@ -81,12 +87,12 @@ class TextFieldWidget {
                       Icons.visibility,
                       color: Colors.transparent,
                     )
-                  : _isPassword
+                  : _isPasswordSignIn
                       ? IconButton(
-                          tooltip: value.isPasswordVisible
+                          tooltip: value.isPasswordSignInVisible
                               ? ContentTexts.hidePassword
                               : ContentTexts.showPassword,
-                          icon: value.isPasswordVisible
+                          icon: value.isPasswordSignInVisible
                               ? Icon(
                                   Icons.visibility,
                                   color: Colors.grey,
@@ -96,26 +102,47 @@ class TextFieldWidget {
                                   color: Colors.grey,
                                 ),
                           onPressed: () {
-                            value.showHidePassword();
+                            value.isPasswordSignInVisible =
+                                !value.isPasswordSignInVisible;
                           },
                         )
-                      : IconButton(
-                          tooltip: value.isConfirmPasswordVisible
-                              ? ContentTexts.hideConfirmPassword
-                              : ContentTexts.showConfirmPassword,
-                          icon: value.isConfirmPasswordVisible
-                              ? Icon(
-                                  Icons.visibility,
-                                  color: Colors.grey,
-                                )
-                              : Icon(
-                                  Icons.visibility_off,
-                                  color: Colors.grey,
-                                ),
-                          onPressed: () {
-                            value.showHideConfirmPassword();
-                          },
-                        ),
+                      : _isPassword
+                          ? IconButton(
+                              tooltip: value.isPasswordSignUpVisible
+                                  ? ContentTexts.hidePassword
+                                  : ContentTexts.showPassword,
+                              icon: value.isPasswordSignUpVisible
+                                  ? Icon(
+                                      Icons.visibility,
+                                      color: Colors.grey,
+                                    )
+                                  : Icon(
+                                      Icons.visibility_off,
+                                      color: Colors.grey,
+                                    ),
+                              onPressed: () {
+                                value.isPasswordSignUpVisible =
+                                    !value.isPasswordSignUpVisible;
+                              },
+                            )
+                          : IconButton(
+                              tooltip: value.isConfirmPasswordVisible
+                                  ? ContentTexts.hideConfirmPassword
+                                  : ContentTexts.showConfirmPassword,
+                              icon: value.isConfirmPasswordVisible
+                                  ? Icon(
+                                      Icons.visibility,
+                                      color: Colors.grey,
+                                    )
+                                  : Icon(
+                                      Icons.visibility_off,
+                                      color: Colors.grey,
+                                    ),
+                              onPressed: () {
+                                value.isConfirmPasswordVisible =
+                                    !value.isConfirmPasswordVisible;
+                              },
+                            ),
               fillColor: ColorPalettes.backgroundGrey,
               filled: true,
               focusedBorder: OutlineInputBorder(
