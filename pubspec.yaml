@@ -34,6 +34,7 @@ dependencies:
   introduction_screen: ^1.0.9
   giffy_dialog: ^1.7.0
   cached_network_image: ^2.2.0+1
+  loading: ^1.0.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -62,9 +63,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/buttons/
-    - assets/icons/
     - assets/ilustrators/
-    - assets/images/
     - assets/logos/
 
   # An image asset can refer to one or more resolution-specific "variants", see

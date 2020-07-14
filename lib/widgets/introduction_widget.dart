@@ -19,11 +19,12 @@ class IntroductionWidget {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          // TODO FADE IN IMAGE
           Image.asset(
             _image,
             height: ContentSizes.height(_context) * 0.5,
             width: ContentSizes.width(_context),
+            alignment: Alignment.center,
+            fit: BoxFit.cover,
           ),
           SizedBox(
             height: ContentSizes.height(_context) * 0.02,

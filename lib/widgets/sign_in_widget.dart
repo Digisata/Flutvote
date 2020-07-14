@@ -23,13 +23,20 @@ class SignInWidget {
       child: MaterialButton(
         height: ContentSizes.height(_context) * 0.07,
         minWidth: ContentSizes.width(_context),
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           _function();
         },
+        padding: EdgeInsets.fromLTRB(
+          ContentSizes.width(_context) * 0.05,
+          ContentSizes.height(_context) * 0.01,
+          ContentSizes.width(_context) * 0.05,
+          ContentSizes.height(_context) * 0.01,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             !_isFacebook
@@ -38,7 +45,7 @@ class SignInWidget {
                     "assets/logos/facebook_logo.png",
                     width: ContentSizes.height(_context) * 0.04,
                     height: ContentSizes.height(_context) * 0.04,
-                    alignment: Alignment.bottomLeft,
+                    alignment: Alignment.center,
                   ),
             SizedBox(
               width: ContentSizes.height(_context) * 0.01,

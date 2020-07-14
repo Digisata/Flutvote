@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 class AppProviders with ChangeNotifier {
-  bool _isPasswordSignInVisible = false,
+  bool _isLoading = false,
+      _isPasswordSignInVisible = false,
       _isPasswordSignUpVisible = false,
       _isConfirmPasswordVisible = false;
-  String _passwordInput, _confirmPasswordInput;
+  String _emailInput, _passwordInput, _confirmPasswordInput;
+
+  bool get isLoading => _isLoading;
 
   bool get isPasswordSignInVisible => _isPasswordSignInVisible;
 
@@ -12,9 +15,16 @@ class AppProviders with ChangeNotifier {
 
   bool get isConfirmPasswordVisible => _isConfirmPasswordVisible;
 
+  String get emailInput => _emailInput;
+
   String get passwordInput => _passwordInput;
 
   String get confirmPasswordInput => _confirmPasswordInput;
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
 
   set isPasswordSignInVisible(bool value) {
     _isPasswordSignInVisible = value;
@@ -28,6 +38,11 @@ class AppProviders with ChangeNotifier {
 
   set isConfirmPasswordVisible(bool value) {
     _isConfirmPasswordVisible = value;
+    notifyListeners();
+  }
+
+  set emailInput(String value) {
+    _emailInput = value;
     notifyListeners();
   }
 

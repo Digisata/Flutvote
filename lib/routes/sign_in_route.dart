@@ -1,8 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
+import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
+import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
+import 'package:loading/loading.dart';
+import 'package:provider/provider.dart';
 
 class SignInRoute extends StatelessWidget {
   final TextEditingController _textEditingControllerEmail =
@@ -14,6 +18,7 @@ class SignInRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
 
     final TextFieldWidget _textFieldEmailWidget = TextFieldWidget(
@@ -42,12 +47,18 @@ class SignInRoute extends StatelessWidget {
       () async {
         if (_formKey.currentState.validate()) {
           try {
+            _appProviders.isLoading = true;
             await _firebaseAuths.signInWithEmailPassword(
               _textEditingControllerEmail.text.trim(),
               _textEditingControllerPassword.text.trim(),
             );
+            _appProviders.emailInput = _textEditingControllerEmail.text.trim();
+            _appProviders.passwordInput =
+                _textEditingControllerPassword.text.trim();
             Navigator.pushReplacementNamed(context, '/introductionRoute');
+            _appProviders.isLoading = false;
           } catch (error) {
+            _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
               ContentTexts.oops,
               error,
@@ -65,9 +76,12 @@ class SignInRoute extends StatelessWidget {
       true,
       () async {
         try {
+          _appProviders.isLoading = true;
           await _facebookAuths.signInWithFacebook();
           Navigator.pushReplacementNamed(context, '/introductionRoute');
+          _appProviders.isLoading = false;
         } catch (error) {
+          _appProviders.isLoading = false;
           _alertDialogWidget.createAlertDialogWidget(
             ContentTexts.oops,
             error,
@@ -92,7 +106,6 @@ class SignInRoute extends StatelessWidget {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _textFieldEmailWidget.createTextFieldWidget(),
@@ -106,11 +119,12 @@ class SignInRoute extends StatelessWidget {
 
     final Row _forgotText = Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            Navigator.pushNamed(context, '/forgotPasswordRoute');
+          },
           child: Text(
             ContentTexts.forgotPassword,
             maxLines: 1,
@@ -127,7 +141,6 @@ class SignInRoute extends StatelessWidget {
 
     final Row _signUpText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         RichText(
@@ -161,7 +174,6 @@ class SignInRoute extends StatelessWidget {
 
     final Row _orText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Expanded(
@@ -191,47 +203,54 @@ class SignInRoute extends StatelessWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(
-              ContentSizes.width(context) * 0.1,
-              ContentSizes.height(context) * 0.2,
-              ContentSizes.width(context) * 0.1,
-              ContentSizes.height(context) * 0.2,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                _signInText,
-                SizedBox(
-                  height: ContentSizes.height(context) * 0.05,
+        child: Center(
+          child: _appProviders.isLoading
+              ? Loading(
+                  color: ColorPalettes.orange,
+                  indicator: BallSpinFadeLoaderIndicator(),
+                  size: ContentSizes.height(context) * 0.1,
+                )
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      ContentSizes.width(context) * 0.1,
+                      ContentSizes.height(context) * 0.2,
+                      ContentSizes.width(context) * 0.1,
+                      ContentSizes.height(context) * 0.2,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        _signInText,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.05,
+                        ),
+                        _signInForm,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.02,
+                        ),
+                        _forgotText,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.03,
+                        ),
+                        _signInEmailAndPaswordWidget.createSignInWidget(),
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.05,
+                        ),
+                        _signUpText,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.02,
+                        ),
+                        _orText,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.05,
+                        ),
+                        _signInFacebookWidget.createSignInWidget(),
+                      ],
+                    ),
+                  ),
                 ),
-                _signInForm,
-                SizedBox(
-                  height: ContentSizes.height(context) * 0.02,
-                ),
-                _forgotText,
-                SizedBox(
-                  height: ContentSizes.height(context) * 0.03,
-                ),
-                _signInEmailAndPaswordWidget.createSignInWidget(),
-                SizedBox(
-                  height: ContentSizes.height(context) * 0.05,
-                ),
-                _signUpText,
-                SizedBox(
-                  height: ContentSizes.height(context) * 0.02,
-                ),
-                _orText,
-                SizedBox(
-                  height: ContentSizes.height(context) * 0.05,
-                ),
-                _signInFacebookWidget.createSignInWidget(),
-              ],
-            ),
-          ),
         ),
       ),
     );

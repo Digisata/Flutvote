@@ -35,6 +35,7 @@ class TextFieldWidget {
             cursorColor: Colors.grey,
             keyboardType:
                 _isEmail ? TextInputType.emailAddress : TextInputType.text,
+            maxLines: 1,
             obscureText: _isEmail
                 ? false
                 : _isPasswordSignIn
@@ -78,6 +79,7 @@ class TextFieldWidget {
             decoration: InputDecoration(
               contentPadding: EdgeInsets.zero,
               hintText: _hint,
+              errorMaxLines: 2,
               prefixIcon: Icon(
                 _icon,
                 color: Colors.grey,

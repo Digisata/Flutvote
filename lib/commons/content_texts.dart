@@ -5,10 +5,10 @@ class ContentTexts {
   static const String welcomeButton = 'Create Account';
 
   static const String signIn = 'Sign In';
-  static const String forgotPassword = 'Forgot password ?';
-  static const String showPassword = 'Show password';
-  static const String hidePassword = 'Hide password';
-  static const String dontHaveAccount = 'Don\'t have an account ? ';
+  static const String forgotPassword = 'Forgot your password?';
+  static const String showPassword = 'Show password.';
+  static const String hidePassword = 'Hide password.';
+  static const String dontHaveAccount = 'Don\'t have an account? ';
   static const String signInWithFacebook = 'Sign in with facebook';
   static const String or = 'Or';
   static const String errorInvalidEmail =
@@ -16,7 +16,7 @@ class ContentTexts {
   static const String errorWrongPassword =
       'Wrong password, make sure you input the correct password!';
   static const String errorUserNotFound =
-      'User not found, invalid email or password!';
+      'User not found, invalid email address!';
   static const String errorUserDisabled =
       'Your account temporary disabled, please send us confirmation!';
   static const String errorTooManyRequest =
@@ -24,12 +24,14 @@ class ContentTexts {
   static const String errorOperationNotAllowed =
       'Operation not allowed, please try another sign in method!';
   static const String errorUnknown = 'Unknown error occurred!';
+  static const String verifyEmail =
+      'Your email isn\'t verified yet, please verify first!';
 
-  static const String backToSignInRoute = 'Back to sign in page';
+  static const String backToSignInRoute = 'Back to sign in page.';
   static const String signUp = 'Sign Up';
-  static const String alreadyHaveAccount = 'Already have an account ? ';
-  static const String showConfirmPassword = 'Show confirm password';
-  static const String hideConfirmPassword = 'Hide confirm password';
+  static const String alreadyHaveAccount = 'Already have an account? ';
+  static const String showConfirmPassword = 'Show confirm password.';
+  static const String hideConfirmPassword = 'Hide confirm password.';
   static const String invalidEmailAddress = 'Invalid email address!';
   static const String passwordDidntMatch = 'Password didn\'t match!';
   static const String invalidPassword =
@@ -43,8 +45,10 @@ class ContentTexts {
   static const String oops = 'Oops';
   static const String yeay = 'Yeaay';
   static const String ok = 'Ok';
-  static const String registeredSuccessfully =
-      'Your account has been registered successfully';
+
+  static const String resetPassword = 'Reset Password';
+  static const String resetPasswordDescription =
+      'Don\'t worry, please input your email associated with your account, then we will send a password reset email.';
 
   static const String searchIntroduction = 'Search for campaign';
   static const String searchDescriptionIntroduction =

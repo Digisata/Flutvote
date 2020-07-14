@@ -3,30 +3,38 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutvote/commons/commons.dart';
 
 abstract class BaseAuth {
-  Future<FirebaseUser> signInWithEmailPassword(String email, String password);
-  Future<FirebaseUser> signUpWithEmailAndPassword(
-      String email, String password);
+  Future<void> signInWithEmailPassword(String email, String password);
+  Future<void> signUpWithEmailAndPassword(String email, String password);
   Future<FirebaseUser> getCurrentUser();
+  Future<void> resetPassword(String email);
   Future<void> sendEmailVerification();
   Future<void> signOut();
   Future<bool> isEmailVerified();
 }
 
+class EmailVerifyException implements Exception {}
+
 class FirebaseAuths implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FacebookLogin _facebookLogin = FacebookLogin();
 
-  Future<FirebaseUser> signInWithEmailPassword(
+  Future<void> signInWithEmailPassword(
     String email,
     String password,
   ) async {
     try {
       final AuthResult _result = await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
       assert(_result != null);
       FirebaseUser _user = _result.user;
       assert(_user != null);
-      return _user;
+      if (!_user.isEmailVerified) {
+        throw EmailVerifyException();
+      }
+    } on EmailVerifyException {
+      throw ContentTexts.verifyEmail;
     } catch (error) {
       switch (error.code) {
         case 'ERROR_INVALID_EMAIL':
@@ -53,17 +61,20 @@ class FirebaseAuths implements BaseAuth {
     }
   }
 
-  Future<FirebaseUser> signUpWithEmailAndPassword(
+  Future<void> signUpWithEmailAndPassword(
     String email,
     String password,
   ) async {
     try {
-      final AuthResult _result = await _firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      final AuthResult _result =
+          await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       assert(_result != null);
       FirebaseUser _user = _result.user;
       assert(_user != null);
-      return _user;
+      await _user.sendEmailVerification();
     } catch (error) {
       switch (error.code) {
         case 'ERROR_WEAK_PASSWORD':
@@ -96,6 +107,23 @@ class FirebaseAuths implements BaseAuth {
       await _facebookLogin.logOut();
     } catch (error) {
       throw 'sign out error: $error';
+    }
+  }
+
+  Future<void> resetPassword(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+    } catch (error) {
+      switch (error.code) {
+        case 'ERROR_INVALID_EMAIL':
+          throw ContentTexts.errorInvalidEmail;
+          break;
+        case 'ERROR_USER_NOT_FOUND':
+          throw ContentTexts.errorUserNotFound;
+          break;
+        default:
+          throw ContentTexts.errorUnknown;
+      }
     }
   }
 

@@ -1,18 +1,15 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
-import 'package:flutvote/providers/app_providers.dart';
+import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
 
-class SignUpRoute extends StatelessWidget {
+class ForgotPasswordRoute extends StatelessWidget {
   final TextEditingController _textEditingControllerEmail =
-          TextEditingController(),
-      _textEditingControllerPassword = TextEditingController(),
-      _textEditingControllerConfirmPassword = TextEditingController();
+      TextEditingController();
   final FirebaseAuths _firebaseAuths = FirebaseAuths();
   final GlobalKey<FormState> _formlKey = GlobalKey<FormState>();
 
@@ -26,27 +23,9 @@ class SignUpRoute extends StatelessWidget {
       context,
       _textEditingControllerEmail,
       'Email',
-      false,
+      true,
       false,
       Icons.email,
-    );
-
-    final TextFieldWidget _textFieldPasswordWidget = TextFieldWidget(
-      context,
-      _textEditingControllerPassword,
-      'Password',
-      false,
-      false,
-      Icons.lock,
-    );
-
-    final TextFieldWidget _textFieldConfirmPasswordWidget = TextFieldWidget(
-      context,
-      _textEditingControllerConfirmPassword,
-      'Confirm password',
-      false,
-      false,
-      Icons.lock,
     );
 
     final BackButtonWidget _backButtonWidget = BackButtonWidget(
@@ -57,8 +36,8 @@ class SignUpRoute extends StatelessWidget {
       },
     );
 
-    final Text _signUpText = Text(
-      ContentTexts.signUp,
+    final Text _resetText = Text(
+      ContentTexts.forgotPassword,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,
@@ -68,47 +47,44 @@ class SignUpRoute extends StatelessWidget {
           ),
     );
 
-    final Form _signUpForm = Form(
+    final Text _descriptionText = Text(
+      ContentTexts.resetPasswordDescription,
+      maxLines: 4,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,  
+      textDirection: TextDirection.ltr,
+      style: Theme.of(context).textTheme.headline2.copyWith(
+            fontSize: ContentSizes.dp18(context),
+          ),
+    );
+
+    final Form _resetForm = Form(
       key: _formlKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _textFieldEmailWidget.createTextFieldWidget(),
-          SizedBox(
-            height: ContentSizes.height(context) * 0.03,
-          ),
-          _textFieldPasswordWidget.createTextFieldWidget(),
-          SizedBox(
-            height: ContentSizes.height(context) * 0.03,
-          ),
-          _textFieldConfirmPasswordWidget.createTextFieldWidget(),
         ],
       ),
     );
 
-    final SignInWidget _signUpEmailAndPaswordWidget = SignInWidget(
+    final SignInWidget _resetEmailWidget = SignInWidget(
       context,
       ColorPalettes.orange,
-      ContentTexts.signUp,
+      ContentTexts.resetPassword,
       false,
       () async {
-        _appProviders.passwordInput =
-            _textEditingControllerPassword.text.trim();
-        _appProviders.confirmPasswordInput =
-            _textEditingControllerConfirmPassword.text.trim();
         if (_formlKey.currentState.validate()) {
           try {
             _appProviders.isLoading = true;
-            await _firebaseAuths.signUpWithEmailAndPassword(
-              _textEditingControllerEmail.text.trim(),
-              _textEditingControllerPassword.text.trim(),
-            );
+            await _firebaseAuths
+                .resetPassword(_textEditingControllerEmail.text.trim());
             _appProviders.emailInput = _textEditingControllerEmail.text.trim();
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
               ContentTexts.yeay,
-              'We sent an email verification to ${_appProviders.emailInput}, please confirm that',
+              'Password reset email already sent to ${_appProviders.emailInput}, please confirm that!',
               ContentTexts.signIn,
             );
           } catch (error) {
@@ -121,39 +97,6 @@ class SignUpRoute extends StatelessWidget {
           }
         }
       },
-    );
-
-    final Row _signInText = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        RichText(
-          text: TextSpan(
-            style: Theme.of(context).textTheme.headline2.copyWith(
-                  fontSize: ContentSizes.dp14(context),
-                ),
-            children: <TextSpan>[
-              TextSpan(
-                text: ContentTexts.alreadyHaveAccount,
-                style: Theme.of(context).textTheme.headline2.copyWith(
-                      fontSize: ContentSizes.dp12(context),
-                    ),
-              ),
-              TextSpan(
-                text: ContentTexts.signIn,
-                style: Theme.of(context).textTheme.headline2.copyWith(
-                      color: ColorPalettes.orange,
-                      fontSize: ContentSizes.dp12(context),
-                    ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    Navigator.pop(context);
-                  },
-              ),
-            ],
-          ),
-        ),
-      ],
     );
 
     return Scaffold(
@@ -189,19 +132,19 @@ class SignUpRoute extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          _signUpText,
+                          _resetText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.02,
+                          ),
+                          _descriptionText,
                           SizedBox(
                             height: ContentSizes.height(context) * 0.05,
                           ),
-                          _signUpForm,
+                          _resetForm,
                           SizedBox(
                             height: ContentSizes.height(context) * 0.05,
                           ),
-                          _signUpEmailAndPaswordWidget.createSignInWidget(),
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _signInText,
+                          _resetEmailWidget.createSignInWidget(),
                         ],
                       ),
                     ),

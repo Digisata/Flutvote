@@ -19,13 +19,18 @@ class AlertDialogWidget {
       context: _context,
       builder: (_) => NetworkGiffyDialog(
         image: CachedNetworkImage(
+          alignment: Alignment.center,
           fit: BoxFit.cover,
+          fadeInCurve: Curves.bounceIn,
+          fadeOutCurve: Curves.bounceOut,
+          fadeInDuration: Duration(milliseconds: 500),
+          fadeOutDuration: Duration(milliseconds: 500),
           imageUrl:
-              'https://raw.githubusssercontent.com/Shashank02051997/FancyGifDialog-Android/master/GIF\'s/gif14.gif',
+              'https://raw.githubusercontent.com/Shashank02051997/FancyGifDialog-Android/master/GIF\'s/gif14.gif',
           progressIndicatorBuilder: (context, url, download) => Center(
             child: Container(
-              width: ContentSizes.height(context) * 0.15,
-              height: ContentSizes.height(context) * 0.15,
+              width: ContentSizes.height(context) * 0.1,
+              height: ContentSizes.height(context) * 0.1,
               child: CircularProgressIndicator(
                 backgroundColor: Colors.transparent,
                 value: download.progress,
@@ -69,7 +74,7 @@ class AlertDialogWidget {
         ),
         description: Text(
           _description,
-          maxLines: 3,
+          maxLines: 4,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
