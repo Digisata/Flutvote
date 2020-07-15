@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 
-class SignInWidget {
+class ActionButtonWidget {
   final BuildContext _context;
   final Color _color;
   final String _text;
   final bool _isFacebook;
-  final Function _function;
+  final Function _validate;
 
-  SignInWidget(
+  ActionButtonWidget(
     this._context,
     this._color,
     this._text,
     this._isFacebook,
-    this._function,
+    this._validate,
   );
 
   Material createSignInWidget() {
@@ -24,7 +24,7 @@ class SignInWidget {
         height: ContentSizes.height(_context) * 0.07,
         minWidth: ContentSizes.width(_context),
         onPressed: () async {
-          _function();
+          await _validate();
         },
         padding: EdgeInsets.fromLTRB(
           ContentSizes.width(_context) * 0.05,

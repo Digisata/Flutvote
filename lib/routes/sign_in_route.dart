@@ -19,9 +19,10 @@ class SignInRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
+    final HiveProviders _hiveProviders =
+        Provider.of<HiveProviders>(context, listen: false);
     final SignInProviders _signInProviders =
         Provider.of<SignInProviders>(context);
-    final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
     final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
 
     final TextFieldWidget _textFieldEmailWidget = TextFieldWidget(
@@ -31,6 +32,9 @@ class SignInRoute extends StatelessWidget {
       true,
       false,
       Icons.email,
+      (input) {
+        _signInProviders.emailSignIn = input.trim();
+      },
     );
 
     final TextFieldWidget _textFieldPasswordWidget = TextFieldWidget(
@@ -40,31 +44,27 @@ class SignInRoute extends StatelessWidget {
       true,
       true,
       Icons.lock,
+      (input) {
+        _signInProviders.passwordSignIn = input.trim();
+      },
     );
 
-    final SignInWidget _signInEmailAndPaswordWidget = SignInWidget(
+    final ActionButtonWidget _signInEmailAndPaswordWidget = ActionButtonWidget(
       context,
       ColorPalettes.orange,
       ContentTexts.signIn,
       false,
       () async {
         if (_formKey.currentState.validate()) {
+          _formKey.currentState.save();
           try {
             _appProviders.isLoading = true;
             await _firebaseAuths.signInWithEmailPassword(
               _textEditingControllerEmail.text.trim(),
               _textEditingControllerPassword.text.trim(),
             );
-            _signInProviders.emailSignIn =
-                _textEditingControllerEmail.text.trim();
-            _signInProviders.passwordSignIn =
-                _textEditingControllerPassword.text.trim();
-            _hiveProviders.putData(
-              'userEmail',
+            _hiveProviders.addData(
               _signInProviders.emailSignIn,
-            );
-            _hiveProviders.putData(
-              'userPassword',
               _signInProviders.passwordSignIn,
             );
             Navigator.pushReplacementNamed(context, '/introductionRoute');
@@ -82,7 +82,7 @@ class SignInRoute extends StatelessWidget {
       },
     );
 
-    final SignInWidget _signInFacebookWidget = SignInWidget(
+    final ActionButtonWidget _signInFacebookWidget = ActionButtonWidget(
       context,
       ColorPalettes.facebook,
       ContentTexts.signInWithFacebook,

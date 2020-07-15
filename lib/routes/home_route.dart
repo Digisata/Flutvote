@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutvote/providers/providers.dart';
+import 'package:flutvote/model/models.dart';
 import 'package:flutvote/services/services.dart';
-import 'package:provider/provider.dart';
+import 'package:hive/hive.dart';
 
 class HomeRoute extends StatelessWidget {
   final FirebaseAuths _firebaseAuths = FirebaseAuths();
 
   @override
   Widget build(BuildContext context) {
-    final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
+    final Box _userDatas = Hive.box('userData');
+    UserData _userEmail = _userDatas.getAt(0);
 
     return Scaffold(
       body: Center(
@@ -16,7 +17,7 @@ class HomeRoute extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Welcome ${_hiveProviders.getData('userEmail')}',
+              'Welcome ${_userEmail.email}',
             ),
             RaisedButton(
               onPressed: () async {

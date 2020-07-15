@@ -11,7 +11,7 @@ class ForgotPasswordRoute extends StatelessWidget {
   final TextEditingController _textEditingControllerEmail =
       TextEditingController();
   final FirebaseAuths _firebaseAuths = FirebaseAuths();
-  final GlobalKey<FormState> _formlKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +28,9 @@ class ForgotPasswordRoute extends StatelessWidget {
       true,
       false,
       Icons.email,
+      (input) {
+        _forgotPasswordProviders.emailForgotPassword = input.trim();
+      },
     );
 
     final BackButtonWidget _backButtonWidget = BackButtonWidget(
@@ -61,7 +64,7 @@ class ForgotPasswordRoute extends StatelessWidget {
     );
 
     final Form _resetForm = Form(
-      key: _formlKey,
+      key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -71,19 +74,18 @@ class ForgotPasswordRoute extends StatelessWidget {
       ),
     );
 
-    final SignInWidget _resetEmailWidget = SignInWidget(
+    final ActionButtonWidget _resetEmailWidget = ActionButtonWidget(
       context,
       ColorPalettes.orange,
       ContentTexts.resetPassword,
       false,
       () async {
-        if (_formlKey.currentState.validate()) {
+        if (_formKey.currentState.validate()) {
+          _formKey.currentState.save();
           try {
             _appProviders.isLoading = true;
             await _firebaseAuths
                 .resetPassword(_textEditingControllerEmail.text.trim());
-            _forgotPasswordProviders.emailForgotPassword =
-                _textEditingControllerEmail.text.trim();
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
               ContentTexts.yeay,

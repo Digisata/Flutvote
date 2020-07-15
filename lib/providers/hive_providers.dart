@@ -1,22 +1,24 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutvote/model/models.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HiveProviders with ChangeNotifier {
-  Box _hiveBox;
+  static bool _isBoxOpen = Hive.isBoxOpen('userData');
 
-  openBox() async {
+  static openBox() async {
     final Directory _directory = await getApplicationDocumentsDirectory();
     Hive.init(_directory.path);
+    Hive.registerAdapter(UserDataAdapter());
     await Hive.openBox('userData');
   }
 
-  void putData(String key, String value) async {
-    _hiveBox = Hive.box('userData');
-    _hiveBox.put(key, value);
+  void addData(String key, String value) async {
+    final Box _userData = Hive.box('userData');
+    _userData.add(UserData(key, value));
   }
 
-  String getData(String key) => _hiveBox.get(key);
+  static bool get isBoxOpen => _isBoxOpen;
 }

@@ -8,10 +8,7 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // TODO FIX HIVE
-  /* if (HiveProviders.hiveBox == null) {
-    await HiveProviders.openBox();
-  } */
+  await HiveProviders.openBox();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runApp(

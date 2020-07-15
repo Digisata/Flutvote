@@ -10,6 +10,7 @@ class TextFieldWidget {
   final String _hint;
   final bool _isRegistered, _isPasswordSignIn;
   final IconData _icon;
+  final Function _onSaved;
 
   TextFieldWidget(
     this._context,
@@ -18,6 +19,7 @@ class TextFieldWidget {
     this._isRegistered,
     this._isPasswordSignIn,
     this._icon,
+    this._onSaved,
   );
 
   Container createTextFieldWidget() {
@@ -35,6 +37,7 @@ class TextFieldWidget {
       child: Consumer<AppProviders>(
         builder: (_, AppProviders value, __) {
           return TextFormField(
+            initialValue: null,
             controller: _textEditingController,
             cursorColor: Colors.grey,
             keyboardType:
@@ -77,6 +80,7 @@ class TextFieldWidget {
                     }
                     return null;
                   },
+            onSaved: _onSaved,
             textAlign: TextAlign.start,
             textDirection: TextDirection.ltr,
             textInputAction:

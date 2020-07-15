@@ -14,7 +14,7 @@ class SignUpRoute extends StatelessWidget {
       _textEditingControllerPassword = TextEditingController(),
       _textEditingControllerConfirmPassword = TextEditingController();
   final FirebaseAuths _firebaseAuths = FirebaseAuths();
-  final GlobalKey<FormState> _formlKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +31,9 @@ class SignUpRoute extends StatelessWidget {
       false,
       false,
       Icons.email,
+      (input) {
+        _signUpProviders.emailSignUp = input.trim();
+      },
     );
 
     final TextFieldWidget _textFieldPasswordWidget = TextFieldWidget(
@@ -40,6 +43,9 @@ class SignUpRoute extends StatelessWidget {
       false,
       false,
       Icons.lock,
+      (input) {
+        _signUpProviders.isPasswordSignUpVisible = false;
+      },
     );
 
     final TextFieldWidget _textFieldConfirmPasswordWidget = TextFieldWidget(
@@ -49,6 +55,9 @@ class SignUpRoute extends StatelessWidget {
       false,
       false,
       Icons.lock,
+      (input) {
+        _signUpProviders.isConfirmPasswordVisible = false;
+      },
     );
 
     final BackButtonWidget _backButtonWidget = BackButtonWidget(
@@ -71,7 +80,7 @@ class SignUpRoute extends StatelessWidget {
     );
 
     final Form _signUpForm = Form(
-      key: _formlKey,
+      key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,7 +98,7 @@ class SignUpRoute extends StatelessWidget {
       ),
     );
 
-    final SignInWidget _signUpEmailAndPaswordWidget = SignInWidget(
+    final ActionButtonWidget _signUpEmailAndPaswordWidget = ActionButtonWidget(
       context,
       ColorPalettes.orange,
       ContentTexts.signUp,
@@ -99,17 +108,14 @@ class SignUpRoute extends StatelessWidget {
             _textEditingControllerPassword.text.trim();
         _signUpProviders.confirmPassword =
             _textEditingControllerConfirmPassword.text.trim();
-        if (_formlKey.currentState.validate()) {
+        if (_formKey.currentState.validate()) {
+          _formKey.currentState.save();
           try {
             _appProviders.isLoading = true;
             await _firebaseAuths.signUpWithEmailAndPassword(
               _textEditingControllerEmail.text.trim(),
               _textEditingControllerPassword.text.trim(),
             );
-            _signUpProviders.emailSignUp =
-                _textEditingControllerEmail.text.trim();
-            _signUpProviders.isPasswordSignUpVisible = false;
-            _signUpProviders.isConfirmPasswordVisible = false;
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
               ContentTexts.yeay,
