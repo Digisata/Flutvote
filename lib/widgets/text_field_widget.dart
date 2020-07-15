@@ -8,14 +8,14 @@ class TextFieldWidget {
   final BuildContext _context;
   final TextEditingController _textEditingController;
   final String _hint;
-  final bool _isSignIn, _isPasswordSignIn;
+  final bool _isRegistered, _isPasswordSignIn;
   final IconData _icon;
 
   TextFieldWidget(
     this._context,
     this._textEditingController,
     this._hint,
-    this._isSignIn,
+    this._isRegistered,
     this._isPasswordSignIn,
     this._icon,
   );
@@ -24,6 +24,10 @@ class TextFieldWidget {
     final bool _isEmail = _hint == 'Email',
         _isPassword = _hint == 'Password',
         _isConfirmPassword = _hint == 'Confirm password';
+    final SignInProviders _signInProviders =
+        Provider.of<SignInProviders>(_context);
+    final SignUpProviders _signUpProviders =
+        Provider.of<SignUpProviders>(_context);
 
     return Container(
       height: ContentSizes.height(_context) * 0.06,
@@ -39,11 +43,11 @@ class TextFieldWidget {
             obscureText: _isEmail
                 ? false
                 : _isPasswordSignIn
-                    ? !value.isPasswordSignInVisible
+                    ? !_signInProviders.isPasswordSignInVisible
                     : _isPassword
-                        ? !value.isPasswordSignUpVisible
-                        : !value.isConfirmPasswordVisible,
-            validator: _isSignIn
+                        ? !_signUpProviders.isPasswordSignUpVisible
+                        : !_signUpProviders.isConfirmPasswordVisible,
+            validator: _isRegistered
                 ? (input) {
                     if (input.isEmpty) {
                       return 'Please input your ${_hint.toLowerCase()}!';
@@ -62,7 +66,8 @@ class TextFieldWidget {
                         Pattern pattern =
                             r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
                         RegExp regex = new RegExp(pattern);
-                        if (value.passwordInput != value.confirmPasswordInput) {
+                        if (_signUpProviders.passwordSignUp !=
+                            _signUpProviders.confirmPassword) {
                           return ContentTexts.passwordDidntMatch;
                         }
                         if (!regex.hasMatch(input)) {
@@ -91,10 +96,10 @@ class TextFieldWidget {
                     )
                   : _isPasswordSignIn
                       ? IconButton(
-                          tooltip: value.isPasswordSignInVisible
+                          tooltip: _signInProviders.isPasswordSignInVisible
                               ? ContentTexts.hidePassword
                               : ContentTexts.showPassword,
-                          icon: value.isPasswordSignInVisible
+                          icon: _signInProviders.isPasswordSignInVisible
                               ? Icon(
                                   Icons.visibility,
                                   color: Colors.grey,
@@ -104,16 +109,16 @@ class TextFieldWidget {
                                   color: Colors.grey,
                                 ),
                           onPressed: () {
-                            value.isPasswordSignInVisible =
-                                !value.isPasswordSignInVisible;
+                            _signInProviders.isPasswordSignInVisible =
+                                !_signInProviders.isPasswordSignInVisible;
                           },
                         )
                       : _isPassword
                           ? IconButton(
-                              tooltip: value.isPasswordSignUpVisible
+                              tooltip: _signUpProviders.isPasswordSignUpVisible
                                   ? ContentTexts.hidePassword
                                   : ContentTexts.showPassword,
-                              icon: value.isPasswordSignUpVisible
+                              icon: _signUpProviders.isPasswordSignUpVisible
                                   ? Icon(
                                       Icons.visibility,
                                       color: Colors.grey,
@@ -123,15 +128,15 @@ class TextFieldWidget {
                                       color: Colors.grey,
                                     ),
                               onPressed: () {
-                                value.isPasswordSignUpVisible =
-                                    !value.isPasswordSignUpVisible;
+                                _signUpProviders.isPasswordSignUpVisible =
+                                    !_signUpProviders.isPasswordSignUpVisible;
                               },
                             )
                           : IconButton(
-                              tooltip: value.isConfirmPasswordVisible
+                              tooltip: _signUpProviders.isConfirmPasswordVisible
                                   ? ContentTexts.hideConfirmPassword
                                   : ContentTexts.showConfirmPassword,
-                              icon: value.isConfirmPasswordVisible
+                              icon: _signUpProviders.isConfirmPasswordVisible
                                   ? Icon(
                                       Icons.visibility,
                                       color: Colors.grey,
@@ -141,8 +146,8 @@ class TextFieldWidget {
                                       color: Colors.grey,
                                     ),
                               onPressed: () {
-                                value.isConfirmPasswordVisible =
-                                    !value.isConfirmPasswordVisible;
+                                _signUpProviders.isConfirmPasswordVisible =
+                                    !_signUpProviders.isConfirmPasswordVisible;
                               },
                             ),
               fillColor: ColorPalettes.backgroundGrey,

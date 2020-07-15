@@ -19,6 +19,9 @@ class SignInRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
+    final SignInProviders _signInProviders =
+        Provider.of<SignInProviders>(context);
+    final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
     final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
 
     final TextFieldWidget _textFieldEmailWidget = TextFieldWidget(
@@ -52,10 +55,20 @@ class SignInRoute extends StatelessWidget {
               _textEditingControllerEmail.text.trim(),
               _textEditingControllerPassword.text.trim(),
             );
-            _appProviders.emailInput = _textEditingControllerEmail.text.trim();
-            _appProviders.passwordInput =
+            _signInProviders.emailSignIn =
+                _textEditingControllerEmail.text.trim();
+            _signInProviders.passwordSignIn =
                 _textEditingControllerPassword.text.trim();
+            _hiveProviders.putData(
+              'userEmail',
+              _signInProviders.emailSignIn,
+            );
+            _hiveProviders.putData(
+              'userPassword',
+              _signInProviders.passwordSignIn,
+            );
             Navigator.pushReplacementNamed(context, '/introductionRoute');
+            _signInProviders.isPasswordSignInVisible = false;
             _appProviders.isLoading = false;
           } catch (error) {
             _appProviders.isLoading = false;

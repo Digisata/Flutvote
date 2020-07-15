@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
-import 'package:flutvote/providers/app_providers.dart';
+import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
@@ -19,6 +19,8 @@ class SignUpRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
+    final SignUpProviders _signUpProviders =
+        Provider.of<SignUpProviders>(context);
 
     final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
 
@@ -93,9 +95,9 @@ class SignUpRoute extends StatelessWidget {
       ContentTexts.signUp,
       false,
       () async {
-        _appProviders.passwordInput =
+        _signUpProviders.passwordSignUp =
             _textEditingControllerPassword.text.trim();
-        _appProviders.confirmPasswordInput =
+        _signUpProviders.confirmPassword =
             _textEditingControllerConfirmPassword.text.trim();
         if (_formlKey.currentState.validate()) {
           try {
@@ -104,11 +106,14 @@ class SignUpRoute extends StatelessWidget {
               _textEditingControllerEmail.text.trim(),
               _textEditingControllerPassword.text.trim(),
             );
-            _appProviders.emailInput = _textEditingControllerEmail.text.trim();
+            _signUpProviders.emailSignUp =
+                _textEditingControllerEmail.text.trim();
+            _signUpProviders.isPasswordSignUpVisible = false;
+            _signUpProviders.isConfirmPasswordVisible = false;
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
               ContentTexts.yeay,
-              'We sent an email verification to ${_appProviders.emailInput}, please confirm that',
+              'We sent an email verification to ${_signUpProviders.emailSignUp}, please confirm that',
               ContentTexts.signIn,
             );
           } catch (error) {
@@ -156,28 +161,28 @@ class SignUpRoute extends StatelessWidget {
       ],
     );
 
-    return Scaffold(
-      body: SafeArea(
-        child: _appProviders.isLoading
-            ? Center(
-                child: Loading(
-                  color: ColorPalettes.orange,
-                  indicator: BallSpinFadeLoaderIndicator(),
-                  size: ContentSizes.height(context) * 0.1,
-                ),
-              )
-            : SingleChildScrollView(
+    return _appProviders.isLoading
+        ? Scaffold(
+            body: Center(
+              child: Loading(
+                color: ColorPalettes.orange,
+                indicator: BallSpinFadeLoaderIndicator(),
+                size: ContentSizes.height(context) * 0.1,
+              ),
+            ),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              elevation: 0.0,
+              leading: _backButtonWidget.createBackButton(),
+              backgroundColor: ColorPalettes.white,
+            ),
+            body: SafeArea(
+              child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        _backButtonWidget.createBackButton(),
-                      ],
-                    ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(
                         ContentSizes.width(context) * 0.1,
@@ -208,7 +213,7 @@ class SignUpRoute extends StatelessWidget {
                   ],
                 ),
               ),
-      ),
-    );
+            ),
+          );
   }
 }

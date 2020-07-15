@@ -6,12 +6,33 @@ import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/routes/routes.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // TODO FIX HIVE
+  /* if (HiveProviders.hiveBox == null) {
+    await HiveProviders.openBox();
+  } */
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runApp(
-    ChangeNotifierProvider<AppProviders>(
-      create: (context) => AppProviders(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppProviders>(
+          create: (context) => AppProviders(),
+        ),
+        ChangeNotifierProvider<HiveProviders>(
+          create: (context) => HiveProviders(),
+        ),
+        ChangeNotifierProvider<SignInProviders>(
+          create: (context) => SignInProviders(),
+        ),
+        ChangeNotifierProvider<SignUpProviders>(
+          create: (context) => SignUpProviders(),
+        ),
+        ChangeNotifierProvider<ForgotPasswordProviders>(
+          create: (context) => ForgotPasswordProviders(),
+        ),
+      ],
       child: Flutvote(),
     ),
   );

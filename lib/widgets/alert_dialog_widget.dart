@@ -16,6 +16,7 @@ class AlertDialogWidget {
     String _textButton,
   ) {
     showDialog(
+      barrierDismissible: false,
       context: _context,
       builder: (_) => NetworkGiffyDialog(
         image: CachedNetworkImage(
@@ -72,7 +73,7 @@ class AlertDialogWidget {
                 fontSize: ContentSizes.dp24(_context),
               ),
         ),
-        description: Text(
+        description: Text(          
           _description,
           maxLines: 4,
           overflow: TextOverflow.ellipsis,
