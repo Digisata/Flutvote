@@ -29,6 +29,9 @@ void main() async {
         ChangeNotifierProvider<ForgotPasswordProviders>(
           create: (context) => ForgotPasswordProviders(),
         ),
+        ChangeNotifierProvider<HomeProviders>(
+          create: (context) => HomeProviders(),
+        ),
       ],
       child: Flutvote(),
     ),
@@ -56,6 +59,7 @@ class Flutvote extends StatelessWidget {
         '/forgotPasswordRoute': (context) => ForgotPasswordRoute(),
         '/introductionRoute': (context) => IntroductionRoute(),
         '/homeRoute': (context) => HomeRoute(),
+        '/historyRoute': (context) => HistoryRoute(),
       },
       theme: ThemeData(
         primaryColor: Colors.white,

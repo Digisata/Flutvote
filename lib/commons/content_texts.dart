@@ -14,7 +14,7 @@ class ContentTexts {
   static const String errorInvalidEmail =
       'Invalid email address, please check it again!';
   static const String errorWrongPassword =
-      'Wrong password, make sure you input the correct password!';
+      'Wrong password, please make sure you input the correct password!';
   static const String errorUserNotFound =
       'User not found, invalid email address!';
   static const String errorUserDisabled =
@@ -50,6 +50,11 @@ class ContentTexts {
   static const String resetPasswordDescription =
       'Don\'t worry, please input your email associated with your account, then we will send a password reset email.';
 
+  static const String errorFacebookSignIn =
+      'Facebook sign in error, please try again later!';
+  static const String errorFacebookCancel =
+      'Facebook sign in has been cancelled, please try again!';
+
   static const String searchIntroduction = 'Search for campaign';
   static const String searchDescriptionIntroduction =
       'Search campaign based on it\'s name, or unique code even throught invitation link.';
@@ -61,4 +66,10 @@ class ContentTexts {
       'Vote wisely, because you can only vote once for each campaign.';
   static const String skip = 'Skip';
   static const String done = 'Done';
+
+  static const String createPost = 'Create new post';
+  static const String speakYourVote = 'Speak your\nVote out loud';
+  static const String search = 'Search';
+  static const String clearSearch = 'Clear search';
+  static const String categories = 'Categories';
 }

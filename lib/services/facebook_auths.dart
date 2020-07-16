@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutvote/commons/commons.dart';
 
 class FacebookAuths {
   final FacebookLogin _facebookLogin = FacebookLogin();
@@ -13,10 +14,10 @@ class FacebookAuths {
 
     switch (_facebookLoginResult.status) {
       case FacebookLoginStatus.error:
-        throw "Facebook login error";
+        throw ContentTexts.errorFacebookSignIn;
         break;
       case FacebookLoginStatus.cancelledByUser:
-        throw "Facebook login cancelled by user";
+        throw ContentTexts.errorFacebookCancel;
         break;
       case FacebookLoginStatus.loggedIn:
         final AuthCredential _authCredential = FacebookAuthProvider.getCredential(
