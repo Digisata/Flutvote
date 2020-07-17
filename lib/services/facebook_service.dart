@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutvote/commons/commons.dart';
 
-class FacebookAuths {
+class FacebookService {
   final FacebookLogin _facebookLogin = FacebookLogin();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 

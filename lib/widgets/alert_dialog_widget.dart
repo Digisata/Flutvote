@@ -42,7 +42,7 @@ class AlertDialogWidget {
             child: Container(
               child: Icon(
                 Icons.error,
-                color: ColorPalettes.orange,
+                color: ContentColors.orange,
                 size: ContentSizes.height(context) * 0.15,
               ),
             ),
@@ -50,7 +50,7 @@ class AlertDialogWidget {
         ),
         cornerRadius: 20.0,
         onlyOkButton: true,
-        buttonOkColor: ColorPalettes.orange,
+        buttonOkColor: ContentColors.orange,
         buttonRadius: 20.0,
         buttonOkText: Text(
           _textButton,
@@ -59,7 +59,7 @@ class AlertDialogWidget {
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
           style: Theme.of(_context).textTheme.headline1.copyWith(
-                color: ColorPalettes.white,
+                color: ContentColors.white,
                 fontSize: ContentSizes.dp16(_context),
               ),
         ),

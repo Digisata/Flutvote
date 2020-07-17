@@ -60,30 +60,31 @@ class Flutvote extends StatelessWidget {
         '/introductionRoute': (context) => IntroductionRoute(),
         '/homeRoute': (context) => HomeRoute(),
         '/historyRoute': (context) => HistoryRoute(),
+        '/profileRoute': (context) => ProfileRoute(),
       },
       theme: ThemeData(
         primaryColor: Colors.white,
         fontFamily: 'Poppins',
         textTheme: TextTheme(
           headline1: TextStyle(
-            color: ColorPalettes.darkGrey,
+            color: ContentColors.darkGrey,
             fontSize: 25.0,
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.bold,
           ),
           headline2: TextStyle(
-            color: ColorPalettes.grey,
+            color: ContentColors.grey,
             fontSize: 20.0,
             fontStyle: FontStyle.normal,
           ),
           headline3: TextStyle(
-            color: ColorPalettes.white,
+            color: ContentColors.white,
             fontSize: 20.0,
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.bold,
           ),
           headline4: TextStyle(
-            color: ColorPalettes.black,
+            color: ContentColors.black,
             fontSize: 25.0,
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.bold,

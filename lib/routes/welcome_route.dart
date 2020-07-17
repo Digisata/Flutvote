@@ -69,7 +69,7 @@ class WelcomeRoute extends StatelessWidget {
                   ContentSizes.height(context) * 0.01,
                 ),
                 decoration: BoxDecoration(
-                  color: ColorPalettes.orange,
+                  color: ContentColors.orange,
                   shape: BoxShape.rectangle,
                 ),
                 child: Text(
@@ -79,7 +79,7 @@ class WelcomeRoute extends StatelessWidget {
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.ltr,
                   style: Theme.of(context).textTheme.headline1.copyWith(
-                        color: ColorPalettes.white,
+                        color: ContentColors.white,
                         fontSize: ContentSizes.dp22(context),
                       ),
                 ),

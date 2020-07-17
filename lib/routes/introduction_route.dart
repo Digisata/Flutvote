@@ -66,13 +66,13 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
             textAlign: TextAlign.center,
             textDirection: TextDirection.ltr,
             style: Theme.of(context).textTheme.headline1.copyWith(
-                  color: ColorPalettes.orange,
+                  color: ContentColors.orange,
                   fontSize: ContentSizes.dp20(context),
                 ),
           ),
           next: Icon(
             Icons.arrow_forward,
-            color: ColorPalettes.orange,
+            color: ContentColors.orange,
             size: ContentSizes.width(context) * 0.07,
           ),
           done: Text(
@@ -82,7 +82,7 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
             textAlign: TextAlign.center,
             textDirection: TextDirection.ltr,
             style: Theme.of(context).textTheme.headline1.copyWith(
-                  color: ColorPalettes.orange,
+                  color: ContentColors.orange,
                   fontSize: ContentSizes.dp20(context),
                 ),
           ),
@@ -91,12 +91,12 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
               ContentSizes.width(context) * 0.02,
               ContentSizes.height(context) * 0.01,
             ),
-            color: ColorPalettes.backgroundDarkGrey,
+            color: ContentColors.backgroundDarkGrey,
             activeSize: Size(
               ContentSizes.width(context) * 0.05,
               ContentSizes.height(context) * 0.01,
             ),
-            activeColor: ColorPalettes.orange,
+            activeColor: ContentColors.orange,
             activeShape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(25.0),

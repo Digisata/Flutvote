@@ -8,24 +8,24 @@ class TextFieldWidget {
   final BuildContext _context;
   final TextEditingController _textEditingController;
   final String _hint;
-  final bool _isRegistered, _isPasswordSignIn;
   final IconData _icon;
   final Function _onSaved;
+  final bool isRegistered, isPasswordSignIn;
 
   TextFieldWidget(
     this._context,
     this._textEditingController,
     this._hint,
-    this._isRegistered,
-    this._isPasswordSignIn,
     this._icon,
-    this._onSaved,
-  );
+    this._onSaved, {
+    this.isRegistered = false,
+    this.isPasswordSignIn = false,
+  });
 
   Container createTextFieldWidget() {
     final bool _isEmail = _hint == 'Email',
         _isPassword = _hint == 'Password',
-        _isConfirmPassword = _hint == 'Confirm password';
+        _isRepeatPassword = _hint == 'Repeat password';
     final SignInProviders _signInProviders =
         Provider.of<SignInProviders>(_context);
     final SignUpProviders _signUpProviders =
@@ -42,12 +42,12 @@ class TextFieldWidget {
         maxLines: 1,
         obscureText: _isEmail
             ? false
-            : _isPasswordSignIn
+            : isPasswordSignIn
                 ? !_signInProviders.isPasswordSignInVisible
                 : _isPassword
                     ? !_signUpProviders.isPasswordSignUpVisible
-                    : !_signUpProviders.isConfirmPasswordVisible,
-        validator: _isRegistered
+                    : !_signUpProviders.isRepeatPasswordVisible,
+        validator: isRegistered
             ? (input) {
                 if (input.isEmpty) {
                   return 'Please input your ${_hint.toLowerCase()}!';
@@ -62,12 +62,12 @@ class TextFieldWidget {
                     if (!EmailValidator.validate(input)) {
                       return ContentTexts.invalidEmailAddress;
                     }
-                  } else if (_isPassword || _isConfirmPassword) {
+                  } else if (_isPassword || _isRepeatPassword) {
                     Pattern pattern =
                         r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
                     RegExp regex = new RegExp(pattern);
                     if (_signUpProviders.passwordSignUp !=
-                        _signUpProviders.confirmPassword) {
+                        _signUpProviders.repeatPassword) {
                       return ContentTexts.passwordDidntMatch;
                     }
                     if (!regex.hasMatch(input)) {
@@ -94,7 +94,7 @@ class TextFieldWidget {
                   Icons.visibility,
                   color: Colors.transparent,
                 )
-              : _isPasswordSignIn
+              : isPasswordSignIn
                   ? IconButton(
                       tooltip: _signInProviders.isPasswordSignInVisible
                           ? ContentTexts.hidePassword
@@ -133,10 +133,10 @@ class TextFieldWidget {
                           },
                         )
                       : IconButton(
-                          tooltip: _signUpProviders.isConfirmPasswordVisible
-                              ? ContentTexts.hideConfirmPassword
-                              : ContentTexts.showConfirmPassword,
-                          icon: _signUpProviders.isConfirmPasswordVisible
+                          tooltip: _signUpProviders.isRepeatPasswordVisible
+                              ? ContentTexts.hideRepeatPassword
+                              : ContentTexts.showRepeatPassword,
+                          icon: _signUpProviders.isRepeatPasswordVisible
                               ? Icon(
                                   Icons.visibility,
                                   color: Colors.grey,
@@ -146,11 +146,11 @@ class TextFieldWidget {
                                   color: Colors.grey,
                                 ),
                           onPressed: () {
-                            _signUpProviders.isConfirmPasswordVisible =
-                                !_signUpProviders.isConfirmPasswordVisible;
+                            _signUpProviders.isRepeatPasswordVisible =
+                                !_signUpProviders.isRepeatPasswordVisible;
                           },
                         ),
-          fillColor: ColorPalettes.backgroundGrey,
+          fillColor: ContentColors.backgroundGrey,
           filled: true,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),

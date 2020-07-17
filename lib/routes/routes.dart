@@ -6,3 +6,4 @@ export 'forgot_password_route.dart';
 export 'introduction_route.dart';
 export 'home_route.dart';
 export 'history_route.dart';
+export 'profile_route.dart';

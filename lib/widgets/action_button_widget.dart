@@ -5,16 +5,16 @@ class ActionButtonWidget {
   final BuildContext _context;
   final Color _color;
   final String _text;
-  final bool _isFacebook;
   final Function _validate;
+  final bool isFacebook;
 
   ActionButtonWidget(
     this._context,
     this._color,
     this._text,
-    this._isFacebook,
-    this._validate,
-  );
+    this._validate, {
+    this.isFacebook = false,
+  });
 
   Material createSignInWidget() {
     return Material(
@@ -39,7 +39,7 @@ class ActionButtonWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            !_isFacebook
+            !isFacebook
                 ? Container()
                 : Image.asset(
                     "assets/logos/facebook_logo.png",

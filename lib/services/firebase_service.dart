@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutvote/commons/commons.dart';
 
-abstract class BaseAuth {
+abstract class BaseService {
   Future<void> signInWithEmailPassword(String email, String password);
   Future<void> signUpWithEmailAndPassword(String email, String password);
   Future<FirebaseUser> getCurrentUser();
@@ -14,7 +14,7 @@ abstract class BaseAuth {
 
 class EmailVerifyException implements Exception {}
 
-class FirebaseAuths implements BaseAuth {
+class FirebaseService implements BaseService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FacebookLogin _facebookLogin = FacebookLogin();
 
@@ -30,6 +30,7 @@ class FirebaseAuths implements BaseAuth {
       assert(_result != null);
       FirebaseUser _user = _result.user;
       assert(_user != null);
+      assert(!_user.isAnonymous);
       if (!_user.isEmailVerified) {
         throw EmailVerifyException();
       }
@@ -65,7 +66,7 @@ class FirebaseAuths implements BaseAuth {
     String email,
     String password,
   ) async {
-    try {
+    try {      
       final AuthResult _result =
           await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
@@ -74,6 +75,7 @@ class FirebaseAuths implements BaseAuth {
       assert(_result != null);
       FirebaseUser _user = _result.user;
       assert(_user != null);
+      assert(!_user.isAnonymous);
       await _user.sendEmailVerification();
     } catch (error) {
       switch (error.code) {

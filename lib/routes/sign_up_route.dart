@@ -12,8 +12,8 @@ class SignUpRoute extends StatelessWidget {
   final TextEditingController _textEditingControllerEmail =
           TextEditingController(),
       _textEditingControllerPassword = TextEditingController(),
-      _textEditingControllerConfirmPassword = TextEditingController();
-  final FirebaseAuths _firebaseAuths = FirebaseAuths();
+      _textEditingControllerRepeatPassword = TextEditingController();
+  final FirebaseService _firebaseService = FirebaseService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -28,8 +28,6 @@ class SignUpRoute extends StatelessWidget {
       context,
       _textEditingControllerEmail,
       'Email',
-      false,
-      false,
       Icons.email,
       (input) {
         _signUpProviders.emailSignUp = input.trim();
@@ -40,23 +38,19 @@ class SignUpRoute extends StatelessWidget {
       context,
       _textEditingControllerPassword,
       'Password',
-      false,
-      false,
       Icons.lock,
       (input) {
         _signUpProviders.isPasswordSignUpVisible = false;
       },
     );
 
-    final TextFieldWidget _textFieldConfirmPasswordWidget = TextFieldWidget(
+    final TextFieldWidget _textFieldRepeatPasswordWidget = TextFieldWidget(
       context,
-      _textEditingControllerConfirmPassword,
-      'Confirm password',
-      false,
-      false,
+      _textEditingControllerRepeatPassword,
+      'Repeat password',
       Icons.lock,
       (input) {
-        _signUpProviders.isConfirmPasswordVisible = false;
+        _signUpProviders.isRepeatPasswordVisible = false;
       },
     );
 
@@ -93,26 +87,26 @@ class SignUpRoute extends StatelessWidget {
           SizedBox(
             height: ContentSizes.height(context) * 0.03,
           ),
-          _textFieldConfirmPasswordWidget.createTextFieldWidget(),
+          _textFieldRepeatPasswordWidget.createTextFieldWidget(),
         ],
       ),
     );
 
-    final ActionButtonWidget _signUpEmailAndPaswordWidget = ActionButtonWidget(
+    final ActionButtonWidget _signUpEmailAndPaswordButtonWidget =
+        ActionButtonWidget(
       context,
-      ColorPalettes.orange,
+      ContentColors.orange,
       ContentTexts.signUp,
-      false,
       () async {
         _signUpProviders.passwordSignUp =
             _textEditingControllerPassword.text.trim();
-        _signUpProviders.confirmPassword =
-            _textEditingControllerConfirmPassword.text.trim();
+        _signUpProviders.repeatPassword =
+            _textEditingControllerRepeatPassword.text.trim();
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           try {
             _appProviders.isLoading = true;
-            await _firebaseAuths.signUpWithEmailAndPassword(
+            await _firebaseService.signUpWithEmailAndPassword(
               _textEditingControllerEmail.text.trim(),
               _textEditingControllerPassword.text.trim(),
             );
@@ -153,7 +147,7 @@ class SignUpRoute extends StatelessWidget {
               TextSpan(
                 text: ContentTexts.signIn,
                 style: Theme.of(context).textTheme.headline2.copyWith(
-                      color: ColorPalettes.orange,
+                      color: ContentColors.orange,
                       fontSize: ContentSizes.dp12(context),
                     ),
                 recognizer: TapGestureRecognizer()
@@ -171,7 +165,7 @@ class SignUpRoute extends StatelessWidget {
         ? Scaffold(
             body: Center(
               child: Loading(
-                color: ColorPalettes.orange,
+                color: ContentColors.orange,
                 indicator: BallSpinFadeLoaderIndicator(),
                 size: ContentSizes.height(context) * 0.1,
               ),
@@ -181,43 +175,41 @@ class SignUpRoute extends StatelessWidget {
             appBar: AppBar(
               elevation: 0.0,
               leading: _backButtonWidget.createBackButton(),
-              backgroundColor: ColorPalettes.white,
+              backgroundColor: ContentColors.white,
             ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          _signUpText,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _signUpForm,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _signUpEmailAndPaswordWidget.createSignInWidget(),
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _signInText,
-                        ],
-                      ),
+            body: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      ContentSizes.width(context) * 0.1,
+                      ContentSizes.height(context) * 0.2,
+                      ContentSizes.width(context) * 0.1,
+                      ContentSizes.height(context) * 0.2,
                     ),
-                  ],
-                ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        _signUpText,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.05,
+                        ),
+                        _signUpForm,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.05,
+                        ),
+                        _signUpEmailAndPaswordButtonWidget.createSignInWidget(),
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.05,
+                        ),
+                        _signInText,
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           );

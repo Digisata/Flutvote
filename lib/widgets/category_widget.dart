@@ -47,7 +47,7 @@ class CategoryWidget {
                 shape: BoxShape.rectangle,
                 color: !_isSelectedCategory
                     ? Colors.transparent
-                    : ColorPalettes.orange,
+                    : ContentColors.orange,
               ),
               child: Text(
                 _categoriesList[index],
@@ -57,8 +57,8 @@ class CategoryWidget {
                 textDirection: TextDirection.ltr,
                 style: Theme.of(context).textTheme.headline2.copyWith(
                       color: !_isSelectedCategory
-                          ? ColorPalettes.grey
-                          : ColorPalettes.white,
+                          ? ContentColors.grey
+                          : ContentColors.white,
                       fontSize: ContentSizes.dp16(context),
                     ),
               ),

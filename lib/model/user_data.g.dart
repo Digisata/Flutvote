@@ -17,18 +17,27 @@ class UserDataAdapter extends TypeAdapter<UserData> {
       for (var i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserData(
-      fields[0] as String,
-      fields[1] as String,
+      userName: fields[0] as String,
+      email: fields[1] as String,
+      displayName: fields[2] as String,
+      isFirstOpened: fields[3] as bool,
+      isFirstSignedIn: fields[4] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserData obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(5)
       ..writeByte(0)
-      ..write(obj.email)
+      ..write(obj.userName)
       ..writeByte(1)
-      ..write(obj.password);
+      ..write(obj.email)
+      ..writeByte(2)
+      ..write(obj.displayName)
+      ..writeByte(3)
+      ..write(obj.isFirstOpened)
+      ..writeByte(4)
+      ..write(obj.isFirstSignedIn);
   }
 }

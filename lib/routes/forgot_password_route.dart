@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 class ForgotPasswordRoute extends StatelessWidget {
   final TextEditingController _textEditingControllerEmail =
       TextEditingController();
-  final FirebaseAuths _firebaseAuths = FirebaseAuths();
+  final FirebaseService _firebaseService = FirebaseService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -25,12 +25,11 @@ class ForgotPasswordRoute extends StatelessWidget {
       context,
       _textEditingControllerEmail,
       'Email',
-      true,
-      false,
       Icons.email,
       (input) {
         _forgotPasswordProviders.emailForgotPassword = input.trim();
       },
+      isRegistered: true,
     );
 
     final BackButtonWidget _backButtonWidget = BackButtonWidget(
@@ -74,17 +73,16 @@ class ForgotPasswordRoute extends StatelessWidget {
       ),
     );
 
-    final ActionButtonWidget _resetEmailWidget = ActionButtonWidget(
+    final ActionButtonWidget _resetPasswordButtonWidget = ActionButtonWidget(
       context,
-      ColorPalettes.orange,
+      ContentColors.orange,
       ContentTexts.resetPassword,
-      false,
       () async {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           try {
             _appProviders.isLoading = true;
-            await _firebaseAuths
+            await _firebaseService
                 .resetPassword(_textEditingControllerEmail.text.trim());
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
@@ -108,7 +106,7 @@ class ForgotPasswordRoute extends StatelessWidget {
         ? Scaffold(
             body: Center(
               child: Loading(
-                color: ColorPalettes.orange,
+                color: ContentColors.orange,
                 indicator: BallSpinFadeLoaderIndicator(),
                 size: ContentSizes.height(context) * 0.1,
               ),
@@ -118,43 +116,41 @@ class ForgotPasswordRoute extends StatelessWidget {
             appBar: AppBar(
               elevation: 0.0,
               leading: _backButtonWidget.createBackButton(),
-              backgroundColor: ColorPalettes.white,
+              backgroundColor: ContentColors.white,
             ),
-            body: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          _resetText,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.02,
-                          ),
-                          _descriptionText,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _resetForm,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _resetEmailWidget.createSignInWidget(),
-                        ],
-                      ),
+            body: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      ContentSizes.width(context) * 0.1,
+                      ContentSizes.height(context) * 0.2,
+                      ContentSizes.width(context) * 0.1,
+                      ContentSizes.height(context) * 0.2,
                     ),
-                  ],
-                ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        _resetText,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.02,
+                        ),
+                        _descriptionText,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.05,
+                        ),
+                        _resetForm,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.05,
+                        ),
+                        _resetPasswordButtonWidget.createSignInWidget(),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ColorPalettes {
+class ContentColors {
   static const Color black = Color.fromRGBO(0, 0, 0, 100);
   static const Color white = Color.fromRGBO(255, 255, 255, 100);
   static const Color orange = Color.fromRGBO(255, 184, 66, 100);

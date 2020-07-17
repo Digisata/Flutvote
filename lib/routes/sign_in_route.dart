@@ -8,13 +8,25 @@ import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
 
-class SignInRoute extends StatelessWidget {
+class SignInRoute extends StatefulWidget {
+  @override
+  _SignInRouteState createState() => _SignInRouteState();
+}
+
+class _SignInRouteState extends State<SignInRoute> {
   final TextEditingController _textEditingControllerEmail =
           TextEditingController(),
       _textEditingControllerPassword = TextEditingController();
-  final FacebookAuths _facebookAuths = FacebookAuths();
-  final FirebaseAuths _firebaseAuths = FirebaseAuths();
+  final FacebookService _facebookService = FacebookService();
+  final FirebaseService _firebaseService = FirebaseService();
+  final FirestoreService _firestoreService = FirestoreService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    HiveProviders.setFirstOpened();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,45 +41,48 @@ class SignInRoute extends StatelessWidget {
       context,
       _textEditingControllerEmail,
       'Email',
-      true,
-      false,
       Icons.email,
       (input) {
         _signInProviders.emailSignIn = input.trim();
       },
+      isRegistered: true,
     );
 
     final TextFieldWidget _textFieldPasswordWidget = TextFieldWidget(
       context,
       _textEditingControllerPassword,
       'Password',
-      true,
-      true,
       Icons.lock,
       (input) {
         _signInProviders.passwordSignIn = input.trim();
       },
+      isRegistered: true,
+      isPasswordSignIn: true,
     );
 
-    final ActionButtonWidget _signInEmailAndPaswordWidget = ActionButtonWidget(
+    final ActionButtonWidget _signInEmailAndPaswordButtonWidget =
+        ActionButtonWidget(
       context,
-      ColorPalettes.orange,
+      ContentColors.orange,
       ContentTexts.signIn,
-      false,
       () async {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           try {
             _appProviders.isLoading = true;
-            await _firebaseAuths.signInWithEmailPassword(
-              _textEditingControllerEmail.text.trim(),
-              _textEditingControllerPassword.text.trim(),
-            );
-            _hiveProviders.addData(
+            await _firebaseService.signInWithEmailPassword(
               _signInProviders.emailSignIn,
               _signInProviders.passwordSignIn,
             );
-            Navigator.pushReplacementNamed(context, '/introductionRoute');
+            _hiveProviders.setUserData();
+            _signInProviders.createUserModel();
+            _firestoreService.createUser(_signInProviders.userModel);
+            // TODO FIX ROUTING
+            if (!HiveProviders.getFirstSignedIn()) {
+              Navigator.pushReplacementNamed(context, '/homeRoute');
+            } else {
+              Navigator.pushReplacementNamed(context, '/introductionRoute');
+            }
             _signInProviders.isPasswordSignInVisible = false;
             _appProviders.isLoading = false;
           } catch (error) {
@@ -82,15 +97,14 @@ class SignInRoute extends StatelessWidget {
       },
     );
 
-    final ActionButtonWidget _signInFacebookWidget = ActionButtonWidget(
+    final ActionButtonWidget _signInFacebookButtonWidget = ActionButtonWidget(
       context,
-      ColorPalettes.facebook,
+      ContentColors.facebook,
       ContentTexts.signInWithFacebook,
-      true,
       () async {
         try {
           _appProviders.isLoading = true;
-          await _facebookAuths.signInWithFacebook();
+          await _facebookService.signInWithFacebook();
           Navigator.pushReplacementNamed(context, '/introductionRoute');
           _appProviders.isLoading = false;
         } catch (error) {
@@ -102,6 +116,7 @@ class SignInRoute extends StatelessWidget {
           );
         }
       },
+      isFacebook: true,
     );
 
     final Text _signInText = Text(
@@ -171,7 +186,7 @@ class SignInRoute extends StatelessWidget {
               TextSpan(
                 text: ContentTexts.signUp,
                 style: Theme.of(context).textTheme.headline2.copyWith(
-                      color: ColorPalettes.orange,
+                      color: ContentColors.orange,
                       fontSize: ContentSizes.dp12(context),
                     ),
                 recognizer: TapGestureRecognizer()
@@ -191,7 +206,7 @@ class SignInRoute extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Divider(
-            color: ColorPalettes.grey,
+            color: ContentColors.grey,
             height: ContentSizes.height(context) * 0.01,
             thickness: 1.0,
             endIndent: 10.0,
@@ -205,7 +220,7 @@ class SignInRoute extends StatelessWidget {
         ),
         Expanded(
           child: Divider(
-            color: ColorPalettes.grey,
+            color: ContentColors.grey,
             height: ContentSizes.height(context) * 0.01,
             thickness: 1.0,
             indent: 10.0,
@@ -219,7 +234,7 @@ class SignInRoute extends StatelessWidget {
         child: Center(
           child: _appProviders.isLoading
               ? Loading(
-                  color: ColorPalettes.orange,
+                  color: ContentColors.orange,
                   indicator: BallSpinFadeLoaderIndicator(),
                   size: ContentSizes.height(context) * 0.1,
                 )
@@ -247,7 +262,7 @@ class SignInRoute extends StatelessWidget {
                         SizedBox(
                           height: ContentSizes.height(context) * 0.03,
                         ),
-                        _signInEmailAndPaswordWidget.createSignInWidget(),
+                        _signInEmailAndPaswordButtonWidget.createSignInWidget(),
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
@@ -259,7 +274,7 @@ class SignInRoute extends StatelessWidget {
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
-                        _signInFacebookWidget.createSignInWidget(),
+                        _signInFacebookButtonWidget.createSignInWidget(),
                       ],
                     ),
                   ),

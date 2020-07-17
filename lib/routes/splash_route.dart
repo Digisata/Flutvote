@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
-import 'package:flutvote/services/firebase_auths.dart';
+import 'package:flutvote/providers/providers.dart';
+import 'package:flutvote/services/firebase_service.dart';
 
 class SplashRoute extends StatefulWidget {
   @override
@@ -8,11 +9,16 @@ class SplashRoute extends StatefulWidget {
 }
 
 class _SplashRouteState extends State<SplashRoute> {
-  final FirebaseAuths _firebaseAuths = FirebaseAuths();
+  final FirebaseService _firebaseService = FirebaseService();
 
-  _navigateRoute() async {
-    if (await _firebaseAuths.getCurrentUser() == null) {
-      Navigator.pushReplacementNamed(context, '/welcomeRoute');
+  _navigateTo() async {
+    if (await _firebaseService.getCurrentUser() == null ||
+        !await _firebaseService.isEmailVerified()) {
+      if (!HiveProviders.getFirstOpened()) {
+        Navigator.pushReplacementNamed(context, '/signInRoute');
+      } else {
+        Navigator.pushReplacementNamed(context, '/welcomeRoute');
+      }
     } else {
       Navigator.pushReplacementNamed(context, '/homeRoute');
     }
@@ -21,7 +27,7 @@ class _SplashRouteState extends State<SplashRoute> {
   @override
   void initState() {
     super.initState();
-    _navigateRoute();
+    _navigateTo();
   }
 
   @override
@@ -29,7 +35,7 @@ class _SplashRouteState extends State<SplashRoute> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: ColorPalettes.white,
+          color: ContentColors.white,
         ),
       ),
     );

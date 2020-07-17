@@ -30,8 +30,8 @@ class ContentTexts {
   static const String backToSignInRoute = 'Back to sign in page.';
   static const String signUp = 'Sign Up';
   static const String alreadyHaveAccount = 'Already have an account? ';
-  static const String showConfirmPassword = 'Show confirm password.';
-  static const String hideConfirmPassword = 'Hide confirm password.';
+  static const String showRepeatPassword = 'Show repeat password.';
+  static const String hideRepeatPassword = 'Hide repeat password.';
   static const String invalidEmailAddress = 'Invalid email address!';
   static const String passwordDidntMatch = 'Password didn\'t match!';
   static const String invalidPassword =

@@ -20,7 +20,7 @@ class SearchBarWidget {
       width: ContentSizes.width(_context),
       child: TextFormField(
         controller: _textEditingController,
-        cursorColor: ColorPalettes.grey,
+        cursorColor: ContentColors.grey,
         keyboardType: TextInputType.text,
         maxLines: 1,
         textAlign: TextAlign.start,
@@ -38,14 +38,14 @@ class SearchBarWidget {
           hintText: ContentTexts.search,
           prefixIcon: Icon(
             Icons.search,
-            color: ColorPalettes.grey,
+            color: ContentColors.grey,
           ),
           suffixIcon: _homeProviders.searchKeyword.isNotEmpty
               ? IconButton(
                   tooltip: ContentTexts.clearSearch,
                   icon: Icon(
                     Icons.clear,
-                    color: ColorPalettes.grey,
+                    color: ContentColors.grey,
                   ),
                   onPressed: () {
                     _textEditingController.clear();
@@ -56,7 +56,7 @@ class SearchBarWidget {
                   Icons.clear,
                   color: Colors.transparent,
                 ),
-          fillColor: ColorPalettes.backgroundGrey,
+          fillColor: ContentColors.backgroundGrey,
           filled: true,
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
