@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HiveProviders.openBox();
+  AppProviders.setAppVersion();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runApp(
@@ -31,6 +32,12 @@ void main() async {
         ),
         ChangeNotifierProvider<HomeProviders>(
           create: (context) => HomeProviders(),
+        ),
+        ChangeNotifierProvider<EditProfileProviders>(
+          create: (context) => EditProfileProviders(),
+        ),
+        ChangeNotifierProvider<ChangePasswordProviders>(
+          create: (context) => ChangePasswordProviders(),
         ),
       ],
       child: Flutvote(),
@@ -61,6 +68,8 @@ class Flutvote extends StatelessWidget {
         '/homeRoute': (context) => HomeRoute(),
         '/historyRoute': (context) => HistoryRoute(),
         '/profileRoute': (context) => ProfileRoute(),
+        '/editProfileRoute': (context) => EditProfileRoute(),
+        '/changePasswordRoute': (context) => ChangePasswordRoute(),
       },
       theme: ThemeData(
         primaryColor: Colors.white,

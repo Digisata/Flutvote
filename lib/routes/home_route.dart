@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/routes/routes.dart';
-import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
@@ -15,7 +13,6 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends State<HomeRoute> {
-  final FirebaseService _firebaseService = FirebaseService();
   final TextEditingController _textEditingControllerSearch =
       TextEditingController();
 
@@ -40,36 +37,16 @@ class _HomeRouteState extends State<HomeRoute> {
           ),
     );
 
-    final GestureDetector _profileIcon = GestureDetector(
+    final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget(
+      ContentSizes.height(context) * 0.025,
+      ContentSizes.height(context) * 0.05,
+    );
+
+    final GestureDetector _photoProfile = GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, '/profileRoute');
       },
-      child: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        radius: ContentSizes.height(context) * 0.025,
-        child: CachedNetworkImage(
-          fit: BoxFit.cover,
-          imageUrl:
-              'https://avatars0.githubusercontent.com/u/30319634?s=400&u=0351d283b9e76d31e8bbd80e088b2c12618948c8&v=4',
-          progressIndicatorBuilder: (context, url, download) =>
-              CircularProgressIndicator(
-            value: download.progress,
-          ),
-          errorWidget: (context, url, error) => Icon(Icons.error),
-          imageBuilder: (context, imageProvider) => Container(
-            width: ContentSizes.height(context) * 0.5,
-            height: ContentSizes.height(context) * 0.5,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.transparent,
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-      ),
+      child: _photoProfileWidget.createPhotoProfileWidget(),
     );
 
     final SearchBarWidget _searchBar = SearchBarWidget(
@@ -131,7 +108,7 @@ class _HomeRouteState extends State<HomeRoute> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 _speakYourVote,
-                                _profileIcon,
+                                _photoProfile,
                               ],
                             ),
                           ),
@@ -163,18 +140,6 @@ class _HomeRouteState extends State<HomeRoute> {
                             height: ContentSizes.height(context) * 0.01,
                           ),
                           _categories,
-                          RaisedButton(
-                            child: Text('signout'),
-                            onPressed: () async {
-                              try {
-                                await _firebaseService.signOut();
-                                Navigator.pushReplacementNamed(
-                                    context, '/signInRoute');
-                              } catch (error) {
-                                throw 'signout error: $error';
-                              }
-                            },
-                          )
                         ],
                       ),
                     ),

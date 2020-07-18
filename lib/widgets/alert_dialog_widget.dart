@@ -13,8 +13,9 @@ class AlertDialogWidget {
   createAlertDialogWidget(
     String _title,
     String _description,
-    String _textButton,
-  ) {
+    String _textButton, {
+    bool isSignOut = false,
+  }) {
     showDialog(
       barrierDismissible: false,
       context: _context,
@@ -49,9 +50,21 @@ class AlertDialogWidget {
           ),
         ),
         cornerRadius: 20.0,
-        onlyOkButton: true,
+        onlyOkButton: !isSignOut,
+        buttonCancelColor: ContentColors.backgroundGrey,
         buttonOkColor: ContentColors.orange,
         buttonRadius: 20.0,
+        buttonCancelText: Text(
+          ContentTexts.cancel,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
+          style: Theme.of(_context).textTheme.headline1.copyWith(
+                color: ContentColors.grey,
+                fontSize: ContentSizes.dp16(_context),
+              ),
+        ),
         buttonOkText: Text(
           _textButton,
           maxLines: 1,
@@ -73,7 +86,7 @@ class AlertDialogWidget {
                 fontSize: ContentSizes.dp24(_context),
               ),
         ),
-        description: Text(          
+        description: Text(
           _description,
           maxLines: 4,
           overflow: TextOverflow.ellipsis,
@@ -83,6 +96,9 @@ class AlertDialogWidget {
                 fontSize: ContentSizes.dp18(_context),
               ),
         ),
+        onCancelButtonPressed: () {
+          Navigator.pop(_context);
+        },
         onOkButtonPressed: () {
           _title == 'Oops'
               ? Navigator.pop(_context)

@@ -40,7 +40,7 @@ class _SignInRouteState extends State<SignInRoute> {
     final TextFieldWidget _textFieldEmailWidget = TextFieldWidget(
       context,
       _textEditingControllerEmail,
-      'Email',
+      ContentTexts.email,
       Icons.email,
       (input) {
         _signInProviders.emailSignIn = input.trim();
@@ -51,7 +51,7 @@ class _SignInRouteState extends State<SignInRoute> {
     final TextFieldWidget _textFieldPasswordWidget = TextFieldWidget(
       context,
       _textEditingControllerPassword,
-      'Password',
+      ContentTexts.password,
       Icons.lock,
       (input) {
         _signInProviders.passwordSignIn = input.trim();
@@ -77,7 +77,6 @@ class _SignInRouteState extends State<SignInRoute> {
             _hiveProviders.setUserData();
             _signInProviders.createUserModel();
             _firestoreService.createUser(_signInProviders.userModel);
-            // TODO FIX ROUTING
             if (!HiveProviders.getFirstSignedIn()) {
               Navigator.pushReplacementNamed(context, '/homeRoute');
             } else {
@@ -262,7 +261,7 @@ class _SignInRouteState extends State<SignInRoute> {
                         SizedBox(
                           height: ContentSizes.height(context) * 0.03,
                         ),
-                        _signInEmailAndPaswordButtonWidget.createSignInWidget(),
+                        _signInEmailAndPaswordButtonWidget.createActionButtonWidget(),
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
@@ -274,7 +273,7 @@ class _SignInRouteState extends State<SignInRoute> {
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
-                        _signInFacebookButtonWidget.createSignInWidget(),
+                        _signInFacebookButtonWidget.createActionButtonWidget(),
                       ],
                     ),
                   ),

@@ -26,6 +26,8 @@ class ContentTexts {
   static const String errorUnknown = 'Unknown error occurred!';
   static const String verifyEmail =
       'Your email isn\'t verified yet, please verify first!';
+  static const String email = 'Email';
+  static const String password = 'Password';
 
   static const String backToSignInRoute = 'Back to sign in page.';
   static const String signUp = 'Sign Up';
@@ -45,6 +47,7 @@ class ContentTexts {
   static const String oops = 'Oops';
   static const String yeay = 'Yeaay';
   static const String ok = 'Ok';
+  static const String repeatPassword = 'Repeat password';
 
   static const String resetPassword = 'Reset Password';
   static const String resetPasswordDescription =
@@ -72,4 +75,19 @@ class ContentTexts {
   static const String search = 'Search';
   static const String clearSearch = 'Clear search';
   static const String categories = 'Categories';
+
+  static const String editProfile = 'Edit profile';
+  static const String changePassword = 'Change password';
+  static const String backToHomeRoute = 'Back to home page.';
+  static const String signOut = 'Sign Out';
+  static const String missYou = 'We will miss you';
+  static const String areYouSure = 'Are you sure want to sign out ? please stay here with us!';
+  static const String cancel = 'Cancel';
+  static const String yes = 'Yes';
+
+  static const String backToProfileRoute = 'Back to profile page.';
+  static const String updatePasswordSuccessfully =
+      'Your password has been updated successfully, please sign in again tp confirm that!';
+  static const String oldPassword = 'Old password';
+  static const String newPassword = 'New password';
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
@@ -8,62 +7,62 @@ import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
 
-class SignUpRoute extends StatelessWidget {
-  final TextEditingController _textEditingControllerEmail =
+class ChangePasswordRoute extends StatelessWidget {
+  final TextEditingController _textEditingControllerOldPassword =
           TextEditingController(),
-      _textEditingControllerPassword = TextEditingController(),
-      _textEditingControllerRepeatPassword = TextEditingController();
+      _textEditingControllerNewPassword = TextEditingController(),
+      _textEditingControllerNewRepeatPassword = TextEditingController();
   final FirebaseService _firebaseService = FirebaseService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
-    final SignUpProviders _signUpProviders =
-        Provider.of<SignUpProviders>(context);
+    final ChangePasswordProviders _changePasswordProviders =
+        Provider.of<ChangePasswordProviders>(context);
 
     final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
 
-    final TextFieldWidget _textFieldEmailWidget = TextFieldWidget(
+    final TextFieldWidget _textFieldOldPasswordWidget = TextFieldWidget(
       context,
-      _textEditingControllerEmail,
-      ContentTexts.email,
-      Icons.email,
-      (input) {
-        _signUpProviders.emailSignUp = input.trim();
-      },
-    );
-
-    final TextFieldWidget _textFieldPasswordWidget = TextFieldWidget(
-      context,
-      _textEditingControllerPassword,
-      ContentTexts.password,
+      _textEditingControllerOldPassword,
+      ContentTexts.oldPassword,
       Icons.lock,
       (input) {
-        _signUpProviders.isPasswordSignUpVisible = false;
+        _changePasswordProviders.isOldPasswordChangeVisible = false;
       },
     );
 
-    final TextFieldWidget _textFieldRepeatPasswordWidget = TextFieldWidget(
+    final TextFieldWidget _textFieldNewPasswordWidget = TextFieldWidget(
       context,
-      _textEditingControllerRepeatPassword,
+      _textEditingControllerNewPassword,
+      ContentTexts.newPassword,
+      Icons.lock,
+      (input) {
+        _changePasswordProviders.isNewPasswordChangeVisible = false;
+      },
+    );
+
+    final TextFieldWidget _textFieldNewRepeatPasswordWidget = TextFieldWidget(
+      context,
+      _textEditingControllerNewRepeatPassword,
       ContentTexts.repeatPassword,
       Icons.lock,
       (input) {
-        _signUpProviders.isRepeatPasswordVisible = false;
+        _changePasswordProviders.isNewRepeatPasswordChangeVisible = false;
       },
     );
 
     final BackButtonWidget _backButtonWidget = BackButtonWidget(
       context,
-      ContentTexts.backToSignInRoute,
+      ContentTexts.backToProfileRoute,
       () {
         Navigator.pop(context);
       },
     );
 
-    final Text _signUpText = Text(
-      ContentTexts.signUp,
+    final Text _changePasswordText = Text(
+      ContentTexts.changePassword,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,
@@ -73,47 +72,47 @@ class SignUpRoute extends StatelessWidget {
           ),
     );
 
-    final Form _signUpForm = Form(
+    final Form _changePasswordForm = Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _textFieldEmailWidget.createTextFieldWidget(),
+          _textFieldOldPasswordWidget.createTextFieldWidget(),
           SizedBox(
             height: ContentSizes.height(context) * 0.03,
           ),
-          _textFieldPasswordWidget.createTextFieldWidget(),
+          _textFieldNewPasswordWidget.createTextFieldWidget(),
           SizedBox(
             height: ContentSizes.height(context) * 0.03,
           ),
-          _textFieldRepeatPasswordWidget.createTextFieldWidget(),
+          _textFieldNewRepeatPasswordWidget.createTextFieldWidget(),
         ],
       ),
     );
 
-    final ActionButtonWidget _signUpEmailAndPaswordButtonWidget =
-        ActionButtonWidget(
+    final ActionButtonWidget _changePaswordButtonWidget = ActionButtonWidget(
       context,
       ContentColors.orange,
-      ContentTexts.signUp,
+      ContentTexts.changePassword,
       () async {
-        _signUpProviders.passwordSignUp =
-            _textEditingControllerPassword.text.trim();
-        _signUpProviders.repeatPassword =
-            _textEditingControllerRepeatPassword.text.trim();
+        _changePasswordProviders.newPasswordChange =
+            _textEditingControllerNewPassword.text.trim();
+        _changePasswordProviders.newRepeatPasswordChange =
+            _textEditingControllerNewRepeatPassword.text.trim();
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           try {
             _appProviders.isLoading = true;
+            // TODO CHANGE TO UPDATE PASSWORD
             await _firebaseService.signUpWithEmailAndPassword(
-              _textEditingControllerEmail.text.trim(),
-              _textEditingControllerPassword.text.trim(),
+              _textEditingControllerOldPassword.text.trim(),
+              _textEditingControllerNewPassword.text.trim(),
             );
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
               ContentTexts.yeay,
-              'We sent an email verification to ${_signUpProviders.emailSignUp}, please confirm that',
+              ContentTexts.updatePasswordSuccessfully,
               ContentTexts.signIn,
             );
           } catch (error) {
@@ -126,39 +125,6 @@ class SignUpRoute extends StatelessWidget {
           }
         }
       },
-    );
-
-    final Row _signInText = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        RichText(
-          text: TextSpan(
-            style: Theme.of(context).textTheme.headline2.copyWith(
-                  fontSize: ContentSizes.dp14(context),
-                ),
-            children: <TextSpan>[
-              TextSpan(
-                text: ContentTexts.alreadyHaveAccount,
-                style: Theme.of(context).textTheme.headline2.copyWith(
-                      fontSize: ContentSizes.dp12(context),
-                    ),
-              ),
-              TextSpan(
-                text: ContentTexts.signIn,
-                style: Theme.of(context).textTheme.headline2.copyWith(
-                      color: ContentColors.orange,
-                      fontSize: ContentSizes.dp12(context),
-                    ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    Navigator.pop(context);
-                  },
-              ),
-            ],
-          ),
-        ),
-      ],
     );
 
     return _appProviders.isLoading
@@ -193,19 +159,15 @@ class SignUpRoute extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        _signUpText,
+                        _changePasswordText,
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
-                        _signUpForm,
+                        _changePasswordForm,
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
-                        _signUpEmailAndPaswordButtonWidget.createActionButtonWidget(),
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _signInText,
+                        _changePaswordButtonWidget.createActionButtonWidget(),
                       ],
                     ),
                   ),

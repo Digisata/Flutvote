@@ -7,3 +7,5 @@ export 'introduction_route.dart';
 export 'home_route.dart';
 export 'history_route.dart';
 export 'profile_route.dart';
+export 'edit_profile_route.dart';
+export 'change_password_route.dart';

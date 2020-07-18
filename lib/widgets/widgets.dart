@@ -5,3 +5,5 @@ export 'back_button_widget.dart';
 export 'introduction_widget.dart';
 export 'search_bar_widget.dart';
 export 'category_widget.dart';
+export 'photo_profile_widget.dart';
+export 'setting_list_widget.dart';

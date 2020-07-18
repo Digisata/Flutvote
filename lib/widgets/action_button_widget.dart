@@ -16,7 +16,7 @@ class ActionButtonWidget {
     this.isFacebook = false,
   });
 
-  Material createSignInWidget() {
+  Material createActionButtonWidget() {
     return Material(
       borderRadius: BorderRadius.circular(30.0),
       color: _color,

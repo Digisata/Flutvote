@@ -146,7 +146,7 @@ class ForgotPasswordRoute extends StatelessWidget {
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
-                        _resetPasswordButtonWidget.createSignInWidget(),
+                        _resetPasswordButtonWidget.createActionButtonWidget(),
                       ],
                     ),
                   ),
