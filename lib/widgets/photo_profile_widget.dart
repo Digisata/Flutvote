@@ -2,14 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class PhotoProfileWidget {
-  final double _radius, _size;
-
-  PhotoProfileWidget(
-    this._radius,
-    this._size,
-  );
-
-  Hero createPhotoProfileWidget() {
+  Hero createPhotoProfileWidget(
+    double _radius,
+    _size,
+  ) {
     return Hero(
       tag: 'photoProfile',
       child: CircleAvatar(

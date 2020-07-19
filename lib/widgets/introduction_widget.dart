@@ -2,17 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 
 class IntroductionWidget {
-  final BuildContext _context;
-  final String _image, _title, _description;
-
-  IntroductionWidget(
-    this._context,
-    this._image,
-    this._title,
-    this._description,
-  );
-
-  Center createIntroductionWidget() {
+  Center createIntroductionWidget(
+    BuildContext _context,
+    String _image,
+    _title,
+    _description,
+  ) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

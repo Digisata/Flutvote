@@ -4,15 +4,10 @@ import 'package:flutvote/providers/providers.dart';
 import 'package:provider/provider.dart';
 
 class SearchBarWidget {
-  final BuildContext _context;
-  final TextEditingController _textEditingController;
-
-  SearchBarWidget(
-    this._context,
-    this._textEditingController,
-  );
-
-  Container createSearchBarWidget() {
+  Container createSearchBarWidget(
+    BuildContext _context,
+    TextEditingController _textEditingController,
+  ) {
     final HomeProviders _homeProviders = Provider.of<HomeProviders>(_context);
 
     return Container(

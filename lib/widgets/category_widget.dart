@@ -4,13 +4,7 @@ import 'package:flutvote/providers/providers.dart';
 import 'package:provider/provider.dart';
 
 class CategoryWidget {
-  final BuildContext _context;
-
-  CategoryWidget(
-    this._context,
-  );
-
-  ListView createCategoryWidget() {
+  ListView createCategoryWidget(BuildContext _context) {
     final HomeProviders _homeProvider = Provider.of<HomeProviders>(_context);
     final List<String> _categoriesList = [
       'All',

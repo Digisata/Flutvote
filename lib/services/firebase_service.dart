@@ -10,6 +10,8 @@ abstract class BaseService {
   Future<void> sendEmailVerification();
   Future<void> signOut();
   Future<bool> isEmailVerified();
+  Future<bool> validatePassword(String password);
+  Future<void> updatePassword(String password);
 }
 
 class EmailVerifyException implements Exception {}
@@ -66,7 +68,7 @@ class FirebaseService implements BaseService {
     String email,
     String password,
   ) async {
-    try {      
+    try {
       final AuthResult _result =
           await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
@@ -109,6 +111,66 @@ class FirebaseService implements BaseService {
       await _facebookLogin.logOut();
     } catch (error) {
       throw 'sign out error: $error';
+    }
+  }
+
+  Future<bool> validatePassword(String password) async {
+    final FirebaseUser _user = await getCurrentUser();
+    final AuthCredential _authCredentials = EmailAuthProvider.getCredential(
+      email: _user.email,
+      password: password,
+    );
+    try {
+      final AuthResult _authResult =
+          await _user.reauthenticateWithCredential(_authCredentials);
+      return _authResult.user != null;
+    } catch (error) {
+      switch (error.code) {
+        case 'ERROR_INVALID_CREDENTIAL':
+          throw ContentTexts.errorInvalidCredentials;
+          break;
+        case 'ERROR_WRONG_PASSWORD':
+          throw ContentTexts.errorWrongPassword;
+          break;
+        case 'ERROR_USER_DISABLED':
+          throw ContentTexts.errorUserDisabled;
+          break;
+        case 'ERROR_USER_NOT_FOUND':
+          throw ContentTexts.errorUserNotFound;
+          break;
+        case 'ERROR_OPERATION_NOT_ALLOWED':
+          throw ContentTexts.errorOperationNotAllowed;
+          break;
+        default:
+          throw ContentTexts.errorUnknown;
+      }
+    }
+  }
+
+  Future<void> updatePassword(String password) async {
+    final FirebaseUser _user = await getCurrentUser();
+    try {
+      _user.updatePassword(password);
+    } catch (error) {
+      switch (error.code) {
+        case 'ERROR_WEAK_PASSWORD':
+          throw ContentTexts.errorWeakPassword;
+          break;
+        case 'ERROR_USER_DISABLED':
+          throw ContentTexts.errorUserDisabled;
+          break;
+        case 'ERROR_USER_NOT_FOUND':
+          throw ContentTexts.errorUserNotFound;
+          break;
+        case 'ERROR_REQUIRES_RECENT_LOGIN':
+          throw ContentTexts.errorRequiresRecentLogin;
+          break;
+        case 'ERROR_OPERATION_NOT_ALLOWED':
+          throw ContentTexts.errorOperationNotAllowed;
+          break;
+        default:
+          throw ContentTexts.errorUnknown;
+      }
     }
   }
 

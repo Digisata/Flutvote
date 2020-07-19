@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 
 class BackButtonWidget {
-  final BuildContext _context;
-  final String _tooltip;
-  final Function _function;
-
-  BackButtonWidget(
-    this._context,
-    this._tooltip,
-    this._function,
-  );
-
-  IconButton createBackButton() {
+  IconButton createBackButton(
+    BuildContext _context,
+    String _tooltip,
+    Function _function,
+  ) {
     return IconButton(
       icon: Image.asset(
         'assets/buttons/back_button.png',

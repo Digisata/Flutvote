@@ -1,21 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
+import 'package:flutvote/providers/providers.dart';
+import 'package:flutvote/services/services.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 
 class AlertDialogWidget {
-  final BuildContext _context;
-
-  AlertDialogWidget(
-    this._context,
-  );
+  final FirebaseService _firebaseService = FirebaseService();
 
   createAlertDialogWidget(
+    BuildContext _context,
     String _title,
     String _description,
     String _textButton, {
-    bool isSignOut = false,
+    bool isOnlyCancelButton = true,
+    isOnlyOkButton = false,
+    isSignOut = false,
+    isChangePassword = false,
   }) {
+    final SignUpProviders _signUpProviders = SignUpProviders();
+    final ChangePasswordProviders _changePasswordProviders =
+        ChangePasswordProviders();
+
     showDialog(
       barrierDismissible: false,
       context: _context,
@@ -50,18 +56,23 @@ class AlertDialogWidget {
           ),
         ),
         cornerRadius: 20.0,
-        onlyOkButton: !isSignOut,
-        buttonCancelColor: ContentColors.backgroundGrey,
+        onlyCancelButton: isOnlyCancelButton,
+        onlyOkButton: isOnlyOkButton,
+        buttonCancelColor: isOnlyCancelButton
+            ? ContentColors.orange
+            : ContentColors.backgroundGrey,
         buttonOkColor: ContentColors.orange,
         buttonRadius: 20.0,
         buttonCancelText: Text(
-          ContentTexts.cancel,
+          isOnlyCancelButton ? ContentTexts.ok : ContentTexts.cancel,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
           style: Theme.of(_context).textTheme.headline1.copyWith(
-                color: ContentColors.grey,
+                color: isOnlyCancelButton
+                    ? ContentColors.white
+                    : ContentColors.grey,
                 fontSize: ContentSizes.dp16(_context),
               ),
         ),
@@ -99,10 +110,19 @@ class AlertDialogWidget {
         onCancelButtonPressed: () {
           Navigator.pop(_context);
         },
-        onOkButtonPressed: () {
-          _title == 'Oops'
-              ? Navigator.pop(_context)
-              : Navigator.pushReplacementNamed(_context, '/signInRoute');
+        onOkButtonPressed: () async {
+          if (isSignOut) {
+            if (isChangePassword) {
+              _changePasswordProviders.isOldPasswordChangeVisible = false;
+              _changePasswordProviders.isNewPasswordChangeVisible = false;
+              _changePasswordProviders.isNewRepeatPasswordChangeVisible = false;
+            }
+            await _firebaseService.signOut();
+          } else {
+            _signUpProviders.isPasswordSignUpVisible = false;
+            _signUpProviders.isRepeatPasswordSignUpVisible = false;
+          }
+          Navigator.pushReplacementNamed(_context, '/signInRoute');
         },
       ),
     );

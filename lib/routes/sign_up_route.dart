@@ -15,6 +15,10 @@ class SignUpRoute extends StatelessWidget {
       _textEditingControllerRepeatPassword = TextEditingController();
   final FirebaseService _firebaseService = FirebaseService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
+  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
+  final BackButtonWidget _backButtonWidget = BackButtonWidget();
+  final TextFieldWidget _textFieldWidget = TextFieldWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -22,39 +26,7 @@ class SignUpRoute extends StatelessWidget {
     final SignUpProviders _signUpProviders =
         Provider.of<SignUpProviders>(context);
 
-    final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
-
-    final TextFieldWidget _textFieldEmailWidget = TextFieldWidget(
-      context,
-      _textEditingControllerEmail,
-      ContentTexts.email,
-      Icons.email,
-      (input) {
-        _signUpProviders.emailSignUp = input.trim();
-      },
-    );
-
-    final TextFieldWidget _textFieldPasswordWidget = TextFieldWidget(
-      context,
-      _textEditingControllerPassword,
-      ContentTexts.password,
-      Icons.lock,
-      (input) {
-        _signUpProviders.isPasswordSignUpVisible = false;
-      },
-    );
-
-    final TextFieldWidget _textFieldRepeatPasswordWidget = TextFieldWidget(
-      context,
-      _textEditingControllerRepeatPassword,
-      ContentTexts.repeatPassword,
-      Icons.lock,
-      (input) {
-        _signUpProviders.isRepeatPasswordVisible = false;
-      },
-    );
-
-    final BackButtonWidget _backButtonWidget = BackButtonWidget(
+    final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToSignInRoute,
       () {
@@ -73,34 +45,70 @@ class SignUpRoute extends StatelessWidget {
           ),
     );
 
+    final Container _textFieldEmail = _textFieldWidget.createTextFieldWidget(
+      context,
+      _textEditingControllerEmail,
+      ContentTexts.email,
+      Icons.email,
+      (input) {
+        _signUpProviders.emailSignUp = input.trim();
+      },
+      isEmail: true,
+    );
+
+    final Container _textFieldPassword = _textFieldWidget.createTextFieldWidget(
+      context,
+      _textEditingControllerPassword,
+      ContentTexts.password,
+      Icons.lock,
+      (input) {
+        _signUpProviders.passwordSignUp = input.trim();
+      },
+      isSignUp: true,
+      isPasswordSignUp: true,
+    );
+
+    final Container _textFieldRepeatPassword =
+        _textFieldWidget.createTextFieldWidget(
+      context,
+      _textEditingControllerRepeatPassword,
+      ContentTexts.repeatPassword,
+      Icons.lock,
+      (input) {
+        _signUpProviders.repeatPasswordSignUp = input.trim();
+      },
+      isSignUp: true,
+      isRepeatPasswordSignUp: true,
+    );
+
     final Form _signUpForm = Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _textFieldEmailWidget.createTextFieldWidget(),
+          _textFieldEmail,
           SizedBox(
             height: ContentSizes.height(context) * 0.03,
           ),
-          _textFieldPasswordWidget.createTextFieldWidget(),
+          _textFieldPassword,
           SizedBox(
             height: ContentSizes.height(context) * 0.03,
           ),
-          _textFieldRepeatPasswordWidget.createTextFieldWidget(),
+          _textFieldRepeatPassword,
         ],
       ),
     );
 
-    final ActionButtonWidget _signUpEmailAndPaswordButtonWidget =
-        ActionButtonWidget(
+    final Material _signUpEmailAndPaswordButton =
+        _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
       ContentTexts.signUp,
       () async {
         _signUpProviders.passwordSignUp =
             _textEditingControllerPassword.text.trim();
-        _signUpProviders.repeatPassword =
+        _signUpProviders.repeatPasswordSignUp =
             _textEditingControllerRepeatPassword.text.trim();
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
@@ -112,13 +120,17 @@ class SignUpRoute extends StatelessWidget {
             );
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
+              context,
               ContentTexts.yeay,
               'We sent an email verification to ${_signUpProviders.emailSignUp}, please confirm that',
               ContentTexts.signIn,
+              isOnlyCancelButton: false,
+              isOnlyOkButton: true,
             );
           } catch (error) {
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
+              context,
               ContentTexts.oops,
               error,
               ContentTexts.ok,
@@ -174,7 +186,7 @@ class SignUpRoute extends StatelessWidget {
         : Scaffold(
             appBar: AppBar(
               elevation: 0.0,
-              leading: _backButtonWidget.createBackButton(),
+              leading: _backButton,
               backgroundColor: ContentColors.white,
             ),
             body: SingleChildScrollView(
@@ -201,7 +213,7 @@ class SignUpRoute extends StatelessWidget {
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
-                        _signUpEmailAndPaswordButtonWidget.createActionButtonWidget(),
+                        _signUpEmailAndPaswordButton,
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),

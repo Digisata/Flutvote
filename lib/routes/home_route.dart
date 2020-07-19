@@ -15,6 +15,8 @@ class HomeRoute extends StatefulWidget {
 class _HomeRouteState extends State<HomeRoute> {
   final TextEditingController _textEditingControllerSearch =
       TextEditingController();
+  final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget();
+  final SearchBarWidget _searchBarWidget = SearchBarWidget();
 
   @override
   void initState() {
@@ -37,19 +39,12 @@ class _HomeRouteState extends State<HomeRoute> {
           ),
     );
 
-    final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget(
+    final Hero _photoProfile = _photoProfileWidget.createPhotoProfileWidget(
       ContentSizes.height(context) * 0.025,
       ContentSizes.height(context) * 0.05,
     );
 
-    final GestureDetector _photoProfile = GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/profileRoute');
-      },
-      child: _photoProfileWidget.createPhotoProfileWidget(),
-    );
-
-    final SearchBarWidget _searchBar = SearchBarWidget(
+    final Container _searchBar = _searchBarWidget.createSearchBarWidget(
       context,
       _textEditingControllerSearch,
     );
@@ -74,7 +69,7 @@ class _HomeRouteState extends State<HomeRoute> {
     final Container _categories = Container(
       height: ContentSizes.height(context) * 0.05,
       width: ContentSizes.width(context),
-      child: CategoryWidget(context).createCategoryWidget(),
+      child: CategoryWidget().createCategoryWidget(context),
     );
 
     return _appProviders.isLoading
@@ -108,7 +103,13 @@ class _HomeRouteState extends State<HomeRoute> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 _speakYourVote,
-                                _photoProfile,
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, '/profileRoute');
+                                  },
+                                  child: _photoProfile,
+                                ),
                               ],
                             ),
                           ),
@@ -122,7 +123,7 @@ class _HomeRouteState extends State<HomeRoute> {
                               ContentSizes.width(context) * 0.05,
                               0,
                             ),
-                            child: _searchBar.createSearchBarWidget(),
+                            child: _searchBar,
                           ),
                           SizedBox(
                             height: ContentSizes.height(context) * 0.03,

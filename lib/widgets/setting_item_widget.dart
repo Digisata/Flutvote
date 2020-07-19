@@ -2,17 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 
 class SettingItemWidget {
-  final BuildContext _context;
-  final String _title;
-  final Function _function;
-
-  SettingItemWidget(
-    this._context,
-    this._title,
-    this._function,
-  );
-
-  GestureDetector createSettingItemWidget() {
+  GestureDetector createSettingItemWidget(
+    BuildContext _context,
+    String _title,
+    Function _function,
+  ) {
     return GestureDetector(
       onTap: _function,
       child: Container(

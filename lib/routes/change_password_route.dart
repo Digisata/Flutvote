@@ -14,6 +14,10 @@ class ChangePasswordRoute extends StatelessWidget {
       _textEditingControllerNewRepeatPassword = TextEditingController();
   final FirebaseService _firebaseService = FirebaseService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
+  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
+  final BackButtonWidget _backButtonWidget = BackButtonWidget();
+  final TextFieldWidget _textFieldWidget = TextFieldWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -21,39 +25,7 @@ class ChangePasswordRoute extends StatelessWidget {
     final ChangePasswordProviders _changePasswordProviders =
         Provider.of<ChangePasswordProviders>(context);
 
-    final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
-
-    final TextFieldWidget _textFieldOldPasswordWidget = TextFieldWidget(
-      context,
-      _textEditingControllerOldPassword,
-      ContentTexts.oldPassword,
-      Icons.lock,
-      (input) {
-        _changePasswordProviders.isOldPasswordChangeVisible = false;
-      },
-    );
-
-    final TextFieldWidget _textFieldNewPasswordWidget = TextFieldWidget(
-      context,
-      _textEditingControllerNewPassword,
-      ContentTexts.newPassword,
-      Icons.lock,
-      (input) {
-        _changePasswordProviders.isNewPasswordChangeVisible = false;
-      },
-    );
-
-    final TextFieldWidget _textFieldNewRepeatPasswordWidget = TextFieldWidget(
-      context,
-      _textEditingControllerNewRepeatPassword,
-      ContentTexts.repeatPassword,
-      Icons.lock,
-      (input) {
-        _changePasswordProviders.isNewRepeatPasswordChangeVisible = false;
-      },
-    );
-
-    final BackButtonWidget _backButtonWidget = BackButtonWidget(
+    final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToProfileRoute,
       () {
@@ -72,26 +44,63 @@ class ChangePasswordRoute extends StatelessWidget {
           ),
     );
 
+    final Container _textFieldOldPassword =
+        _textFieldWidget.createTextFieldWidget(
+      context,
+      _textEditingControllerOldPassword,
+      ContentTexts.oldPassword,
+      Icons.lock,
+      (input) {
+        _changePasswordProviders.oldPasswordChange = input.trim();
+      },
+      isOldPassword: true,
+    );
+
+    final Container _textFieldNewPassword =
+        _textFieldWidget.createTextFieldWidget(
+      context,
+      _textEditingControllerNewPassword,
+      ContentTexts.newPassword,
+      Icons.lock,
+      (input) {
+        _changePasswordProviders.newPasswordChange = input.trim();
+      },
+      isNewPassword: true,
+    );
+
+    final Container _textFieldNewRepeatPassword =
+        _textFieldWidget.createTextFieldWidget(
+      context,
+      _textEditingControllerNewRepeatPassword,
+      ContentTexts.repeatPassword,
+      Icons.lock,
+      (input) {
+        _changePasswordProviders.newRepeatPasswordChange = input.trim();
+      },
+      isRepeatChangePassword: true,
+    );
+
     final Form _changePasswordForm = Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _textFieldOldPasswordWidget.createTextFieldWidget(),
+          _textFieldOldPassword,
           SizedBox(
             height: ContentSizes.height(context) * 0.03,
           ),
-          _textFieldNewPasswordWidget.createTextFieldWidget(),
+          _textFieldNewPassword,
           SizedBox(
             height: ContentSizes.height(context) * 0.03,
           ),
-          _textFieldNewRepeatPasswordWidget.createTextFieldWidget(),
+          _textFieldNewRepeatPassword,
         ],
       ),
     );
 
-    final ActionButtonWidget _changePaswordButtonWidget = ActionButtonWidget(
+    final Material _changePaswordButtonWidget =
+        _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
       ContentTexts.changePassword,
@@ -104,20 +113,27 @@ class ChangePasswordRoute extends StatelessWidget {
           _formKey.currentState.save();
           try {
             _appProviders.isLoading = true;
-            // TODO CHANGE TO UPDATE PASSWORD
-            await _firebaseService.signUpWithEmailAndPassword(
-              _textEditingControllerOldPassword.text.trim(),
-              _textEditingControllerNewPassword.text.trim(),
-            );
+            final bool _isPasswordValid = await _firebaseService
+                .validatePassword(_changePasswordProviders.oldPasswordChange);
+            if (_isPasswordValid) {
+              await _firebaseService
+                  .updatePassword(_changePasswordProviders.newPasswordChange);
+            }
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
+              context,
               ContentTexts.yeay,
               ContentTexts.updatePasswordSuccessfully,
               ContentTexts.signIn,
+              isOnlyCancelButton: false,
+              isOnlyOkButton: true,
+              isSignOut: true,
+              isChangePassword: true,
             );
           } catch (error) {
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
+              context,
               ContentTexts.oops,
               error,
               ContentTexts.ok,
@@ -140,7 +156,7 @@ class ChangePasswordRoute extends StatelessWidget {
         : Scaffold(
             appBar: AppBar(
               elevation: 0.0,
-              leading: _backButtonWidget.createBackButton(),
+              leading: _backButton,
               backgroundColor: ContentColors.white,
             ),
             body: SingleChildScrollView(
@@ -167,7 +183,7 @@ class ChangePasswordRoute extends StatelessWidget {
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
-                        _changePaswordButtonWidget.createActionButtonWidget(),
+                        _changePaswordButtonWidget,
                       ],
                     ),
                   ),

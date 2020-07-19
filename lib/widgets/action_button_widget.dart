@@ -2,21 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 
 class ActionButtonWidget {
-  final BuildContext _context;
-  final Color _color;
-  final String _text;
-  final Function _validate;
-  final bool isFacebook;
-
-  ActionButtonWidget(
-    this._context,
-    this._color,
-    this._text,
-    this._validate, {
-    this.isFacebook = false,
-  });
-
-  Material createActionButtonWidget() {
+  Material createActionButtonWidget(
+    BuildContext _context,
+    Color _color,
+    String _text,
+    Function _validate, {
+    bool isFacebook = false,
+  }) {
     return Material(
       borderRadius: BorderRadius.circular(30.0),
       color: _color,

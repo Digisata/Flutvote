@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
-import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
 class ProfileRoute extends StatelessWidget {
-  final FirebaseService _firebaseService = FirebaseService();
   final Box _userData = Hive.box('userData');
+  final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
+  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
+  final BackButtonWidget _backButtonWidget = BackButtonWidget();
+  final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget();
+  final SettingItemWidget _settingItemWidget = SettingItemWidget();
 
   @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of(context, listen: false);
-    final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
 
-    final BackButtonWidget _backButtonWidget = BackButtonWidget(
+    final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToHomeRoute,
       () {
@@ -23,33 +25,9 @@ class ProfileRoute extends StatelessWidget {
       },
     );
 
-    final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget(
+    final Hero _photoProfile = _photoProfileWidget.createPhotoProfileWidget(
       ContentSizes.height(context) * 0.06,
       ContentSizes.height(context) * 0.12,
-    );
-
-    final SettingItemWidget _settingItemEditProfileWidget = SettingItemWidget(
-      context,
-      ContentTexts.editProfile,
-      () {
-        Navigator.pushNamed(context, '/editProfileRoute');
-      },
-    );
-
-    final SettingItemWidget _settingItemChangePasswordWidget =
-        SettingItemWidget(
-      context,
-      ContentTexts.changePassword,
-      () {
-        Navigator.pushNamed(context, '/changePasswordRoute');
-      },
-    );
-
-    final GestureDetector _photoProfile = GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, '/profileRoute');
-      },
-      child: _photoProfileWidget.createPhotoProfileWidget(),
     );
 
     final Text _displayNameText = Text(
@@ -74,31 +52,51 @@ class ProfileRoute extends StatelessWidget {
           ),
     );
 
+    final GestureDetector _settingItemEditProfile =
+        _settingItemWidget.createSettingItemWidget(
+      context,
+      ContentTexts.editProfile,
+      () {
+        Navigator.pushNamed(context, '/editProfileRoute');
+      },
+    );
+
+    final GestureDetector _settingItemChangePassword =
+        _settingItemWidget.createSettingItemWidget(
+      context,
+      ContentTexts.changePassword,
+      () {
+        Navigator.pushNamed(context, '/changePasswordRoute');
+      },
+    );
+
     final Expanded _settingList = Expanded(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _settingItemEditProfileWidget.createSettingItemWidget(),
+          _settingItemEditProfile,
           SizedBox(
             height: ContentSizes.height(context) * 0.03,
           ),
-          _settingItemChangePasswordWidget.createSettingItemWidget(),
+          _settingItemChangePassword,
         ],
       ),
     );
 
-    final ActionButtonWidget _signOutButtonWidget = ActionButtonWidget(
+    final Material _signOutButtonWidget =
+        _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.grey,
       ContentTexts.signOut,
       () async {
         try {
-          await _firebaseService.signOut();
           _alertDialogWidget.createAlertDialogWidget(
+            context,
             ContentTexts.missYou,
             ContentTexts.areYouSure,
             ContentTexts.yes,
+            isOnlyCancelButton: false,
             isSignOut: true,
           );
         } catch (error) {
@@ -127,7 +125,7 @@ class ProfileRoute extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
-        leading: _backButtonWidget.createBackButton(),
+        leading: _backButton,
         backgroundColor: ContentColors.white,
       ),
       body: Padding(
@@ -153,7 +151,7 @@ class ProfileRoute extends StatelessWidget {
             SizedBox(
               height: ContentSizes.height(context) * 0.01,
             ),
-            _signOutButtonWidget.createActionButtonWidget(),
+            _signOutButtonWidget,
           ],
         ),
       ),

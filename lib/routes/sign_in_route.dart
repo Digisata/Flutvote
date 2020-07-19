@@ -21,6 +21,9 @@ class _SignInRouteState extends State<SignInRoute> {
   final FirebaseService _firebaseService = FirebaseService();
   final FirestoreService _firestoreService = FirestoreService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
+  final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
+  final TextFieldWidget _textFieldWidget = TextFieldWidget();
 
   @override
   void initState() {
@@ -35,9 +38,19 @@ class _SignInRouteState extends State<SignInRoute> {
         Provider.of<HiveProviders>(context, listen: false);
     final SignInProviders _signInProviders =
         Provider.of<SignInProviders>(context);
-    final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
 
-    final TextFieldWidget _textFieldEmailWidget = TextFieldWidget(
+    final Text _signInText = Text(
+      ContentTexts.signIn,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+      style: Theme.of(context).textTheme.headline1.copyWith(
+            fontSize: ContentSizes.dp24(context),
+          ),
+    );
+
+    final Container _textFieldEmail = _textFieldWidget.createTextFieldWidget(
       context,
       _textEditingControllerEmail,
       ContentTexts.email,
@@ -46,9 +59,10 @@ class _SignInRouteState extends State<SignInRoute> {
         _signInProviders.emailSignIn = input.trim();
       },
       isRegistered: true,
+      isEmail: true,
     );
 
-    final TextFieldWidget _textFieldPasswordWidget = TextFieldWidget(
+    final Container _textFieldPassword = _textFieldWidget.createTextFieldWidget(
       context,
       _textEditingControllerPassword,
       ContentTexts.password,
@@ -60,8 +74,45 @@ class _SignInRouteState extends State<SignInRoute> {
       isPasswordSignIn: true,
     );
 
-    final ActionButtonWidget _signInEmailAndPaswordButtonWidget =
-        ActionButtonWidget(
+    final Form _signInForm = Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _textFieldEmail,
+          SizedBox(
+            height: ContentSizes.height(context) * 0.03,
+          ),
+          _textFieldPassword,
+        ],
+      ),
+    );
+
+    final Row _forgotText = Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, '/forgotPasswordRoute');
+          },
+          child: Text(
+            ContentTexts.forgotPassword,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            textDirection: TextDirection.ltr,
+            style: Theme.of(context).textTheme.headline2.copyWith(
+                  fontSize: ContentSizes.dp12(context),
+                ),
+          ),
+        ),
+      ],
+    );
+
+    final Material _signInWithEmailAndPasswordButton =
+        _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
       ContentTexts.signIn,
@@ -87,6 +138,7 @@ class _SignInRouteState extends State<SignInRoute> {
           } catch (error) {
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
+              context,
               ContentTexts.oops,
               error,
               ContentTexts.ok,
@@ -94,76 +146,6 @@ class _SignInRouteState extends State<SignInRoute> {
           }
         }
       },
-    );
-
-    final ActionButtonWidget _signInFacebookButtonWidget = ActionButtonWidget(
-      context,
-      ContentColors.facebook,
-      ContentTexts.signInWithFacebook,
-      () async {
-        try {
-          _appProviders.isLoading = true;
-          await _facebookService.signInWithFacebook();
-          Navigator.pushReplacementNamed(context, '/introductionRoute');
-          _appProviders.isLoading = false;
-        } catch (error) {
-          _appProviders.isLoading = false;
-          _alertDialogWidget.createAlertDialogWidget(
-            ContentTexts.oops,
-            error,
-            ContentTexts.ok,
-          );
-        }
-      },
-      isFacebook: true,
-    );
-
-    final Text _signInText = Text(
-      ContentTexts.signIn,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      textAlign: TextAlign.center,
-      textDirection: TextDirection.ltr,
-      style: Theme.of(context).textTheme.headline1.copyWith(
-            fontSize: ContentSizes.dp24(context),
-          ),
-    );
-
-    final Form _signInForm = Form(
-      key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          _textFieldEmailWidget.createTextFieldWidget(),
-          SizedBox(
-            height: ContentSizes.height(context) * 0.03,
-          ),
-          _textFieldPasswordWidget.createTextFieldWidget(),
-        ],
-      ),
-    );
-
-    final Row _forgotText = Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            Navigator.pushNamed(context, '/forgotPasswordRoute');
-          },
-          child: Text(
-            ContentTexts.forgotPassword,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            textDirection: TextDirection.ltr,
-            style: Theme.of(context).textTheme.headline2.copyWith(
-                  fontSize: ContentSizes.dp12(context),
-                ),
-          ),
-        ),
-      ],
     );
 
     final Row _signUpText = Row(
@@ -228,6 +210,30 @@ class _SignInRouteState extends State<SignInRoute> {
       ],
     );
 
+    final Material _signInWithFacebookButton =
+        _actionButtonWidget.createActionButtonWidget(
+      context,
+      ContentColors.facebook,
+      ContentTexts.signInWithFacebook,
+      () async {
+        try {
+          _appProviders.isLoading = true;
+          await _facebookService.signInWithFacebook();
+          Navigator.pushReplacementNamed(context, '/introductionRoute');
+          _appProviders.isLoading = false;
+        } catch (error) {
+          _appProviders.isLoading = false;
+          _alertDialogWidget.createAlertDialogWidget(
+            context,
+            ContentTexts.oops,
+            error,
+            ContentTexts.ok,
+          );
+        }
+      },
+      isFacebook: true,
+    );
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -261,7 +267,7 @@ class _SignInRouteState extends State<SignInRoute> {
                         SizedBox(
                           height: ContentSizes.height(context) * 0.03,
                         ),
-                        _signInEmailAndPaswordButtonWidget.createActionButtonWidget(),
+                        _signInWithEmailAndPasswordButton,
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
@@ -273,7 +279,7 @@ class _SignInRouteState extends State<SignInRoute> {
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
-                        _signInFacebookButtonWidget.createActionButtonWidget(),
+                        _signInWithFacebookButton,
                       ],
                     ),
                   ),

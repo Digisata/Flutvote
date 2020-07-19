@@ -12,6 +12,10 @@ class ForgotPasswordRoute extends StatelessWidget {
       TextEditingController();
   final FirebaseService _firebaseService = FirebaseService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
+  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
+  final BackButtonWidget _backButtonWidget = BackButtonWidget();
+  final TextFieldWidget _textFieldWidget = TextFieldWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +23,7 @@ class ForgotPasswordRoute extends StatelessWidget {
     final ForgotPasswordProviders _forgotPasswordProviders =
         Provider.of<ForgotPasswordProviders>(context);
 
-    final AlertDialogWidget _alertDialogWidget = AlertDialogWidget(context);
-
-    final TextFieldWidget _textFieldEmailWidget = TextFieldWidget(
-      context,
-      _textEditingControllerEmail,
-      'Email',
-      Icons.email,
-      (input) {
-        _forgotPasswordProviders.emailForgotPassword = input.trim();
-      },
-      isRegistered: true,
-    );
-
-    final BackButtonWidget _backButtonWidget = BackButtonWidget(
+    final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToSignInRoute,
       () {
@@ -62,18 +53,31 @@ class ForgotPasswordRoute extends StatelessWidget {
           ),
     );
 
+    final Container _textFieldEmail = _textFieldWidget.createTextFieldWidget(
+      context,
+      _textEditingControllerEmail,
+      'Email',
+      Icons.email,
+      (input) {
+        _forgotPasswordProviders.emailForgotPassword = input.trim();
+      },
+      isRegistered: true,
+      isEmail: true,
+    );
+
     final Form _resetForm = Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _textFieldEmailWidget.createTextFieldWidget(),
+          _textFieldEmail,
         ],
       ),
     );
 
-    final ActionButtonWidget _resetPasswordButtonWidget = ActionButtonWidget(
+    final Material _resetPasswordButtonWidget =
+        _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
       ContentTexts.resetPassword,
@@ -86,13 +90,17 @@ class ForgotPasswordRoute extends StatelessWidget {
                 .resetPassword(_textEditingControllerEmail.text.trim());
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
+              context,
               ContentTexts.yeay,
               'Password reset email already sent to ${_forgotPasswordProviders.emailForgotPassword}, please confirm that!',
               ContentTexts.signIn,
+              isOnlyCancelButton: false,
+              isOnlyOkButton: true,
             );
           } catch (error) {
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
+              context,
               ContentTexts.oops,
               error,
               ContentTexts.ok,
@@ -115,7 +123,7 @@ class ForgotPasswordRoute extends StatelessWidget {
         : Scaffold(
             appBar: AppBar(
               elevation: 0.0,
-              leading: _backButtonWidget.createBackButton(),
+              leading: _backButton,
               backgroundColor: ContentColors.white,
             ),
             body: SingleChildScrollView(
@@ -146,7 +154,7 @@ class ForgotPasswordRoute extends StatelessWidget {
                         SizedBox(
                           height: ContentSizes.height(context) * 0.05,
                         ),
-                        _resetPasswordButtonWidget.createActionButtonWidget(),
+                        _resetPasswordButtonWidget,
                       ],
                     ),
                   ),

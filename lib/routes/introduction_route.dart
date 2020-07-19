@@ -11,24 +11,28 @@ class IntroductionRoute extends StatefulWidget {
 class _IntroductionRouteState extends State<IntroductionRoute> {
   final GlobalKey<IntroductionScreenState> _introductionKey =
       GlobalKey<IntroductionScreenState>();
+  final IntroductionWidget _introductionWidget = IntroductionWidget();
 
   @override
   Widget build(BuildContext context) {
-    final IntroductionWidget _introductionSearchWidget = IntroductionWidget(
+    final Center _introductionSearch =
+        _introductionWidget.createIntroductionWidget(
       context,
       'assets/ilustrators/search_ilustrator.png',
       ContentTexts.searchIntroduction,
       ContentTexts.searchDescriptionIntroduction,
     );
 
-    final IntroductionWidget _introductionInputWidget = IntroductionWidget(
+    final Center _introductionInputWidget =
+        _introductionWidget.createIntroductionWidget(
       context,
       'assets/ilustrators/input_ilustrator.png',
       ContentTexts.inputIntroduction,
       ContentTexts.inputDescriptionIntroduction,
     );
 
-    final IntroductionWidget _introductionVoteWidget = IntroductionWidget(
+    final Center _introductionVote =
+        _introductionWidget.createIntroductionWidget(
       context,
       'assets/ilustrators/vote_ilustrator.png',
       ContentTexts.voteIntroduction,
@@ -42,15 +46,15 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
           pages: [
             PageViewModel(
               title: '',
-              bodyWidget: _introductionSearchWidget.createIntroductionWidget(),
+              bodyWidget: _introductionSearch,
             ),
             PageViewModel(
               title: '',
-              bodyWidget: _introductionInputWidget.createIntroductionWidget(),
+              bodyWidget: _introductionInputWidget,
             ),
             PageViewModel(
               title: '',
-              bodyWidget: _introductionVoteWidget.createIntroductionWidget(),
+              bodyWidget: _introductionVote,
             ),
           ],
           onDone: () => Navigator.pushReplacementNamed(context, '/homeRoute'),
