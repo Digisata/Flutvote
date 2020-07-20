@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
+import 'package:flutvote/model/models.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
@@ -125,9 +127,14 @@ class _SignInRouteState extends State<SignInRoute> {
               _signInProviders.emailSignIn,
               _signInProviders.passwordSignIn,
             );
-            _hiveProviders.setUserData();
-            _signInProviders.createUserModel();
-            _firestoreService.createUser(_signInProviders.userModel);
+            final FirebaseUser _user = await _firebaseService.getCurrentUser();
+            AppProviders.setUserModel = UserModel(
+              username: 'username',
+              email: _user.email,
+              displayName: 'Display name',
+            );
+            await _firestoreService.setUserData(AppProviders.userModel);
+            HiveProviders.syncUserData();
             if (!HiveProviders.getFirstSignedIn()) {
               Navigator.pushReplacementNamed(context, '/homeRoute');
             } else {

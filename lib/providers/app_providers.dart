@@ -1,13 +1,22 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutvote/model/models.dart';
 import 'package:package_info/package_info.dart';
 
 class AppProviders with ChangeNotifier {
   bool _isLoading = false;
   static String _appVersion = '';
+  static UserModel _userModel;
 
   bool get isLoading => _isLoading;
 
   String get appVersion => _appVersion;
+
+  static UserModel get userModel => _userModel;
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
 
   static void setAppVersion() async {
     try {
@@ -18,8 +27,7 @@ class AppProviders with ChangeNotifier {
     }
   }
 
-  set isLoading(bool value) {
-    _isLoading = value;
-    notifyListeners();
+  static set setUserModel(UserModel value) {
+    _userModel = value;
   }
 }

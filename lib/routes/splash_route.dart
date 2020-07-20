@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/firebase_service.dart';
+import 'package:flutvote/services/services.dart';
 
 class SplashRoute extends StatefulWidget {
   @override
@@ -10,8 +11,17 @@ class SplashRoute extends StatefulWidget {
 
 class _SplashRouteState extends State<SplashRoute> {
   final FirebaseService _firebaseService = FirebaseService();
+  final FirestoreService _firestoreService = FirestoreService();
 
-  _navigateTo() async {
+  void _fetchUserData() async {
+    await _firestoreService.fetchUserData();
+  }
+
+  void _syncUserData() {
+    HiveProviders.syncUserData();
+  }
+
+  void _navigateTo() async {
     if (await _firebaseService.getCurrentUser() == null ||
         !await _firebaseService.isEmailVerified()) {
       if (!HiveProviders.getFirstOpened()) {
@@ -20,6 +30,8 @@ class _SplashRouteState extends State<SplashRoute> {
         Navigator.pushReplacementNamed(context, '/welcomeRoute');
       }
     } else {
+      _fetchUserData();
+      _syncUserData();
       Navigator.pushReplacementNamed(context, '/homeRoute');
     }
   }
