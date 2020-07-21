@@ -67,7 +67,7 @@ class Flutvote extends StatelessWidget {
         '/introductionRoute': (context) => IntroductionRoute(),
         '/homeRoute': (context) => HomeRoute(),
         '/historyRoute': (context) => HistoryRoute(),
-        '/profileRoute': (context) => ProfileRoute(),
+        '/settingRoute': (context) => SettingRoute(),
         '/editProfileRoute': (context) => EditProfileRoute(),
         '/changePasswordRoute': (context) => ChangePasswordRoute(),
       },

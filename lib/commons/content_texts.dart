@@ -80,19 +80,26 @@ class ContentTexts {
   static const String changePassword = 'Change password';
   static const String backToHomeRoute = 'Back to home page.';
   static const String signOut = 'Sign Out';
-  static const String missYou = 'We will miss you';
-  static const String areYouSure =
+  static const String signOutConfirmation =
       'Are you sure want to sign out ? please stay here with us!';
   static const String cancel = 'Cancel';
   static const String yes = 'Yes';
 
-  static const String backToProfileRoute = 'Back to profile page.';
-  static const String updatePasswordSuccessfully =
-      'Your password has been updated successfully, please sign in again to confirm that!';
+  static const String backToSettingRoute = 'Back to setting page.';
+  static const String changePasswordSuccessfully =
+      'Your password has been changed successfully, please sign in again to confirm that!';
   static const String oldPassword = 'Old password';
   static const String newPassword = 'New password';
   static const String errorInvalidCredentials =
       'Invalid credential, please check it again!';
   static const String errorRequiresRecentLogin =
       'Last sign-in time does not meet the security threshold, please reauthenticate first!';
+
+  static const String save = 'Save';
+  static const String discard = 'Discard';
+  static const String discardChanges = 'Discard changes';
+  static const String discardConfirmation =
+      'Are you sure ? all your changes will be lost!';
+  static const String editProfileSuccessfully =
+      'Your profile has been edited successfully, you can change it again whenever you want!';
 }

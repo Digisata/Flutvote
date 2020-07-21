@@ -12,8 +12,8 @@ class ChangePasswordRoute extends StatelessWidget {
           TextEditingController(),
       _textEditingControllerNewPassword = TextEditingController(),
       _textEditingControllerNewRepeatPassword = TextEditingController();
-  final FirebaseService _firebaseService = FirebaseService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FirebaseService _firebaseService = FirebaseService();
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
   final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
   final BackButtonWidget _backButtonWidget = BackButtonWidget();
@@ -27,7 +27,7 @@ class ChangePasswordRoute extends StatelessWidget {
 
     final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
-      ContentTexts.backToProfileRoute,
+      ContentTexts.backToSettingRoute,
       () {
         Navigator.pop(context);
       },
@@ -53,6 +53,7 @@ class ChangePasswordRoute extends StatelessWidget {
       (input) {
         _changePasswordProviders.oldPasswordChange = input.trim();
       },
+      isRegistered: true,
       isOldPassword: true,
     );
 
@@ -103,6 +104,7 @@ class ChangePasswordRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
+      ContentColors.white,
       ContentTexts.changePassword,
       () async {
         _changePasswordProviders.newPasswordChange =
@@ -123,7 +125,7 @@ class ChangePasswordRoute extends StatelessWidget {
             _alertDialogWidget.createAlertDialogWidget(
               context,
               ContentTexts.yeay,
-              ContentTexts.updatePasswordSuccessfully,
+              ContentTexts.changePasswordSuccessfully,
               ContentTexts.signIn,
               isOnlyCancelButton: false,
               isOnlyOkButton: true,
@@ -139,6 +141,30 @@ class ChangePasswordRoute extends StatelessWidget {
               ContentTexts.ok,
             );
           }
+        }
+      },
+    );
+
+    final Material _discardButtonWidget =
+        _actionButtonWidget.createActionButtonWidget(
+      context,
+      ContentColors.backgroundDarkGrey,
+      ContentColors.grey,
+      ContentTexts.discard,
+      () {
+        if (_textEditingControllerOldPassword.text.isEmpty &&
+            _textEditingControllerNewPassword.text.isEmpty &&
+            _textEditingControllerNewRepeatPassword.text.isEmpty) {
+          Navigator.pop(context);
+        } else {
+          _alertDialogWidget.createAlertDialogWidget(
+            context,
+            ContentTexts.discardChanges,
+            ContentTexts.discardConfirmation,
+            ContentTexts.discard,
+            routeName: '/settingRoute',
+            isOnlyCancelButton: false,
+          );
         }
       },
     );
@@ -184,6 +210,10 @@ class ChangePasswordRoute extends StatelessWidget {
                           height: ContentSizes.height(context) * 0.05,
                         ),
                         _changePaswordButtonWidget,
+                        SizedBox(
+                          height: ContentSizes.height(context) * 0.01,
+                        ),
+                        _discardButtonWidget,
                       ],
                     ),
                   ),

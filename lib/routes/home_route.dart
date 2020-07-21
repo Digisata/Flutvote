@@ -106,7 +106,7 @@ class _HomeRouteState extends State<HomeRoute> {
                                 GestureDetector(
                                   onTap: () {
                                     Navigator.pushNamed(
-                                        context, '/profileRoute');
+                                        context, '/settingRoute');
                                   },
                                   child: _photoProfile,
                                 ),

@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/widgets/widgets.dart';
-import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
-class ProfileRoute extends StatelessWidget {
-  final Box _userData = Hive.box('userData');
+class SettingRoute extends StatelessWidget {
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
-  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
   final BackButtonWidget _backButtonWidget = BackButtonWidget();
   final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget();
   final SettingItemWidget _settingItemWidget = SettingItemWidget();
+  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
 
   @override
   Widget build(BuildContext context) {
-    final AppProviders _appProviders = Provider.of(context, listen: false);
+    final AppProviders _appProviders = Provider.of<AppProviders>(context);
+    final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
 
     final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
@@ -31,7 +30,7 @@ class ProfileRoute extends StatelessWidget {
     );
 
     final Text _displayNameText = Text(
-      _userData.get('displayName'),
+      _hiveProviders.displayName,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,
@@ -42,7 +41,7 @@ class ProfileRoute extends StatelessWidget {
     );
 
     final Text _userNameText = Text(
-      '@${_userData.get('username')}',
+      '@${_hiveProviders.username}',
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,
@@ -87,21 +86,18 @@ class ProfileRoute extends StatelessWidget {
     final Material _signOutButtonWidget =
         _actionButtonWidget.createActionButtonWidget(
       context,
+      ContentColors.backgroundDarkGrey,
       ContentColors.grey,
       ContentTexts.signOut,
-      () async {
-        try {
-          _alertDialogWidget.createAlertDialogWidget(
-            context,
-            ContentTexts.missYou,
-            ContentTexts.areYouSure,
-            ContentTexts.yes,
-            isOnlyCancelButton: false,
-            isSignOut: true,
-          );
-        } catch (error) {
-          throw 'signout error: $error';
-        }
+      () {
+        _alertDialogWidget.createAlertDialogWidget(
+          context,
+          ContentTexts.signOut,
+          ContentTexts.signOutConfirmation,
+          ContentTexts.signOut,
+          isOnlyCancelButton: false,
+          isSignOut: true,
+        );
       },
     );
 

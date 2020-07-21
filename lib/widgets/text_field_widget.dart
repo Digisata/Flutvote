@@ -14,6 +14,7 @@ class TextFieldWidget {
     bool isRegistered = false,
     isSignUp = false,
     isEmail = false,
+    isEditProfile = false,
     isPasswordSignIn = false,
     isPasswordSignUp = false,
     isOldPassword = false,
@@ -27,10 +28,11 @@ class TextFieldWidget {
         Provider.of<SignUpProviders>(_context);
     final ChangePasswordProviders _changePasswordProviders =
         Provider.of<ChangePasswordProviders>(_context);
-    final bool _isShouldCheck = isPasswordSignUp ||
+    final bool _isPassword = isPasswordSignUp ||
         isRepeatPasswordSignUp ||
         isNewPassword ||
-        isRepeatChangePassword;
+        isRepeatChangePassword, 
+        _isPlainText = isEmail || isEditProfile;
 
     return Container(
       height: ContentSizes.height(_context) * 0.06,
@@ -40,7 +42,7 @@ class TextFieldWidget {
         cursorColor: Colors.grey,
         keyboardType: isEmail ? TextInputType.emailAddress : TextInputType.text,
         maxLines: 1,
-        obscureText: isEmail
+        obscureText: _isPlainText
             ? false
             : isPasswordSignIn
                 ? !_signInProviders.isPasswordSignInVisible
@@ -71,7 +73,7 @@ class TextFieldWidget {
                     if (!EmailValidator.validate(input)) {
                       return ContentTexts.invalidEmailAddress;
                     }
-                  } else if (_isShouldCheck) {
+                  } else if (_isPassword) {
                     Pattern pattern =
                         r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
                     RegExp regex = new RegExp(pattern);
@@ -96,7 +98,6 @@ class TextFieldWidget {
         onSaved: _onSaved,
         textAlign: TextAlign.start,
         textDirection: TextDirection.ltr,
-        textInputAction: isEmail ? TextInputAction.next : TextInputAction.done,
         decoration: InputDecoration(
           contentPadding: EdgeInsets.zero,
           hintText: _hint,
@@ -105,7 +106,7 @@ class TextFieldWidget {
             _icon,
             color: Colors.grey,
           ),
-          suffixIcon: isEmail
+          suffixIcon: _isPlainText
               ? Icon(
                   Icons.visibility,
                   color: Colors.transparent,

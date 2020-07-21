@@ -16,9 +16,9 @@ class SignUpRoute extends StatelessWidget {
   final FirebaseService _firebaseService = FirebaseService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
-  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
   final BackButtonWidget _backButtonWidget = BackButtonWidget();
   final TextFieldWidget _textFieldWidget = TextFieldWidget();
+  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +104,7 @@ class SignUpRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
+      ContentColors.white,
       ContentTexts.signUp,
       () async {
         _signUpProviders.passwordSignUp =
@@ -124,6 +125,7 @@ class SignUpRoute extends StatelessWidget {
               ContentTexts.yeay,
               'We sent an email verification to ${_signUpProviders.emailSignUp}, please confirm that',
               ContentTexts.signIn,
+              isSignUp: true,
               isOnlyCancelButton: false,
               isOnlyOkButton: true,
             );

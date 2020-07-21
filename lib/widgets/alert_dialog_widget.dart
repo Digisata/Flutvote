@@ -4,6 +4,7 @@ import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
+import 'package:provider/provider.dart';
 
 class AlertDialogWidget {
   final FirebaseService _firebaseService = FirebaseService();
@@ -13,14 +14,18 @@ class AlertDialogWidget {
     String _title,
     String _description,
     String _textButton, {
+    String routeName = '/signInRoute',
     bool isOnlyCancelButton = true,
     isOnlyOkButton = false,
+    isSignUp = false,
     isSignOut = false,
     isChangePassword = false,
   }) {
-    final SignUpProviders _signUpProviders = SignUpProviders();
+    final AppProviders _appProviders = Provider.of<AppProviders>(_context);
+    final SignUpProviders _signUpProviders =
+        Provider.of<SignUpProviders>(_context);
     final ChangePasswordProviders _changePasswordProviders =
-        ChangePasswordProviders();
+        Provider.of<ChangePasswordProviders>(_context);
 
     showDialog(
       barrierDismissible: false,
@@ -111,18 +116,24 @@ class AlertDialogWidget {
           Navigator.pop(_context);
         },
         onOkButtonPressed: () async {
-          if (isSignOut) {
+          if (isSignUp) {
+            _signUpProviders.isPasswordSignUpVisible = false;
+            _signUpProviders.isRepeatPasswordSignUpVisible = false;
+          } else if (isSignOut) {
             if (isChangePassword) {
               _changePasswordProviders.isOldPasswordChangeVisible = false;
               _changePasswordProviders.isNewPasswordChangeVisible = false;
               _changePasswordProviders.isNewRepeatPasswordChangeVisible = false;
             }
-            await _firebaseService.signOut();
-          } else {
-            _signUpProviders.isPasswordSignUpVisible = false;
-            _signUpProviders.isRepeatPasswordSignUpVisible = false;
+            try {
+              _appProviders.isLoading = true;
+              await _firebaseService.signOut();
+              _appProviders.isLoading = false;
+            } catch (error) {
+              throw 'Sign out error: $error';
+            }
           }
-          Navigator.pushReplacementNamed(_context, '/signInRoute');
+          Navigator.pushReplacementNamed(_context, routeName);
         },
       ),
     );

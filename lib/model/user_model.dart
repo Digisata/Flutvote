@@ -4,7 +4,7 @@ import 'dart:convert';
 class UserModel {
     UserModel({
         @required this.username,
-        @required this.email,
+        this.email,
         @required this.displayName,
     });
 

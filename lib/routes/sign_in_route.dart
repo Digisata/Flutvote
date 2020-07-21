@@ -23,9 +23,9 @@ class _SignInRouteState extends State<SignInRoute> {
   final FirebaseService _firebaseService = FirebaseService();
   final FirestoreService _firestoreService = FirestoreService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
   final TextFieldWidget _textFieldWidget = TextFieldWidget();
+  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
 
   @override
   void initState() {
@@ -36,8 +36,6 @@ class _SignInRouteState extends State<SignInRoute> {
   @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
-    final HiveProviders _hiveProviders =
-        Provider.of<HiveProviders>(context, listen: false);
     final SignInProviders _signInProviders =
         Provider.of<SignInProviders>(context);
 
@@ -117,6 +115,7 @@ class _SignInRouteState extends State<SignInRoute> {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
+      ContentColors.white,
       ContentTexts.signIn,
       () async {
         if (_formKey.currentState.validate()) {
@@ -128,6 +127,7 @@ class _SignInRouteState extends State<SignInRoute> {
               _signInProviders.passwordSignIn,
             );
             final FirebaseUser _user = await _firebaseService.getCurrentUser();
+            // TODO FIX USER MODEL CONDITION, CHECK IN THE FIRESTORE IF USER EXIST
             AppProviders.setUserModel = UserModel(
               username: 'username',
               email: _user.email,
@@ -221,12 +221,17 @@ class _SignInRouteState extends State<SignInRoute> {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.facebook,
+      ContentColors.white,
       ContentTexts.signInWithFacebook,
       () async {
         try {
           _appProviders.isLoading = true;
           await _facebookService.signInWithFacebook();
-          Navigator.pushReplacementNamed(context, '/introductionRoute');
+          if (!HiveProviders.getFirstSignedIn()) {
+            Navigator.pushReplacementNamed(context, '/homeRoute');
+          } else {
+            Navigator.pushReplacementNamed(context, '/introductionRoute');
+          }
           _appProviders.isLoading = false;
         } catch (error) {
           _appProviders.isLoading = false;

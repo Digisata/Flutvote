@@ -4,20 +4,19 @@ import 'package:flutvote/commons/commons.dart';
 class ActionButtonWidget {
   Material createActionButtonWidget(
     BuildContext _context,
-    Color _color,
+    Color _backgroundColor,
+    Color _textColor,
     String _text,
-    Function _validate, {
+    Function _function, {
     bool isFacebook = false,
   }) {
     return Material(
       borderRadius: BorderRadius.circular(30.0),
-      color: _color,
+      color: _backgroundColor,
       child: MaterialButton(
         height: ContentSizes.height(_context) * 0.07,
         minWidth: ContentSizes.width(_context),
-        onPressed: () async {
-          await _validate();
-        },
+        onPressed: _function,
         padding: EdgeInsets.fromLTRB(
           ContentSizes.width(_context) * 0.05,
           ContentSizes.height(_context) * 0.01,
@@ -49,7 +48,7 @@ class ActionButtonWidget {
               textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
               style: Theme.of(_context).textTheme.headline2.copyWith(
-                    color: Colors.white,
+                    color: _textColor,
                     fontSize: ContentSizes.dp18(_context),
                   ),
             ),

@@ -47,9 +47,10 @@ class FirestoreService {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
-      await _collectionReference
-          .document(_user.uid)
-          .updateData(userModel.toMap());
+      await _collectionReference.document(_user.uid).updateData({
+        'username': userModel.username,
+        'displayName': userModel.displayName,
+      });
     } catch (error) {
       throw 'update data error: $error';
     }

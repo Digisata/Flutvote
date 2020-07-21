@@ -13,9 +13,9 @@ class ForgotPasswordRoute extends StatelessWidget {
   final FirebaseService _firebaseService = FirebaseService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
-  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
   final BackButtonWidget _backButtonWidget = BackButtonWidget();
   final TextFieldWidget _textFieldWidget = TextFieldWidget();
+  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +80,7 @@ class ForgotPasswordRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
+      ContentColors.white,
       ContentTexts.resetPassword,
       () async {
         if (_formKey.currentState.validate()) {
