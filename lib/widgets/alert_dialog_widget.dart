@@ -4,7 +4,6 @@ import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
-import 'package:provider/provider.dart';
 
 class AlertDialogWidget {
   final FirebaseService _firebaseService = FirebaseService();
@@ -21,11 +20,10 @@ class AlertDialogWidget {
     isSignOut = false,
     isChangePassword = false,
   }) {
-    final AppProviders _appProviders = Provider.of<AppProviders>(_context);
-    final SignUpProviders _signUpProviders =
-        Provider.of<SignUpProviders>(_context);
+    final AppProviders _appProviders = AppProviders();
+    final SignUpProviders _signUpProviders = SignUpProviders();
     final ChangePasswordProviders _changePasswordProviders =
-        Provider.of<ChangePasswordProviders>(_context);
+        ChangePasswordProviders();
 
     showDialog(
       barrierDismissible: false,

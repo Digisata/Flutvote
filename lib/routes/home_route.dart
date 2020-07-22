@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/routes/routes.dart';
 import 'package:flutvote/widgets/widgets.dart';
+import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +17,12 @@ class HomeRoute extends StatefulWidget {
 class _HomeRouteState extends State<HomeRoute> {
   final TextEditingController _textEditingControllerSearch =
       TextEditingController();
+  final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
+  final PostItemWidget _postItemWidget = PostItemWidget();
   final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget();
   final SearchBarWidget _searchBarWidget = SearchBarWidget();
+  final Stream<QuerySnapshot> _postSnapshots =
+      Firestore.instance.collection('posts').snapshots();
 
   @override
   void initState() {
@@ -70,6 +76,41 @@ class _HomeRouteState extends State<HomeRoute> {
       height: ContentSizes.height(context) * 0.05,
       width: ContentSizes.width(context),
       child: CategoryWidget().createCategoryWidget(context),
+    );
+
+    final StreamBuilder _postList = StreamBuilder<QuerySnapshot>(
+      stream: _postSnapshots,
+      builder: (context, snapshots) {
+        if (!snapshots.hasData) {
+          return Loading(
+            color: ContentColors.orange,
+            indicator: BallPulseIndicator(),
+            size: ContentSizes.height(context) * 0.1,
+          );
+        } else if (snapshots.hasError) {
+          return _alertDialogWidget.createAlertDialogWidget(
+            context,
+            ContentTexts.oops,
+            'error',
+            ContentTexts.ok,
+          );
+        }
+        // TODO FIX SCROLL ITEM
+        return ListView(
+          padding: EdgeInsets.fromLTRB(
+            ContentSizes.width(context) * 0.05,
+            ContentSizes.height(context) * 0.05,
+            ContentSizes.width(context) * 0.05,
+            0,
+          ),
+          children: snapshots.data.documents
+              .map(
+                (document) =>
+                    _postItemWidget.createPostItemWidget(context, document),
+              )
+              .toList(),
+        );
+      },
     );
 
     return _appProviders.isLoading
@@ -141,6 +182,10 @@ class _HomeRouteState extends State<HomeRoute> {
                             height: ContentSizes.height(context) * 0.01,
                           ),
                           _categories,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.01,
+                          ),
+                          _postList,
                         ],
                       ),
                     ),

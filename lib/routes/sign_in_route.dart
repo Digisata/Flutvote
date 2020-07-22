@@ -127,13 +127,16 @@ class _SignInRouteState extends State<SignInRoute> {
               _signInProviders.passwordSignIn,
             );
             final FirebaseUser _user = await _firebaseService.getCurrentUser();
-            // TODO FIX USER MODEL CONDITION, CHECK IN THE FIRESTORE IF USER EXIST
-            AppProviders.setUserModel = UserModel(
-              username: 'username',
-              email: _user.email,
-              displayName: 'Display name',
-            );
-            await _firestoreService.setUserData(AppProviders.userModel);
+            if (!await _firestoreService.isUserExist()) {
+              AppProviders.setUserModel = UserModel(
+                username: 'username',
+                email: _user.email,
+                displayName: 'Display name',
+              );
+              await _firestoreService.setUserData(AppProviders.userModel);
+            } else {
+              await _firestoreService.fetchUserData();
+            }
             HiveProviders.syncUserData();
             if (!HiveProviders.getFirstSignedIn()) {
               Navigator.pushReplacementNamed(context, '/homeRoute');

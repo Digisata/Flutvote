@@ -7,3 +7,4 @@ export 'search_bar_widget.dart';
 export 'category_widget.dart';
 export 'photo_profile_widget.dart';
 export 'setting_item_widget.dart';
+export 'post_item_widget.dart';

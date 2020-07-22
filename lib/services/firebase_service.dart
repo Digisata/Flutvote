@@ -18,7 +18,6 @@ class EmailVerifyException implements Exception {}
 
 class FirebaseService implements BaseService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final FacebookLogin _facebookLogin = FacebookLogin();
 
   Future<void> signInWithEmailPassword(
     String email,
@@ -106,6 +105,7 @@ class FirebaseService implements BaseService {
   }
 
   Future<void> signOut() async {
+    final FacebookLogin _facebookLogin = FacebookLogin();
     try {
       await _firebaseAuth.signOut();
       await _facebookLogin.logOut();

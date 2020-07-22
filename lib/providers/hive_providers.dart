@@ -31,7 +31,7 @@ class HiveProviders with ChangeNotifier {
 
   static bool getFirstOpened() => _userData.get('isFirstOpened');
 
-  static bool getFirstSignedIn() => _userData.get('isFirstOpened');
+  static bool getFirstSignedIn() => _userData.get('isFirstSignedIn');
 
   static void setFirstOpened() async {
     await _userData.put('isFirstOpened', false);

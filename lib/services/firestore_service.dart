@@ -9,6 +9,19 @@ class FirestoreService {
       Firestore.instance.collection('users');
   final FirebaseService _firebaseService = FirebaseService();
 
+  Future<bool> isUserExist() async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      final DocumentSnapshot _document =
+          await _collectionReference.document(_user.uid).get();
+      assert(_document != null);
+      return _document.exists;
+    } catch (error) {
+      throw 'is user exist error: $error';
+    }
+  }
+
   Future<void> addUserData(UserModel userModel) async {
     try {
       await _collectionReference.add(userModel.toMap());
