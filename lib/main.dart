@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HiveProviders.openBox();
-  AppProviders.setAppVersion();
+  HiveProviders.setAndroidId();
+  HiveProviders.setAppVersion();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runApp(
@@ -33,8 +34,8 @@ void main() async {
         ChangeNotifierProvider<HomeProviders>(
           create: (context) => HomeProviders(),
         ),
-        ChangeNotifierProvider<EditProfileProviders>(
-          create: (context) => EditProfileProviders(),
+        ChangeNotifierProvider<UserProfileProviders>(
+          create: (context) => UserProfileProviders(),
         ),
         ChangeNotifierProvider<ChangePasswordProviders>(
           create: (context) => ChangePasswordProviders(),

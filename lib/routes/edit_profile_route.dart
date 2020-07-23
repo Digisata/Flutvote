@@ -24,14 +24,27 @@ class EditProfileRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
-    final EditProfileProviders _editProfileProviders =
-        Provider.of<EditProfileProviders>(context);
+    final UserProfileProviders _userProfileProviders =
+        Provider.of<UserProfileProviders>(context);
 
     final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToSettingRoute,
       () {
-        Navigator.pop(context);
+        if (_textEditingControllerDisplayName.text.isEmpty &&
+            _textEditingControllerUsername.text.isEmpty) {
+          Navigator.pushReplacementNamed(context, '/settingRoute');
+        } else {
+          _alertDialogWidget.createAlertDialogWidget(
+            context,
+            ContentTexts.leavePage,
+            ContentTexts.leaveConfirmation,
+            ContentTexts.leave,
+            routeName: '/settingRoute',
+            isOnlyCancelButton: false,
+            isEditProfile: true,
+          );
+        }
       },
     );
 
@@ -58,10 +71,10 @@ class EditProfileRoute extends StatelessWidget {
       _hiveProviders.displayName,
       Icons.account_circle,
       (input) {
-        _editProfileProviders.displayNameChange = input.trim();
+        _userProfileProviders.displayName = input.trim();
       },
       isEditProfile: true,
-      isRegistered: true,
+      isDisplayName: true,
     );
 
     final Container _textFieldUsername = _textFieldWidget.createTextFieldWidget(
@@ -70,10 +83,10 @@ class EditProfileRoute extends StatelessWidget {
       _hiveProviders.username,
       Icons.alternate_email,
       (input) {
-        _editProfileProviders.usernameChange = input.trim();
+        _userProfileProviders.username = input.trim();
       },
       isEditProfile: true,
-      isRegistered: true,
+      isUsername: true,
     );
 
     final Form _editProfileForm = Form(
@@ -103,8 +116,8 @@ class EditProfileRoute extends StatelessWidget {
           try {
             _appProviders.isLoading = true;
             AppProviders.setUserModel = UserModel(
-              username: _editProfileProviders.usernameChange,
-              displayName: _editProfileProviders.displayNameChange,
+              username: _userProfileProviders.username,
+              displayName: _userProfileProviders.displayName,
             );
             await _firestoreService.updateUserData(AppProviders.userModel);
             HiveProviders.syncUserData();
@@ -119,7 +132,7 @@ class EditProfileRoute extends StatelessWidget {
               isOnlyOkButton: true,
             );
           } catch (error) {
-            throw 'save error: $error';
+            throw 'edit profile error: $error';
           }
         }
       },
@@ -164,30 +177,32 @@ class EditProfileRoute extends StatelessWidget {
               leading: _backButton,
               backgroundColor: ContentColors.white,
             ),
-            body: Padding(
-              padding: EdgeInsets.all(ContentSizes.width(context) * 0.05),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  _editProfileText,
-                  SizedBox(
-                    height: ContentSizes.height(context) * 0.05,
-                  ),
-                  _photoProfile,
-                  SizedBox(
-                    height: ContentSizes.height(context) * 0.05,
-                  ),
-                  _editProfileForm,
-                  SizedBox(
-                    height: ContentSizes.height(context) * 0.05,
-                  ),
-                  _saveButtonWidget,
-                  SizedBox(
-                    height: ContentSizes.height(context) * 0.01,
-                  ),
-                  _discardButtonWidget,
-                ],
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(ContentSizes.width(context) * 0.05),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    _editProfileText,
+                    SizedBox(
+                      height: ContentSizes.height(context) * 0.05,
+                    ),
+                    _photoProfile,
+                    SizedBox(
+                      height: ContentSizes.height(context) * 0.05,
+                    ),
+                    _editProfileForm,
+                    SizedBox(
+                      height: ContentSizes.height(context) * 0.05,
+                    ),
+                    _saveButtonWidget,
+                    SizedBox(
+                      height: ContentSizes.height(context) * 0.01,
+                    ),
+                    _discardButtonWidget,
+                  ],
+                ),
               ),
             ),
           );

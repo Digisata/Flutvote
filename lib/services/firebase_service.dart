@@ -176,7 +176,7 @@ class FirebaseService implements BaseService {
 
   Future<void> resetPassword(String email) async {
     try {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      await _firebaseAuth.sendPasswordResetEmail(email: email);      
     } catch (error) {
       switch (error.code) {
         case 'ERROR_INVALID_EMAIL':

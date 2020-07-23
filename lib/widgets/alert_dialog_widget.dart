@@ -12,18 +12,21 @@ class AlertDialogWidget {
     BuildContext _context,
     String _title,
     String _description,
-    String _textButton, {
+    String _textOkButton, {
+    String textCancelButton,
     String routeName = '/signInRoute',
     bool isOnlyCancelButton = true,
     isOnlyOkButton = false,
     isSignUp = false,
     isSignOut = false,
+    isEditProfile = false,
     isChangePassword = false,
   }) {
     final AppProviders _appProviders = AppProviders();
     final SignUpProviders _signUpProviders = SignUpProviders();
     final ChangePasswordProviders _changePasswordProviders =
         ChangePasswordProviders();
+    final bool _isStay = isEditProfile || isChangePassword;
 
     showDialog(
       barrierDismissible: false,
@@ -67,7 +70,9 @@ class AlertDialogWidget {
         buttonOkColor: ContentColors.orange,
         buttonRadius: 20.0,
         buttonCancelText: Text(
-          isOnlyCancelButton ? ContentTexts.ok : ContentTexts.cancel,
+          isOnlyCancelButton
+              ? ContentTexts.ok
+              : _isStay ? ContentTexts.stay : ContentTexts.cancel,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
@@ -80,7 +85,7 @@ class AlertDialogWidget {
               ),
         ),
         buttonOkText: Text(
-          _textButton,
+          _textOkButton,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
@@ -111,6 +116,11 @@ class AlertDialogWidget {
               ),
         ),
         onCancelButtonPressed: () {
+          if (isChangePassword) {
+            _changePasswordProviders.isOldPasswordChangeVisible = false;
+            _changePasswordProviders.isNewPasswordChangeVisible = false;
+            _changePasswordProviders.isNewRepeatPasswordChangeVisible = false;
+          }
           Navigator.pop(_context);
         },
         onOkButtonPressed: () async {

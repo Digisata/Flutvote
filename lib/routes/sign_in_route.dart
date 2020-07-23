@@ -38,6 +38,7 @@ class _SignInRouteState extends State<SignInRoute> {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final SignInProviders _signInProviders =
         Provider.of<SignInProviders>(context);
+    final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
 
     final Text _signInText = Text(
       ContentTexts.signIn,
@@ -129,14 +130,14 @@ class _SignInRouteState extends State<SignInRoute> {
             final FirebaseUser _user = await _firebaseService.getCurrentUser();
             if (!await _firestoreService.isUserExist()) {
               AppProviders.setUserModel = UserModel(
-                username: 'username',
                 email: _user.email,
-                displayName: 'Display name',
+                deviceId: _hiveProviders.androidId,
               );
               await _firestoreService.setUserData(AppProviders.userModel);
             } else {
               await _firestoreService.fetchUserData();
             }
+            _hiveProviders.setPassword(_signInProviders.passwordSignIn);
             HiveProviders.syncUserData();
             if (!HiveProviders.getFirstSignedIn()) {
               Navigator.pushReplacementNamed(context, '/homeRoute');

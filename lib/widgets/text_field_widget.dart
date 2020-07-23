@@ -15,6 +15,8 @@ class TextFieldWidget {
     isSignUp = false,
     isEmail = false,
     isEditProfile = false,
+    isUsername = false,
+    isDisplayName = false,
     isPasswordSignIn = false,
     isPasswordSignUp = false,
     isOldPassword = false,
@@ -29,9 +31,9 @@ class TextFieldWidget {
     final ChangePasswordProviders _changePasswordProviders =
         Provider.of<ChangePasswordProviders>(_context);
     final bool _isPassword = isPasswordSignUp ||
-        isRepeatPasswordSignUp ||
-        isNewPassword ||
-        isRepeatChangePassword, 
+            isRepeatPasswordSignUp ||
+            isNewPassword ||
+            isRepeatChangePassword,
         _isPlainText = isEmail || isEditProfile;
 
     return Container(
@@ -67,15 +69,26 @@ class TextFieldWidget {
               }
             : (input) {
                 if (input.isEmpty) {
-                  return 'Please input ${_hint.toLowerCase()}!';
+                  return isDisplayName
+                      ? 'Please input ${ContentTexts.displayName.toLowerCase()}'
+                      : isUsername
+                          ? 'Please input ${ContentTexts.username.toLowerCase()}'
+                          : 'Please input ${_hint.toLowerCase()}!';
                 } else {
                   if (isEmail) {
                     if (!EmailValidator.validate(input)) {
                       return ContentTexts.invalidEmailAddress;
                     }
+                  } else if (isUsername) {
+                    Pattern pattern =
+                        r'^(?=.{6,15}$)(?![_])(?!.*[_]{2})[a-zA-Z0-9_]+(?<![_])$';
+                    RegExp regex = new RegExp(pattern);
+                    if (!regex.hasMatch(input)) {
+                      return ContentTexts.invalidUsername;
+                    }
                   } else if (_isPassword) {
                     Pattern pattern =
-                        r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
+                        r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,20}$';
                     RegExp regex = new RegExp(pattern);
                     if (isSignUp) {
                       if (_signUpProviders.passwordSignUp !=

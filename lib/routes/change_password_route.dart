@@ -24,12 +24,27 @@ class ChangePasswordRoute extends StatelessWidget {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final ChangePasswordProviders _changePasswordProviders =
         Provider.of<ChangePasswordProviders>(context);
+    final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
 
     final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToSettingRoute,
       () {
-        Navigator.pop(context);
+        if (_textEditingControllerOldPassword.text.isEmpty &&
+            _textEditingControllerNewPassword.text.isEmpty &&
+            _textEditingControllerNewRepeatPassword.text.isEmpty) {
+          Navigator.pushReplacementNamed(context, '/settingRoute');
+        } else {
+          _alertDialogWidget.createAlertDialogWidget(
+            context,
+            ContentTexts.leavePage,
+            ContentTexts.leaveConfirmation,
+            ContentTexts.leave,
+            routeName: '/settingRoute',
+            isOnlyCancelButton: false,
+            isChangePassword: true,
+          );
+        }
       },
     );
 
@@ -121,6 +136,8 @@ class ChangePasswordRoute extends StatelessWidget {
               await _firebaseService
                   .updatePassword(_changePasswordProviders.newPasswordChange);
             }
+            _hiveProviders
+                .setPassword(_changePasswordProviders.newPasswordChange);
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
               context,

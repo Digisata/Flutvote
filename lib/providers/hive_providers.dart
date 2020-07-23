@@ -1,13 +1,16 @@
 import 'dart:io';
 
+import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutvote/model/models.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:hive/hive.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HiveProviders with ChangeNotifier {
   static final Box _userData = Hive.box('userData');
+  static String _androidId = '', _appVersion = '';
 
   static openBox() async {
     try {
@@ -27,28 +30,64 @@ class HiveProviders with ChangeNotifier {
 
   String get email => _userData.get('email');
 
+  String get password => _userData.get('password');
+
   String get displayName => _userData.get('displayName');
+
+  String get androidId => _androidId;
+
+  String get appVersion => _appVersion;
 
   static bool getFirstOpened() => _userData.get('isFirstOpened');
 
   static bool getFirstSignedIn() => _userData.get('isFirstSignedIn');
 
+  static void setAndroidId() async {
+    final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
+    try {
+      final AndroidDeviceInfo _androidDeviceInfo =
+          await _deviceInfoPlugin.androidInfo;
+      _androidId = _androidDeviceInfo.androidId;
+    } catch (error) {
+      throw 'set android id error: $error';
+    }
+  }
+
+  static void setAppVersion() async {
+    try {
+      final PackageInfo _packageInfo = await PackageInfo.fromPlatform();
+      _appVersion = _packageInfo.version;
+    } catch (error) {
+      throw 'set app info error: $error';
+    }
+  }
+
   static void setFirstOpened() async {
-    await _userData.put('isFirstOpened', false);
+    if (getFirstOpened()) {
+      await _userData.put('isFirstOpened', false);
+    }
   }
 
   static void setFirstSignedIn() async {
-    await _userData.put('isFirstSignedIn', false);
+    if (getFirstSignedIn()) {
+      await _userData.put('isFirstSignedIn', false);
+    }
+  }
+
+  void setPassword(String password) async {
+    await _userData.put('password', password);
   }
 
   static void syncUserData() async {
     UserModel _userModel = AppProviders.userModel;
     if (_userData.get('username') != _userModel.username ||
         _userData.get('email') != _userModel.email ||
-        _userData.get('displayName') != _userModel.displayName) {
+        _userData.get('displayName') != _userModel.displayName ||
+        _userData.get('deviceId') != _userModel.deviceId) {
       await _userData.put('username', _userModel.username);
       await _userData.put('email', _userModel.email);
       await _userData.put('displayName', _userModel.displayName);
+      await _userData.put('deviceId', _userModel.deviceId);
     }
   }
 }

@@ -185,7 +185,7 @@ class _HomeRouteState extends State<HomeRoute> {
                           SizedBox(
                             height: ContentSizes.height(context) * 0.01,
                           ),
-                          _postList,
+                          // _postList,
                         ],
                       ),
                     ),

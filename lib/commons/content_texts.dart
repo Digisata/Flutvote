@@ -37,7 +37,7 @@ class ContentTexts {
   static const String invalidEmailAddress = 'Invalid email address!';
   static const String passwordDidntMatch = 'Password didn\'t match!';
   static const String invalidPassword =
-      'Password must contain at least one letter, one number, and longer than six charaters!';
+      'Password must contain at least one letter, one number, and between 6 - 20 charaters!';
   static const String errorWeakPassword =
       'Password is too weak, please make it stronger!';
   static const String errorInvalidEmailFormatted =
@@ -69,6 +69,12 @@ class ContentTexts {
       'Vote wisely, because you can only vote once for each campaign.';
   static const String skip = 'Skip';
   static const String done = 'Done';
+  static const String setUpProfile = 'Set up profile';
+  static const String homePage = 'Home page';
+  static const String setUpProfileDescription =
+      'One last step, please set up your display name and username to complete your profile';
+  static const String setUpProfileSuccessfully =
+      'Your profile has been set up successfully, you can change it later if you want!';
 
   static const String createPost = 'Create new post';
   static const String speakYourVote = 'Speak your\nVote out loud';
@@ -85,6 +91,23 @@ class ContentTexts {
   static const String cancel = 'Cancel';
   static const String yes = 'Yes';
 
+  static const String displayName = 'Display name';
+  static const String username = 'Username';
+  static const String save = 'Save';
+  static const String leave = 'Leave';
+  static const String leavePage = 'Leave page';
+  static const String leaveConfirmation =
+      'Are you sure want to leave? all your changes will be lost!';
+  static const String stay = 'Stay';
+  static const String discard = 'Discard';
+  static const String discardChanges = 'Discard changes';
+  static const String discardConfirmation =
+      'Are you sure ? all your changes will be lost!';
+  static const String editProfileSuccessfully =
+      'Your profile has been edited successfully, you can change it again whenever you want!';
+  static const String invalidUsername =
+      'Username can only contains alphanumeric characters, underscore and between 6 - 15 charaters!';
+
   static const String backToSettingRoute = 'Back to setting page.';
   static const String changePasswordSuccessfully =
       'Your password has been changed successfully, please sign in again to confirm that!';
@@ -94,12 +117,4 @@ class ContentTexts {
       'Invalid credential, please check it again!';
   static const String errorRequiresRecentLogin =
       'Last sign-in time does not meet the security threshold, please reauthenticate first!';
-
-  static const String save = 'Save';
-  static const String discard = 'Discard';
-  static const String discardChanges = 'Discard changes';
-  static const String discardConfirmation =
-      'Are you sure ? all your changes will be lost!';
-  static const String editProfileSuccessfully =
-      'Your profile has been edited successfully, you can change it again whenever you want!';
 }

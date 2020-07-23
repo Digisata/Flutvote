@@ -13,7 +13,6 @@ class SettingRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
 
     final IconButton _backButton = _backButtonWidget.createBackButton(
@@ -106,7 +105,7 @@ class SettingRoute extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
-          'Version ${_appProviders.appVersion}',
+          'Version ${_hiveProviders.appVersion}',
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
