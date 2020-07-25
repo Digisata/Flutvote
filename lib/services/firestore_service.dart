@@ -22,14 +22,6 @@ class FirestoreService {
     }
   }
 
-  Future<void> addUserData(UserModel userModel) async {
-    try {
-      await _collectionReference.add(userModel.toMap());
-    } catch (error) {
-      throw 'add data error: $error';
-    }
-  }
-
   Future<void> fetchUserData() async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
@@ -56,7 +48,7 @@ class FirestoreService {
     }
   }
 
-  Future<void> updateUserData(UserModel userModel) async {
+  Future<void> updateUsernameAndDisplayName(UserModel userModel) async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
@@ -65,7 +57,19 @@ class FirestoreService {
         'displayName': userModel.displayName,
       });
     } catch (error) {
-      throw 'update data error: $error';
+      throw 'update username and display name error: $error';
+    }
+  }
+
+  Future<void> updateIsSetupCompleted(UserModel userModel) async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _collectionReference.document(_user.uid).updateData({
+        'isSetupCompleted': userModel.isSetupCompleted,
+      });
+    } catch (error) {
+      throw 'update is setup completed error: $error';
     }
   }
 }

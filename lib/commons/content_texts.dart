@@ -28,6 +28,9 @@ class ContentTexts {
       'Your email isn\'t verified yet, please verify first!';
   static const String email = 'Email';
   static const String password = 'Password';
+  static const String exit = 'Exit';
+  static const String exitApp = 'Exit app';
+  static const String exitAppConfirmation = 'Are you sure want to exit app? please stay here with us!';
 
   static const String backToSignInRoute = 'Back to sign in page.';
   static const String signUp = 'Sign Up';
@@ -69,11 +72,11 @@ class ContentTexts {
       'Vote wisely, because you can only vote once for each campaign.';
   static const String skip = 'Skip';
   static const String done = 'Done';
-  static const String setUpProfile = 'Set up profile';
+  static const String setupProfile = 'Set up profile';
   static const String homePage = 'Home page';
-  static const String setUpProfileDescription =
+  static const String setupProfileDescription =
       'One last step, please set up your display name and username to complete your profile';
-  static const String setUpProfileSuccessfully =
+  static const String setupProfileSuccessfully =
       'Your profile has been set up successfully, you can change it later if you want!';
 
   static const String createPost = 'Create new post';
@@ -87,7 +90,7 @@ class ContentTexts {
   static const String backToHomeRoute = 'Back to home page.';
   static const String signOut = 'Sign Out';
   static const String signOutConfirmation =
-      'Are you sure want to sign out ? please stay here with us!';
+      'Are you sure want to sign out? please stay here with us!';
   static const String cancel = 'Cancel';
   static const String yes = 'Yes';
 
@@ -102,7 +105,7 @@ class ContentTexts {
   static const String discard = 'Discard';
   static const String discardChanges = 'Discard changes';
   static const String discardConfirmation =
-      'Are you sure ? all your changes will be lost!';
+      'Are you sure? all your changes will be lost!';
   static const String editProfileSuccessfully =
       'Your profile has been edited successfully, you can change it again whenever you want!';
   static const String invalidUsername =

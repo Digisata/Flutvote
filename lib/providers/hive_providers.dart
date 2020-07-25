@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 class HiveProviders with ChangeNotifier {
   static final Box _userData = Hive.box('userData');
-  static String _androidId = '', _appVersion = '';
+  static String _deviceId = '', _appVersion = '';
 
   static openBox() async {
     try {
@@ -20,6 +20,7 @@ class HiveProviders with ChangeNotifier {
       if (_userData.isEmpty) {
         await _userData.put('isFirstOpened', true);
         await _userData.put('isFirstSignedIn', true);
+        await _userData.put('isSetupCompleted', false);
       }
     } catch (error) {
       throw 'open box error: $error';
@@ -34,7 +35,7 @@ class HiveProviders with ChangeNotifier {
 
   String get displayName => _userData.get('displayName');
 
-  String get androidId => _androidId;
+  String get deviceId => _deviceId;
 
   String get appVersion => _appVersion;
 
@@ -42,12 +43,14 @@ class HiveProviders with ChangeNotifier {
 
   static bool getFirstSignedIn() => _userData.get('isFirstSignedIn');
 
+  static bool getIsSetupCompleted() => _userData.get('isSetupCompleted');
+
   static void setAndroidId() async {
     final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
     try {
       final AndroidDeviceInfo _androidDeviceInfo =
           await _deviceInfoPlugin.androidInfo;
-      _androidId = _androidDeviceInfo.androidId;
+      _deviceId = _androidDeviceInfo.androidId;
     } catch (error) {
       throw 'set android id error: $error';
     }
@@ -62,6 +65,10 @@ class HiveProviders with ChangeNotifier {
     }
   }
 
+  void setPassword(String password) async {
+    await _userData.put('password', password);
+  }
+
   static void setFirstOpened() async {
     if (getFirstOpened()) {
       await _userData.put('isFirstOpened', false);
@@ -74,20 +81,18 @@ class HiveProviders with ChangeNotifier {
     }
   }
 
-  void setPassword(String password) async {
-    await _userData.put('password', password);
-  }
-
-  static void syncUserData() async {
+  static Future<void> syncUserData() async {
     UserModel _userModel = AppProviders.userModel;
     if (_userData.get('username') != _userModel.username ||
         _userData.get('email') != _userModel.email ||
         _userData.get('displayName') != _userModel.displayName ||
-        _userData.get('deviceId') != _userModel.deviceId) {
+        _userData.get('deviceId') != _userModel.deviceId ||
+        _userData.get('isSetupCompleted') != _userModel.isSetupCompleted) {
       await _userData.put('username', _userModel.username);
       await _userData.put('email', _userModel.email);
       await _userData.put('displayName', _userModel.displayName);
       await _userData.put('deviceId', _userModel.deviceId);
+      await _userData.put('isSetupCompleted', _userModel.isSetupCompleted);
     }
   }
 }

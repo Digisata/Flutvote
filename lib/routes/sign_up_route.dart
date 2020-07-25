@@ -26,6 +26,12 @@ class SignUpRoute extends StatelessWidget {
     final SignUpProviders _signUpProviders =
         Provider.of<SignUpProviders>(context);
 
+    _onBackButtonPressed() {
+      _signUpProviders.isPasswordSignUpVisible = false;
+      _signUpProviders.isRepeatPasswordSignUpVisible = false;
+      Navigator.pop(context, true);
+    }
+
     final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToSignInRoute,
@@ -125,9 +131,9 @@ class SignUpRoute extends StatelessWidget {
               ContentTexts.yeay,
               'We sent an email verification to ${_signUpProviders.emailSignUp}, please confirm that',
               ContentTexts.signIn,
-              isSignUp: true,
               isOnlyCancelButton: false,
               isOnlyOkButton: true,
+              isSignUp: true,
             );
           } catch (error) {
             _appProviders.isLoading = false;
@@ -176,54 +182,60 @@ class SignUpRoute extends StatelessWidget {
     );
 
     return _appProviders.isLoading
-        ? Scaffold(
-            body: Center(
-              child: Loading(
-                color: ContentColors.orange,
-                indicator: BallSpinFadeLoaderIndicator(),
-                size: ContentSizes.height(context) * 0.1,
+        ? WillPopScope(
+            onWillPop: () async => _onBackButtonPressed(),
+            child: Scaffold(
+              body: Center(
+                child: Loading(
+                  color: ContentColors.orange,
+                  indicator: BallSpinFadeLoaderIndicator(),
+                  size: ContentSizes.height(context) * 0.1,
+                ),
               ),
             ),
           )
-        : Scaffold(
-            appBar: AppBar(
-              elevation: 0.0,
-              leading: _backButton,
-              backgroundColor: ContentColors.white,
-            ),
-            body: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      ContentSizes.width(context) * 0.1,
-                      ContentSizes.height(context) * 0.2,
-                      ContentSizes.width(context) * 0.1,
-                      ContentSizes.height(context) * 0.2,
+        : WillPopScope(
+            onWillPop: () async => _onBackButtonPressed(),
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0.0,
+                leading: _backButton,
+                backgroundColor: ContentColors.white,
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        ContentSizes.width(context) * 0.1,
+                        ContentSizes.height(context) * 0.2,
+                        ContentSizes.width(context) * 0.1,
+                        ContentSizes.height(context) * 0.2,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          _signUpText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _signUpForm,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _signUpEmailAndPaswordButton,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _signInText,
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        _signUpText,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _signUpForm,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _signUpEmailAndPaswordButton,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _signInText,
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

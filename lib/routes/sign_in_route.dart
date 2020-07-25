@@ -10,12 +10,7 @@ import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
 
-class SignInRoute extends StatefulWidget {
-  @override
-  _SignInRouteState createState() => _SignInRouteState();
-}
-
-class _SignInRouteState extends State<SignInRoute> {
+class SignInRoute extends StatelessWidget {
   final TextEditingController _textEditingControllerEmail =
           TextEditingController(),
       _textEditingControllerPassword = TextEditingController();
@@ -28,17 +23,22 @@ class _SignInRouteState extends State<SignInRoute> {
   final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
 
   @override
-  void initState() {
-    HiveProviders.setFirstOpened();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final SignInProviders _signInProviders =
         Provider.of<SignInProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
+
+    _exitApp() {
+      _alertDialogWidget.createAlertDialogWidget(
+        context,
+        ContentTexts.exitApp,
+        ContentTexts.exitAppConfirmation,
+        ContentTexts.exit,
+        isOnlyCancelButton: false,
+        isExit: true,
+      );
+    }
 
     final Text _signInText = Text(
       ContentTexts.signIn,
@@ -131,17 +131,27 @@ class _SignInRouteState extends State<SignInRoute> {
             if (!await _firestoreService.isUserExist()) {
               AppProviders.setUserModel = UserModel(
                 email: _user.email,
-                deviceId: _hiveProviders.androidId,
+                deviceId: _hiveProviders.deviceId,
+                isSetupCompleted: false,
               );
               await _firestoreService.setUserData(AppProviders.userModel);
             } else {
               await _firestoreService.fetchUserData();
             }
             _hiveProviders.setPassword(_signInProviders.passwordSignIn);
-            HiveProviders.syncUserData();
+            await HiveProviders.syncUserData();
             if (!HiveProviders.getFirstSignedIn()) {
+              if (!HiveProviders.getIsSetupCompleted()) {
+                Navigator.pushReplacementNamed(context, '/introductionRoute');
+              } else {
+                Navigator.pushReplacementNamed(context, '/homeRoute');
+              }
+            } else if (await _firestoreService.isUserExist() &&
+                HiveProviders.getIsSetupCompleted()) {
+              HiveProviders.setFirstSignedIn();
               Navigator.pushReplacementNamed(context, '/homeRoute');
             } else {
+              HiveProviders.setFirstSignedIn();
               Navigator.pushReplacementNamed(context, '/introductionRoute');
             }
             _signInProviders.isPasswordSignInVisible = false;
@@ -250,56 +260,59 @@ class _SignInRouteState extends State<SignInRoute> {
       isFacebook: true,
     );
 
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: _appProviders.isLoading
-              ? Loading(
-                  color: ContentColors.orange,
-                  indicator: BallSpinFadeLoaderIndicator(),
-                  size: ContentSizes.height(context) * 0.1,
-                )
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      ContentSizes.width(context) * 0.1,
-                      ContentSizes.height(context) * 0.2,
-                      ContentSizes.width(context) * 0.1,
-                      ContentSizes.height(context) * 0.2,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        _signInText,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _signInForm,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.02,
-                        ),
-                        _forgotText,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.03,
-                        ),
-                        _signInWithEmailAndPasswordButton,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _signUpText,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.02,
-                        ),
-                        _orText,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _signInWithFacebookButton,
-                      ],
+    return WillPopScope(
+      onWillPop: () async => _exitApp(),
+      child: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: _appProviders.isLoading
+                ? Loading(
+                    color: ContentColors.orange,
+                    indicator: BallSpinFadeLoaderIndicator(),
+                    size: ContentSizes.height(context) * 0.1,
+                  )
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        ContentSizes.width(context) * 0.1,
+                        ContentSizes.height(context) * 0.2,
+                        ContentSizes.width(context) * 0.1,
+                        ContentSizes.height(context) * 0.2,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          _signInText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _signInForm,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.02,
+                          ),
+                          _forgotText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.03,
+                          ),
+                          _signInWithEmailAndPasswordButton,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _signUpText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.02,
+                          ),
+                          _orText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _signInWithFacebookButton,
+                        ],
+                      ),
                     ),
                   ),
-                ),
+          ),
         ),
       ),
     );

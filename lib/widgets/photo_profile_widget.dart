@@ -14,7 +14,7 @@ class PhotoProfileWidget {
         child: CachedNetworkImage(
           fit: BoxFit.cover,
           imageUrl:
-              'https://avatars0.githubusercontent.com/u/30319634?s=400&u=0351d283b9e76d31e8bbd80e088b2c12618948c8&v=4',
+              'https://sairajfilmsproduction.com/application/assets/images/nopic.jpg',
           progressIndicatorBuilder: (context, url, download) =>
               CircularProgressIndicator(
             value: download.progress,

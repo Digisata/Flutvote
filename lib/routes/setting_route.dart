@@ -15,6 +15,10 @@ class SettingRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
 
+    _onBackButtonPressed() {
+      Navigator.pop(context, true);
+    }
+
     final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToHomeRoute,
@@ -117,37 +121,40 @@ class SettingRoute extends StatelessWidget {
       ],
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        leading: _backButton,
-        backgroundColor: ContentColors.white,
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(ContentSizes.width(context) * 0.05),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _photoProfile,
-            SizedBox(
-              height: ContentSizes.height(context) * 0.01,
-            ),
-            _displayNameText,
-            _userNameText,
-            SizedBox(
-              height: ContentSizes.height(context) * 0.05,
-            ),
-            _settingList,
-            SizedBox(
-              height: ContentSizes.height(context) * 0.01,
-            ),
-            _appVersionText,
-            SizedBox(
-              height: ContentSizes.height(context) * 0.01,
-            ),
-            _signOutButtonWidget,
-          ],
+    return WillPopScope(
+      onWillPop: () async => _onBackButtonPressed(),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          leading: _backButton,
+          backgroundColor: ContentColors.white,
+        ),
+        body: Padding(
+          padding: EdgeInsets.all(ContentSizes.width(context) * 0.05),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              _photoProfile,
+              SizedBox(
+                height: ContentSizes.height(context) * 0.01,
+              ),
+              _displayNameText,
+              _userNameText,
+              SizedBox(
+                height: ContentSizes.height(context) * 0.05,
+              ),
+              _settingList,
+              SizedBox(
+                height: ContentSizes.height(context) * 0.01,
+              ),
+              _appVersionText,
+              SizedBox(
+                height: ContentSizes.height(context) * 0.01,
+              ),
+              _signOutButtonWidget,
+            ],
+          ),
         ),
       ),
     );

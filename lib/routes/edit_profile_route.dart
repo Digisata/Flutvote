@@ -27,20 +27,35 @@ class EditProfileRoute extends StatelessWidget {
     final UserProfileProviders _userProfileProviders =
         Provider.of<UserProfileProviders>(context);
 
+    _onBackButtonPressed() {
+      if (_textEditingControllerDisplayName.text.isEmpty &&
+          _textEditingControllerUsername.text.isEmpty) {
+        Navigator.pop(context);
+      } else {
+        _alertDialogWidget.createAlertDialogWidget(
+          context,
+          ContentTexts.leavePage,
+          ContentTexts.leaveConfirmation,
+          ContentTexts.leave,
+          isOnlyCancelButton: false,
+          isEditProfile: true,
+        );
+      }
+    }
+
     final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToSettingRoute,
       () {
         if (_textEditingControllerDisplayName.text.isEmpty &&
             _textEditingControllerUsername.text.isEmpty) {
-          Navigator.pushReplacementNamed(context, '/settingRoute');
+          Navigator.pop(context);
         } else {
           _alertDialogWidget.createAlertDialogWidget(
             context,
             ContentTexts.leavePage,
             ContentTexts.leaveConfirmation,
             ContentTexts.leave,
-            routeName: '/settingRoute',
             isOnlyCancelButton: false,
             isEditProfile: true,
           );
@@ -119,17 +134,18 @@ class EditProfileRoute extends StatelessWidget {
               username: _userProfileProviders.username,
               displayName: _userProfileProviders.displayName,
             );
-            await _firestoreService.updateUserData(AppProviders.userModel);
-            HiveProviders.syncUserData();
+            await _firestoreService
+                .updateUsernameAndDisplayName(AppProviders.userModel);
+            await HiveProviders.syncUserData();
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
               context,
               ContentTexts.yeay,
               ContentTexts.editProfileSuccessfully,
               ContentTexts.ok,
-              routeName: '/settingRoute',
               isOnlyCancelButton: false,
               isOnlyOkButton: true,
+              isEditProfile: true,
             );
           } catch (error) {
             throw 'edit profile error: $error';
@@ -154,54 +170,60 @@ class EditProfileRoute extends StatelessWidget {
             ContentTexts.discardChanges,
             ContentTexts.discardConfirmation,
             ContentTexts.discard,
-            routeName: '/settingRoute',
             isOnlyCancelButton: false,
+            isEditProfile: true,
           );
         }
       },
     );
 
     return _appProviders.isLoading
-        ? Scaffold(
-            body: Center(
-              child: Loading(
-                color: ContentColors.orange,
-                indicator: BallSpinFadeLoaderIndicator(),
-                size: ContentSizes.height(context) * 0.1,
+        ? WillPopScope(
+            onWillPop: () async => _onBackButtonPressed(),
+            child: Scaffold(
+              body: Center(
+                child: Loading(
+                  color: ContentColors.orange,
+                  indicator: BallSpinFadeLoaderIndicator(),
+                  size: ContentSizes.height(context) * 0.1,
+                ),
               ),
             ),
           )
-        : Scaffold(
-            appBar: AppBar(
-              elevation: 0.0,
-              leading: _backButton,
-              backgroundColor: ContentColors.white,
-            ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(ContentSizes.width(context) * 0.05),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    _editProfileText,
-                    SizedBox(
-                      height: ContentSizes.height(context) * 0.05,
-                    ),
-                    _photoProfile,
-                    SizedBox(
-                      height: ContentSizes.height(context) * 0.05,
-                    ),
-                    _editProfileForm,
-                    SizedBox(
-                      height: ContentSizes.height(context) * 0.05,
-                    ),
-                    _saveButtonWidget,
-                    SizedBox(
-                      height: ContentSizes.height(context) * 0.01,
-                    ),
-                    _discardButtonWidget,
-                  ],
+        : WillPopScope(
+            onWillPop: () async => _onBackButtonPressed(),
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0.0,
+                leading: _backButton,
+                backgroundColor: ContentColors.white,
+              ),
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(ContentSizes.width(context) * 0.05),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      _editProfileText,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.05,
+                      ),
+                      _photoProfile,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.05,
+                      ),
+                      _editProfileForm,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.05,
+                      ),
+                      _saveButtonWidget,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.01,
+                      ),
+                      _discardButtonWidget,
+                    ],
+                  ),
                 ),
               ),
             ),

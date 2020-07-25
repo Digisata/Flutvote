@@ -9,12 +9,7 @@ import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
 
-class HomeRoute extends StatefulWidget {
-  @override
-  _HomeRouteState createState() => _HomeRouteState();
-}
-
-class _HomeRouteState extends State<HomeRoute> {
+class HomeRoute extends StatelessWidget {
   final TextEditingController _textEditingControllerSearch =
       TextEditingController();
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
@@ -25,14 +20,19 @@ class _HomeRouteState extends State<HomeRoute> {
       Firestore.instance.collection('posts').snapshots();
 
   @override
-  void initState() {
-    HiveProviders.setFirstSignedIn();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
+
+    _exitApp() {
+      _alertDialogWidget.createAlertDialogWidget(
+        context,
+        ContentTexts.exitApp,
+        ContentTexts.exitAppConfirmation,
+        ContentTexts.exit,
+        isOnlyCancelButton: false,
+        isExit: true,
+      );
+    }
 
     final Text _speakYourVote = Text(
       ContentTexts.speakYourVote,
@@ -114,114 +114,121 @@ class _HomeRouteState extends State<HomeRoute> {
     );
 
     return _appProviders.isLoading
-        ? Scaffold(
-            body: Loading(
-              color: ContentColors.orange,
-              indicator: BallSpinFadeLoaderIndicator(),
-              size: ContentSizes.height(context) * 0.1,
+        ? WillPopScope(
+            onWillPop: () async => _exitApp(),
+            child: Scaffold(
+              body: Loading(
+                color: ContentColors.orange,
+                indicator: BallSpinFadeLoaderIndicator(),
+                size: ContentSizes.height(context) * 0.1,
+              ),
             ),
           )
         : DefaultTabController(
             length: 2,
-            child: Scaffold(
-              body: Center(
-                child: TabBarView(
-                  children: [
-                    SafeArea(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(
-                              ContentSizes.width(context) * 0.05,
-                              ContentSizes.height(context) * 0.05,
-                              ContentSizes.width(context) * 0.05,
-                              0,
+            child: WillPopScope(
+              onWillPop: () async => _exitApp(),
+              child: Scaffold(
+                body: Center(
+                  child: TabBarView(
+                    children: [
+                      SafeArea(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                ContentSizes.width(context) * 0.05,
+                                ContentSizes.height(context) * 0.05,
+                                ContentSizes.width(context) * 0.05,
+                                0,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  _speakYourVote,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, '/settingRoute');
+                                    },
+                                    child: _photoProfile,
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                _speakYourVote,
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, '/settingRoute');
-                                  },
-                                  child: _photoProfile,
-                                ),
-                              ],
+                            SizedBox(
+                              height: ContentSizes.height(context) * 0.03,
                             ),
-                          ),
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.03,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(
-                              ContentSizes.width(context) * 0.05,
-                              0,
-                              ContentSizes.width(context) * 0.05,
-                              0,
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                ContentSizes.width(context) * 0.05,
+                                0,
+                                ContentSizes.width(context) * 0.05,
+                                0,
+                              ),
+                              child: _searchBar,
                             ),
-                            child: _searchBar,
-                          ),
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.03,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(
-                              ContentSizes.width(context) * 0.05,
-                              0,
-                              ContentSizes.width(context) * 0.05,
-                              0,
+                            SizedBox(
+                              height: ContentSizes.height(context) * 0.03,
                             ),
-                            child: _categoriesText,
-                          ),
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.01,
-                          ),
-                          _categories,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.01,
-                          ),
-                          // _postList,
-                        ],
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                ContentSizes.width(context) * 0.05,
+                                0,
+                                ContentSizes.width(context) * 0.05,
+                                0,
+                              ),
+                              child: _categoriesText,
+                            ),
+                            SizedBox(
+                              height: ContentSizes.height(context) * 0.01,
+                            ),
+                            _categories,
+                            SizedBox(
+                              height: ContentSizes.height(context) * 0.01,
+                            ),
+                            // _postList,
+                          ],
+                        ),
                       ),
+                      HistoryRoute(),
+                    ],
+                  ),
+                ),
+                bottomNavigationBar: TabBar(
+                  tabs: [
+                    Tab(
+                      icon: Icon(Icons.home),
                     ),
-                    HistoryRoute(),
+                    Tab(
+                      icon: Icon(Icons.history),
+                    ),
                   ],
+                  labelColor: ContentColors.orange,
+                  unselectedLabelColor: ContentColors.backgroundDarkGrey,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  indicatorPadding: EdgeInsets.all(5.0),
+                  indicatorColor: ContentColors.orange,
+                  indicatorWeight: 3,
                 ),
-              ),
-              bottomNavigationBar: TabBar(
-                tabs: [
-                  Tab(
-                    icon: Icon(Icons.home),
+                floatingActionButton: FloatingActionButton(
+                  foregroundColor: ContentColors.orange,
+                  backgroundColor: ContentColors.orange,
+                  child: Icon(
+                    Icons.add,
+                    color: ContentColors.white,
                   ),
-                  Tab(
-                    icon: Icon(Icons.history),
-                  ),
-                ],
-                labelColor: ContentColors.orange,
-                unselectedLabelColor: ContentColors.backgroundDarkGrey,
-                indicatorSize: TabBarIndicatorSize.label,
-                indicatorPadding: EdgeInsets.all(5.0),
-                indicatorColor: ContentColors.orange,
-                indicatorWeight: 3,
-              ),
-              floatingActionButton: FloatingActionButton(
-                foregroundColor: ContentColors.orange,
-                backgroundColor: ContentColors.orange,
-                child: Icon(
-                  Icons.add,
-                  color: ContentColors.white,
+                  elevation: 3.0,
+                  tooltip: ContentTexts.createPost,
+                  onPressed: () {},
                 ),
-                elevation: 3.0,
-                tooltip: ContentTexts.createPost,
-                onPressed: () {},
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerDocked,
               ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
             ),
           );
   }

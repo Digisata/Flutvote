@@ -23,6 +23,10 @@ class ForgotPasswordRoute extends StatelessWidget {
     final ForgotPasswordProviders _forgotPasswordProviders =
         Provider.of<ForgotPasswordProviders>(context);
 
+    _onBackButtonPressed() {
+      Navigator.pop(context, true);
+    }
+
     final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToSignInRoute,
@@ -97,6 +101,7 @@ class ForgotPasswordRoute extends StatelessWidget {
               ContentTexts.signIn,
               isOnlyCancelButton: false,
               isOnlyOkButton: true,
+              isForgotPassword: true,
             );
           } catch (error) {
             _appProviders.isLoading = false;
@@ -112,54 +117,60 @@ class ForgotPasswordRoute extends StatelessWidget {
     );
 
     return _appProviders.isLoading
-        ? Scaffold(
-            body: Center(
-              child: Loading(
-                color: ContentColors.orange,
-                indicator: BallSpinFadeLoaderIndicator(),
-                size: ContentSizes.height(context) * 0.1,
+        ? WillPopScope(
+            onWillPop: () async => _onBackButtonPressed(),
+            child: Scaffold(
+              body: Center(
+                child: Loading(
+                  color: ContentColors.orange,
+                  indicator: BallSpinFadeLoaderIndicator(),
+                  size: ContentSizes.height(context) * 0.1,
+                ),
               ),
             ),
           )
-        : Scaffold(
-            appBar: AppBar(
-              elevation: 0.0,
-              leading: _backButton,
-              backgroundColor: ContentColors.white,
-            ),
-            body: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      ContentSizes.width(context) * 0.1,
-                      ContentSizes.height(context) * 0.2,
-                      ContentSizes.width(context) * 0.1,
-                      ContentSizes.height(context) * 0.2,
+        : WillPopScope(
+            onWillPop: () async => _onBackButtonPressed(),
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0.0,
+                leading: _backButton,
+                backgroundColor: ContentColors.white,
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        ContentSizes.width(context) * 0.1,
+                        ContentSizes.height(context) * 0.2,
+                        ContentSizes.width(context) * 0.1,
+                        ContentSizes.height(context) * 0.2,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          _resetText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.02,
+                          ),
+                          _descriptionText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _resetForm,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _resetPasswordButtonWidget,
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        _resetText,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.02,
-                        ),
-                        _descriptionText,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _resetForm,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _resetPasswordButtonWidget,
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

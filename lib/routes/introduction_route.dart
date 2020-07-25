@@ -29,12 +29,22 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
   @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
-    final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
     final UserProfileProviders _userProfileProviders =
         Provider.of<UserProfileProviders>(context);
 
-    final Text _setUpProfileText = Text(
-      ContentTexts.setUpProfile,
+    _exitApp() {
+      _alertDialogWidget.createAlertDialogWidget(
+        context,
+        ContentTexts.exitApp,
+        ContentTexts.exitAppConfirmation,
+        ContentTexts.exit,
+        isOnlyCancelButton: false,
+        isExit: true,
+      );
+    }
+
+    final Text _setupProfileText = Text(
+      ContentTexts.setupProfile,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,
@@ -45,7 +55,7 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
     );
 
     final Text _descriptionText = Text(
-      ContentTexts.setUpProfileDescription,
+      ContentTexts.setupProfileDescription,
       maxLines: 4,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,
@@ -80,13 +90,13 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
       isUsername: true,
     );
 
-    final Form _setUpProfileForm = Form(
+    final Form _setupProfileForm = Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _setUpProfileText,
+          _setupProfileText,
           SizedBox(
             height: ContentSizes.height(context) * 0.02,
           ),
@@ -127,7 +137,7 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
       ContentTexts.voteDescriptionIntroduction,
     );
 
-    final Center _setUpDisplayNameAndUsername = _appProviders.isLoading
+    final Center _setupDisplayNameAndUsername = _appProviders.isLoading
         ? Center(
             child: Loading(
               color: ContentColors.orange,
@@ -136,104 +146,110 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
             ),
           )
         : Center(
-            child: _setUpProfileForm,
+            child: _setupProfileForm,
           );
 
-    return Scaffold(
-      body: SafeArea(
-        child: IntroductionScreen(
-          key: _introductionKey,
-          pages: [
-            PageViewModel(
-              title: '',
-              bodyWidget: _introductionSearch,
-            ),
-            PageViewModel(
-              title: '',
-              bodyWidget: _introductionInput,
-            ),
-            PageViewModel(
-              title: '',
-              bodyWidget: _introductionVote,
-            ),
-            PageViewModel(
-              title: '',
-              bodyWidget: _setUpDisplayNameAndUsername,
-            ),
-          ],
-          // TODO FIX ROUTING
-          onDone: () async {
-            if (_formKey.currentState.validate()) {
-              _formKey.currentState.save();
-              try {
-                _appProviders.isLoading = true;
-                AppProviders.setUserModel = UserModel(
-                  username: _userProfileProviders.username,
-                  displayName: _userProfileProviders.displayName,
-                );
-                await _firestoreService.updateUserData(AppProviders.userModel);
-                HiveProviders.syncUserData();
-                _appProviders.isLoading = false;
-                _alertDialogWidget.createAlertDialogWidget(
-                  context,
-                  ContentTexts.yeay,
-                  ContentTexts.setUpProfileSuccessfully,
-                  ContentTexts.homePage,
-                  routeName: '/homeRoute',
-                  isOnlyCancelButton: false,
-                  isOnlyOkButton: true,
-                );
-              } catch (error) {
-                throw 'set up profile error: $error';
+    return WillPopScope(
+      onWillPop: () async => _exitApp(),
+      child: Scaffold(
+        body: SafeArea(
+          child: IntroductionScreen(
+            key: _introductionKey,
+            pages: [
+              PageViewModel(
+                title: '',
+                bodyWidget: _introductionSearch,
+              ),
+              PageViewModel(
+                title: '',
+                bodyWidget: _introductionInput,
+              ),
+              PageViewModel(
+                title: '',
+                bodyWidget: _introductionVote,
+              ),
+              PageViewModel(
+                title: '',
+                bodyWidget: _setupDisplayNameAndUsername,
+              ),
+            ],
+            onDone: () async {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+                try {
+                  _appProviders.isLoading = true;
+                  AppProviders.setUserModel = UserModel(
+                    username: _userProfileProviders.username,
+                    displayName: _userProfileProviders.displayName,
+                    isSetupCompleted: true,
+                  );
+                  await _firestoreService
+                      .updateUsernameAndDisplayName(AppProviders.userModel);
+                  await _firestoreService
+                      .updateIsSetupCompleted(AppProviders.userModel);
+                  await HiveProviders.syncUserData();
+                  _appProviders.isLoading = false;
+                  _alertDialogWidget.createAlertDialogWidget(
+                    context,
+                    ContentTexts.yeay,
+                    ContentTexts.setupProfileSuccessfully,
+                    ContentTexts.homePage,
+                    routeName: '/homeRoute',
+                    isOnlyCancelButton: false,
+                    isOnlyOkButton: true,
+                  );
+                } catch (error) {
+                  throw 'set up profile error: $error';
+                }
               }
-            }
-          },
-          isProgress: true,
-          showSkipButton: true,
-          showNextButton: true,
-          skipFlex: 0,
-          nextFlex: 0,
-          skip: Text(
-            ContentTexts.skip,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            textDirection: TextDirection.ltr,
-            style: Theme.of(context).textTheme.headline1.copyWith(
-                  color: ContentColors.orange,
-                  fontSize: ContentSizes.dp20(context),
-                ),
-          ),
-          next: Icon(
-            Icons.arrow_forward,
-            color: ContentColors.orange,
-            size: ContentSizes.width(context) * 0.07,
-          ),
-          done: Text(
-            ContentTexts.done,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            textDirection: TextDirection.ltr,
-            style: Theme.of(context).textTheme.headline1.copyWith(
-                  color: ContentColors.orange,
-                  fontSize: ContentSizes.dp20(context),
-                ),
-          ),
-          dotsDecorator: DotsDecorator(
-            size: Size(
-              ContentSizes.width(context) * 0.02,
-              ContentSizes.height(context) * 0.01,
+            },
+            isProgress: true,
+            showSkipButton: true,
+            showNextButton: true,
+            skipFlex: 0,
+            nextFlex: 0,
+            skip: Text(
+              ContentTexts.skip,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.ltr,
+              style: Theme.of(context).textTheme.headline1.copyWith(
+                    color: ContentColors.orange,
+                    fontSize: ContentSizes.dp20(context),
+                  ),
             ),
-            color: ContentColors.backgroundDarkGrey,
-            activeSize: Size(
-              ContentSizes.width(context) * 0.05,
-              ContentSizes.height(context) * 0.01,
+            next: Icon(
+              Icons.arrow_forward,
+              color: ContentColors.orange,
+              size: ContentSizes.width(context) * 0.07,
             ),
-            activeColor: ContentColors.orange,
-            activeShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(25.0),
+            done: Text(
+              ContentTexts.done,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              textDirection: TextDirection.ltr,
+              style: Theme.of(context).textTheme.headline1.copyWith(
+                    color: ContentColors.orange,
+                    fontSize: ContentSizes.dp20(context),
+                  ),
+            ),
+            dotsDecorator: DotsDecorator(
+              size: Size(
+                ContentSizes.width(context) * 0.02,
+                ContentSizes.height(context) * 0.01,
+              ),
+              color: ContentColors.backgroundDarkGrey,
+              activeSize: Size(
+                ContentSizes.width(context) * 0.05,
+                ContentSizes.height(context) * 0.01,
+              ),
+              activeColor: ContentColors.orange,
+              activeShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(25.0),
+                ),
               ),
             ),
           ),

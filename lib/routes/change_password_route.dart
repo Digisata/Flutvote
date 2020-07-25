@@ -26,6 +26,23 @@ class ChangePasswordRoute extends StatelessWidget {
         Provider.of<ChangePasswordProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
 
+    _onBackButtonPressed() {
+      if (_textEditingControllerOldPassword.text.isEmpty &&
+          _textEditingControllerNewPassword.text.isEmpty &&
+          _textEditingControllerNewRepeatPassword.text.isEmpty) {
+        Navigator.pop(context);
+      } else {
+        _alertDialogWidget.createAlertDialogWidget(
+          context,
+          ContentTexts.leavePage,
+          ContentTexts.leaveConfirmation,
+          ContentTexts.leave,
+          isOnlyCancelButton: false,
+          isChangePassword: true,
+        );
+      }
+    }
+
     final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToSettingRoute,
@@ -33,14 +50,13 @@ class ChangePasswordRoute extends StatelessWidget {
         if (_textEditingControllerOldPassword.text.isEmpty &&
             _textEditingControllerNewPassword.text.isEmpty &&
             _textEditingControllerNewRepeatPassword.text.isEmpty) {
-          Navigator.pushReplacementNamed(context, '/settingRoute');
+          Navigator.pop(context);
         } else {
           _alertDialogWidget.createAlertDialogWidget(
             context,
             ContentTexts.leavePage,
             ContentTexts.leaveConfirmation,
             ContentTexts.leave,
-            routeName: '/settingRoute',
             isOnlyCancelButton: false,
             isChangePassword: true,
           );
@@ -179,62 +195,68 @@ class ChangePasswordRoute extends StatelessWidget {
             ContentTexts.discardChanges,
             ContentTexts.discardConfirmation,
             ContentTexts.discard,
-            routeName: '/settingRoute',
             isOnlyCancelButton: false,
+            isChangePassword: true,
           );
         }
       },
     );
 
     return _appProviders.isLoading
-        ? Scaffold(
-            body: Center(
-              child: Loading(
-                color: ContentColors.orange,
-                indicator: BallSpinFadeLoaderIndicator(),
-                size: ContentSizes.height(context) * 0.1,
+        ? WillPopScope(
+            onWillPop: () async => _onBackButtonPressed(),
+            child: Scaffold(
+              body: Center(
+                child: Loading(
+                  color: ContentColors.orange,
+                  indicator: BallSpinFadeLoaderIndicator(),
+                  size: ContentSizes.height(context) * 0.1,
+                ),
               ),
             ),
           )
-        : Scaffold(
-            appBar: AppBar(
-              elevation: 0.0,
-              leading: _backButton,
-              backgroundColor: ContentColors.white,
-            ),
-            body: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(
-                      ContentSizes.width(context) * 0.1,
-                      ContentSizes.height(context) * 0.2,
-                      ContentSizes.width(context) * 0.1,
-                      ContentSizes.height(context) * 0.2,
+        : WillPopScope(
+            onWillPop: () async => _onBackButtonPressed(),
+            child: Scaffold(
+              appBar: AppBar(
+                elevation: 0.0,
+                leading: _backButton,
+                backgroundColor: ContentColors.white,
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        ContentSizes.width(context) * 0.1,
+                        ContentSizes.height(context) * 0.2,
+                        ContentSizes.width(context) * 0.1,
+                        ContentSizes.height(context) * 0.2,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          _changePasswordText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _changePasswordForm,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _changePaswordButtonWidget,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.01,
+                          ),
+                          _discardButtonWidget,
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        _changePasswordText,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _changePasswordForm,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.05,
-                        ),
-                        _changePaswordButtonWidget,
-                        SizedBox(
-                          height: ContentSizes.height(context) * 0.01,
-                        ),
-                        _discardButtonWidget,
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

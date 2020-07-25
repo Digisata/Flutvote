@@ -17,8 +17,8 @@ class _SplashRouteState extends State<SplashRoute> {
     await _firestoreService.fetchUserData();
   }
 
-  void _syncUserData() {
-    HiveProviders.syncUserData();
+  void _syncUserData() async {
+    await HiveProviders.syncUserData();
   }
 
   void _navigateTo() async {
@@ -29,6 +29,8 @@ class _SplashRouteState extends State<SplashRoute> {
       } else {
         Navigator.pushReplacementNamed(context, '/welcomeRoute');
       }
+    } else if (!HiveProviders.getIsSetupCompleted()) {
+      Navigator.pushReplacementNamed(context, '/introductionRoute');
     } else {
       _fetchUserData();
       _syncUserData();
