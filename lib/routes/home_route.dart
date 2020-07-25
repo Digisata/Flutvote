@@ -191,7 +191,7 @@ class HomeRoute extends StatelessWidget {
                             SizedBox(
                               height: ContentSizes.height(context) * 0.01,
                             ),
-                            // _postList,
+                            _postList,
                           ],
                         ),
                       ),

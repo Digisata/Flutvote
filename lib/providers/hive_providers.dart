@@ -27,6 +27,25 @@ class HiveProviders with ChangeNotifier {
     }
   }
 
+  static Future<void> syncUserData() async {
+    UserModel _userModel = AppProviders.userModel;
+    if (_userData.get('username') != _userModel.username ||
+        _userData.get('email') != _userModel.email ||
+        _userData.get('displayName') != _userModel.displayName ||
+        _userData.get('deviceId') != _userModel.deviceId ||
+        _userData.get('isSetupCompleted') != _userModel.isSetupCompleted) {
+      await _userData.put('username', _userModel.username);
+      await _userData.put('email', _userModel.email);
+      await _userData.put('displayName', _userModel.displayName);
+      await _userData.put('deviceId', _userModel.deviceId);
+      await _userData.put('isSetupCompleted', _userModel.isSetupCompleted);
+    }
+  }
+
+  refreshUserData() {
+    notifyListeners();
+  }
+
   String get username => _userData.get('username');
 
   String get email => _userData.get('email');
@@ -78,21 +97,6 @@ class HiveProviders with ChangeNotifier {
   static void setFirstSignedIn() async {
     if (getFirstSignedIn()) {
       await _userData.put('isFirstSignedIn', false);
-    }
-  }
-
-  static Future<void> syncUserData() async {
-    UserModel _userModel = AppProviders.userModel;
-    if (_userData.get('username') != _userModel.username ||
-        _userData.get('email') != _userModel.email ||
-        _userData.get('displayName') != _userModel.displayName ||
-        _userData.get('deviceId') != _userModel.deviceId ||
-        _userData.get('isSetupCompleted') != _userModel.isSetupCompleted) {
-      await _userData.put('username', _userModel.username);
-      await _userData.put('email', _userModel.email);
-      await _userData.put('displayName', _userModel.displayName);
-      await _userData.put('deviceId', _userModel.deviceId);
-      await _userData.put('isSetupCompleted', _userModel.isSetupCompleted);
     }
   }
 }

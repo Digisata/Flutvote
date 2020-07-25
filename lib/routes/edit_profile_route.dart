@@ -137,6 +137,7 @@ class EditProfileRoute extends StatelessWidget {
             await _firestoreService
                 .updateUsernameAndDisplayName(AppProviders.userModel);
             await HiveProviders.syncUserData();
+            _hiveProviders.refreshUserData();
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
               context,
