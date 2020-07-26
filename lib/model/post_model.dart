@@ -7,26 +7,32 @@ class PostModel {
     @required this.username,
     @required this.email,
     @required this.displayName,
-    @required this.postTitle,
-    @required this.postDescription,
-    @required this.voteSum,
+    @required this.imageUrl,
+    @required this.title,
+    @required this.description,
+    @required this.options,
+    @required this.totalVotes,
   });
 
   final String uid;
   final String username;
   final String email;
   final String displayName;
-  final String postTitle;
-  final String postDescription;
-  final int voteSum;
+  final String imageUrl;
+  final String title;
+  final String description;
+  final List<String> options;
+  final int totalVotes;
 
   PostModel copyWith({
     String uid,
     String username,
     String email,
     String displayName,
-    String postTitle,
-    String postDescription,
+    String imageUrl,
+    String title,
+    String description,
+    List<String> options,
     int voteSum,
   }) =>
       PostModel(
@@ -34,9 +40,11 @@ class PostModel {
         username: username ?? this.username,
         email: email ?? this.email,
         displayName: displayName ?? this.displayName,
-        postTitle: postTitle ?? this.postTitle,
-        postDescription: postDescription ?? this.postDescription,
-        voteSum: voteSum ?? this.voteSum,
+        imageUrl: imageUrl ?? this.imageUrl,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        options: options ?? this.options,
+        totalVotes: voteSum ?? this.totalVotes,
       );
 
   factory PostModel.fromJson(String str) => PostModel.fromMap(json.decode(str));
@@ -48,9 +56,11 @@ class PostModel {
         username: json["username"],
         email: json["email"],
         displayName: json["displayName"],
-        postTitle: json["postTitle"],
-        postDescription: json["postDescription"],
-        voteSum: json["voteSum"],
+        imageUrl: json["imageUrl"],
+        title: json["title"],
+        description: json["description"],
+        options: List<String>.from(json["options"].map((x) => x)),
+        totalVotes: json["totalVotes"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -58,8 +68,10 @@ class PostModel {
         "username": username,
         "email": email,
         "displayName": displayName,
-        "postTitle": postTitle,
-        "postDescription": postDescription,
-        "voteSum": voteSum,
+        "imageUrl": imageUrl,
+        "title": title,
+        "description": description,
+        "options": List<dynamic>.from(options.map((x) => x)),
+        "totalVotes": totalVotes,
       };
 }

@@ -92,7 +92,7 @@ class ForgotPasswordRoute extends StatelessWidget {
           try {
             _appProviders.isLoading = true;
             await _firebaseService
-                .resetPassword(_textEditingControllerEmail.text.trim());
+                .resetPassword(_forgotPasswordProviders.emailForgotPassword);
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
               context,
@@ -118,7 +118,7 @@ class ForgotPasswordRoute extends StatelessWidget {
 
     return _appProviders.isLoading
         ? WillPopScope(
-            onWillPop: () async => _onBackButtonPressed(),
+            onWillPop: () async => false,
             child: Scaffold(
               body: Center(
                 child: Loading(
@@ -138,38 +138,32 @@ class ForgotPasswordRoute extends StatelessWidget {
                 backgroundColor: ContentColors.white,
               ),
               body: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    ContentSizes.width(context) * 0.05,
+                    ContentSizes.height(context) * 0.01,
+                    ContentSizes.width(context) * 0.05,
+                    ContentSizes.height(context) * 0.01,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      _resetText,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.02,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          _resetText,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.02,
-                          ),
-                          _descriptionText,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _resetForm,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _resetPasswordButtonWidget,
-                        ],
+                      _descriptionText,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.05,
                       ),
-                    ),
-                  ],
+                      _resetForm,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.05,
+                      ),
+                      _resetPasswordButtonWidget,
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -9,3 +9,4 @@ export 'history_route.dart';
 export 'setting_route.dart';
 export 'edit_profile_route.dart';
 export 'change_password_route.dart';
+export 'detail_post_route.dart';

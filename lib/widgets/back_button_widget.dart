@@ -5,11 +5,14 @@ class BackButtonWidget {
   IconButton createBackButton(
     BuildContext _context,
     String _tooltip,
-    Function _function,
-  ) {
+    Function _function, {
+    bool isVote = false,
+  }) {
     return IconButton(
       icon: Image.asset(
-        'assets/buttons/back_button.png',
+        isVote
+            ? 'assets/buttons/white_back_button.png'
+            : 'assets/buttons/back_button.png',
         height: ContentSizes.height(_context) * 0.03,
         width: ContentSizes.height(_context) * 0.03,
       ),

@@ -260,28 +260,35 @@ class SignInRoute extends StatelessWidget {
       isFacebook: true,
     );
 
-    return WillPopScope(
-      onWillPop: () async => _exitApp(),
-      child: Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: _appProviders.isLoading
-                ? Loading(
-                    color: ContentColors.orange,
-                    indicator: BallSpinFadeLoaderIndicator(),
-                    size: ContentSizes.height(context) * 0.1,
-                  )
-                : SingleChildScrollView(
+    return _appProviders.isLoading
+        ? WillPopScope(
+            onWillPop: () async => false,
+            child: Scaffold(
+              body: Center(
+                child: Loading(
+                  color: ContentColors.orange,
+                  indicator: BallSpinFadeLoaderIndicator(),
+                  size: ContentSizes.height(context) * 0.1,
+                ),
+              ),
+            ),
+          )
+        : WillPopScope(
+            onWillPop: () async => _exitApp(),
+            child: Scaffold(
+              body: SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
+                        ContentSizes.width(context) * 0.05,
+                        ContentSizes.height(context) * 0.01,
+                        ContentSizes.width(context) * 0.05,
+                        ContentSizes.height(context) * 0.01,
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           _signInText,
                           SizedBox(
@@ -312,9 +319,9 @@ class SignInRoute extends StatelessWidget {
                       ),
                     ),
                   ),
-          ),
-        ),
-      ),
-    );
+                ),
+              ),
+            ),
+          );
   }
 }

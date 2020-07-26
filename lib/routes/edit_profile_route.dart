@@ -74,9 +74,12 @@ class EditProfileRoute extends StatelessWidget {
           ),
     );
 
-    final Hero _photoProfile = _photoProfileWidget.createPhotoProfileWidget(
-      ContentSizes.height(context) * 0.06,
-      ContentSizes.height(context) * 0.12,
+    final Hero _photoProfile = Hero(
+      tag: 'photoProfile',
+      child: _photoProfileWidget.createPhotoProfileWidget(
+        ContentSizes.height(context) * 0.06,
+        ContentSizes.height(context) * 0.12,
+      ),
     );
 
     final Container _textFieldDisplayName =
@@ -180,7 +183,7 @@ class EditProfileRoute extends StatelessWidget {
 
     return _appProviders.isLoading
         ? WillPopScope(
-            onWillPop: () async => _onBackButtonPressed(),
+            onWillPop: () async => false,
             child: Scaffold(
               body: Center(
                 child: Loading(
@@ -201,10 +204,15 @@ class EditProfileRoute extends StatelessWidget {
               ),
               body: SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.all(ContentSizes.width(context) * 0.05),
+                  padding: EdgeInsets.fromLTRB(
+                    ContentSizes.width(context) * 0.05,
+                    ContentSizes.width(context) * 0.01,
+                    ContentSizes.width(context) * 0.05,
+                    ContentSizes.width(context) * 0.01,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       _editProfileText,
                       SizedBox(

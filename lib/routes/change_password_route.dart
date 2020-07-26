@@ -204,7 +204,7 @@ class ChangePasswordRoute extends StatelessWidget {
 
     return _appProviders.isLoading
         ? WillPopScope(
-            onWillPop: () async => _onBackButtonPressed(),
+            onWillPop: () async => false,
             child: Scaffold(
               body: Center(
                 child: Loading(
@@ -224,38 +224,32 @@ class ChangePasswordRoute extends StatelessWidget {
                 backgroundColor: ContentColors.white,
               ),
               body: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    ContentSizes.width(context) * 0.05,
+                    ContentSizes.width(context) * 0.01,
+                    ContentSizes.width(context) * 0.05,
+                    ContentSizes.width(context) * 0.01,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      _changePasswordText,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.05,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          _changePasswordText,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _changePasswordForm,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _changePaswordButtonWidget,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.01,
-                          ),
-                          _discardButtonWidget,
-                        ],
+                      _changePasswordForm,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.05,
                       ),
-                    ),
-                  ],
+                      _changePaswordButtonWidget,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.01,
+                      ),
+                      _discardButtonWidget,
+                    ],
+                  ),
                 ),
               ),
             ),

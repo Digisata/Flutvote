@@ -34,8 +34,8 @@ class ActionButtonWidget {
                 ? Container()
                 : Image.asset(
                     "assets/logos/facebook_logo.png",
-                    width: ContentSizes.height(_context) * 0.04,
                     height: ContentSizes.height(_context) * 0.04,
+                    width: ContentSizes.height(_context) * 0.04,
                     alignment: Alignment.center,
                   ),
             SizedBox(

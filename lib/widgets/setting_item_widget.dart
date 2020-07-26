@@ -16,8 +16,8 @@ class SettingItemWidget {
         margin: EdgeInsets.only(
           bottom: ContentSizes.height(_context) * 0.001,
         ),
-        width: ContentSizes.width(_context),
         height: ContentSizes.height(_context) * 0.07,
+        width: ContentSizes.width(_context),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
           color: ContentColors.white,

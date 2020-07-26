@@ -6,3 +6,4 @@ export 'hive_providers.dart';
 export 'home_providers.dart';
 export 'user_profile_providers.dart';
 export 'change_password_providers.dart';
+export 'detail_post_providers.dart';

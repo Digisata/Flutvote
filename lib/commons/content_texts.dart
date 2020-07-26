@@ -30,7 +30,8 @@ class ContentTexts {
   static const String password = 'Password';
   static const String exit = 'Exit';
   static const String exitApp = 'Exit app';
-  static const String exitAppConfirmation = 'Are you sure want to exit app? please stay here with us!';
+  static const String exitAppConfirmation =
+      'Are you sure want to exit app? please stay here with us!';
 
   static const String backToSignInRoute = 'Back to sign in page.';
   static const String signUp = 'Sign Up';
@@ -84,6 +85,11 @@ class ContentTexts {
   static const String search = 'Search';
   static const String clearSearch = 'Clear search';
   static const String categories = 'Categories';
+  static const String errorRetrieveData =
+      'Failed to retrieve data, please try again later!';
+  static const String voted = 'Voted';
+
+  static const String vote = 'Vote';
 
   static const String editProfile = 'Edit profile';
   static const String changePassword = 'Change password';

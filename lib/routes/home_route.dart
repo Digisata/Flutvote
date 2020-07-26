@@ -45,9 +45,12 @@ class HomeRoute extends StatelessWidget {
           ),
     );
 
-    final Hero _photoProfile = _photoProfileWidget.createPhotoProfileWidget(
-      ContentSizes.height(context) * 0.025,
-      ContentSizes.height(context) * 0.05,
+    final Hero _photoProfile = Hero(
+      tag: 'photoProfile',
+      child: _photoProfileWidget.createPhotoProfileWidget(
+        ContentSizes.height(context) * 0.025,
+        ContentSizes.height(context) * 0.05,
+      ),
     );
 
     final Container _searchBar = _searchBarWidget.createSearchBarWidget(
@@ -91,31 +94,33 @@ class HomeRoute extends StatelessWidget {
           return _alertDialogWidget.createAlertDialogWidget(
             context,
             ContentTexts.oops,
-            'error',
+            ContentTexts.errorRetrieveData,
             ContentTexts.ok,
           );
+        } else {
+          return Expanded(
+            child: ListView(
+              padding: EdgeInsets.fromLTRB(
+                ContentSizes.width(context) * 0.05,
+                ContentSizes.height(context) * 0.05,
+                ContentSizes.width(context) * 0.05,
+                0,
+              ),
+              children: snapshots.data.documents
+                  .map(
+                    (document) =>
+                        _postItemWidget.createPostItemWidget(context, document),
+                  )
+                  .toList(),
+            ),
+          );
         }
-        // TODO FIX SCROLL ITEM
-        return ListView(
-          padding: EdgeInsets.fromLTRB(
-            ContentSizes.width(context) * 0.05,
-            ContentSizes.height(context) * 0.05,
-            ContentSizes.width(context) * 0.05,
-            0,
-          ),
-          children: snapshots.data.documents
-              .map(
-                (document) =>
-                    _postItemWidget.createPostItemWidget(context, document),
-              )
-              .toList(),
-        );
       },
     );
 
     return _appProviders.isLoading
         ? WillPopScope(
-            onWillPop: () async => _exitApp(),
+            onWillPop: () async => false,
             child: Scaffold(
               body: Loading(
                 color: ContentColors.orange,

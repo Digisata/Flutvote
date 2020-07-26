@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutvote/commons/commons.dart';
-import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 
@@ -22,13 +21,16 @@ class AlertDialogWidget {
     isSignOut = false,
     isSignUp = false,
     isForgotPassword = false,
+    isSubmit = false,
     isEditProfile = false,
     isChangePassword = false,
   }) {
-    final AppProviders _appProviders = AppProviders();
     final bool _isStay = isEditProfile || isChangePassword || isExit;
-    final bool _isBack =
-        isSignUp || isForgotPassword || isEditProfile || isChangePassword;
+    final bool _isBack = isSignUp ||
+        isForgotPassword ||
+        isSubmit ||
+        isEditProfile ||
+        isChangePassword;
 
     showDialog(
       barrierDismissible: false,
@@ -47,8 +49,8 @@ class AlertDialogWidget {
                 'https://raw.githubusercontent.com/Shashank02051997/FancyGifDialog-Android/master/GIF\'s/gif14.gif',
             progressIndicatorBuilder: (context, url, download) => Center(
               child: Container(
-                width: ContentSizes.height(context) * 0.1,
                 height: ContentSizes.height(context) * 0.1,
+                width: ContentSizes.height(context) * 0.1,
                 child: CircularProgressIndicator(
                   backgroundColor: Colors.transparent,
                   value: download.progress,
@@ -125,9 +127,7 @@ class AlertDialogWidget {
           onOkButtonPressed: () async {
             if (isSignOut) {
               try {
-                _appProviders.isLoading = true;
                 await _firebaseService.signOut();
-                _appProviders.isLoading = false;
                 Navigator.pop(_context, true);
                 Navigator.pushReplacementNamed(_context, routeName);
               } catch (error) {

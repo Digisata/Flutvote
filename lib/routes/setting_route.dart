@@ -27,9 +27,12 @@ class SettingRoute extends StatelessWidget {
       },
     );
 
-    final Hero _photoProfile = _photoProfileWidget.createPhotoProfileWidget(
-      ContentSizes.height(context) * 0.06,
-      ContentSizes.height(context) * 0.12,
+    final Hero _photoProfile = Hero(
+      tag: 'photoProfile',
+      child: _photoProfileWidget.createPhotoProfileWidget(
+        ContentSizes.height(context) * 0.06,
+        ContentSizes.height(context) * 0.12,
+      ),
     );
 
     final Text _displayNameText = Text(
@@ -130,7 +133,12 @@ class SettingRoute extends StatelessWidget {
           backgroundColor: ContentColors.white,
         ),
         body: Padding(
-          padding: EdgeInsets.all(ContentSizes.width(context) * 0.05),
+          padding: EdgeInsets.fromLTRB(
+            ContentSizes.width(context) * 0.05,
+            ContentSizes.width(context) * 0.01,
+            ContentSizes.width(context) * 0.05,
+            ContentSizes.width(context) * 0.05,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,

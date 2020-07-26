@@ -122,8 +122,8 @@ class SignUpRoute extends StatelessWidget {
           try {
             _appProviders.isLoading = true;
             await _firebaseService.signUpWithEmailAndPassword(
-              _textEditingControllerEmail.text.trim(),
-              _textEditingControllerPassword.text.trim(),
+              _signUpProviders.emailSignUp,
+              _signUpProviders.passwordSignUp,
             );
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
@@ -183,7 +183,7 @@ class SignUpRoute extends StatelessWidget {
 
     return _appProviders.isLoading
         ? WillPopScope(
-            onWillPop: () async => _onBackButtonPressed(),
+            onWillPop: () async => false,
             child: Scaffold(
               body: Center(
                 child: Loading(
@@ -203,38 +203,32 @@ class SignUpRoute extends StatelessWidget {
                 backgroundColor: ContentColors.white,
               ),
               body: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
-                        ContentSizes.width(context) * 0.1,
-                        ContentSizes.height(context) * 0.2,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    ContentSizes.width(context) * 0.05,
+                    ContentSizes.height(context) * 0.01,
+                    ContentSizes.width(context) * 0.05,
+                    ContentSizes.height(context) * 0.01,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      _signUpText,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.05,
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          _signUpText,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _signUpForm,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _signUpEmailAndPaswordButton,
-                          SizedBox(
-                            height: ContentSizes.height(context) * 0.05,
-                          ),
-                          _signInText,
-                        ],
+                      _signUpForm,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.05,
                       ),
-                    ),
-                  ],
+                      _signUpEmailAndPaswordButton,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.05,
+                      ),
+                      _signInText,
+                    ],
+                  ),
                 ),
               ),
             ),

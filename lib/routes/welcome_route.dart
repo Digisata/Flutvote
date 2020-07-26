@@ -75,9 +75,9 @@ class WelcomeRoute extends StatelessWidget {
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.fromLTRB(
-                  ContentSizes.width(context) * 0.1,
+                  ContentSizes.width(context) * 0.05,
                   ContentSizes.height(context) * 0.15,
-                  ContentSizes.width(context) * 0.1,
+                  ContentSizes.width(context) * 0.05,
                   ContentSizes.height(context) * 0.15,
                 ),
                 child: Column(

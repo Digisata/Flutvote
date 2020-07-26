@@ -27,8 +27,8 @@ class CategoryWidget {
           padding: EdgeInsets.all(ContentSizes.height(context) * 0.003),
           child: GestureDetector(
             child: Container(
-              width: ContentSizes.width(context) * 0.2,
               height: ContentSizes.height(context) * 0.3,
+              width: ContentSizes.width(context) * 0.2,
               alignment: Alignment.center,
               padding: EdgeInsets.fromLTRB(
                 ContentSizes.width(context) * 0.01,

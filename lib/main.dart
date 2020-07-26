@@ -40,6 +40,9 @@ void main() async {
         ChangeNotifierProvider<ChangePasswordProviders>(
           create: (context) => ChangePasswordProviders(),
         ),
+        ChangeNotifierProvider<DetailPostProviders>(
+          create: (context) => DetailPostProviders(),
+        ),
       ],
       child: Flutvote(),
     ),
@@ -71,6 +74,7 @@ class Flutvote extends StatelessWidget {
         '/settingRoute': (context) => SettingRoute(),
         '/editProfileRoute': (context) => EditProfileRoute(),
         '/changePasswordRoute': (context) => ChangePasswordRoute(),
+        '/detailPostRoute': (context) => DetailPostRoute(),
       },
       theme: ThemeData(
         primaryColor: Colors.white,
