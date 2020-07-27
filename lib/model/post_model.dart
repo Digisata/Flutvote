@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
@@ -10,8 +11,8 @@ class PostModel {
     @required this.imageUrl,
     @required this.title,
     @required this.description,
-    @required this.options,
     @required this.totalVotes,
+    @required this.detailVotes,
   });
 
   final String uid;
@@ -21,8 +22,8 @@ class PostModel {
   final String imageUrl;
   final String title;
   final String description;
-  final List<String> options;
   final int totalVotes;
+  final DetailVotes detailVotes;
 
   PostModel copyWith({
     String uid,
@@ -32,8 +33,9 @@ class PostModel {
     String imageUrl,
     String title,
     String description,
-    List<String> options,
-    int voteSum,
+    int totalVotes,
+    DetailVotes detailVotes,
+    DocumentReference reference,
   }) =>
       PostModel(
         uid: uid ?? this.uid,
@@ -43,8 +45,8 @@ class PostModel {
         imageUrl: imageUrl ?? this.imageUrl,
         title: title ?? this.title,
         description: description ?? this.description,
-        options: options ?? this.options,
-        totalVotes: voteSum ?? this.totalVotes,
+        totalVotes: totalVotes ?? this.totalVotes,
+        detailVotes: detailVotes ?? this.detailVotes,
       );
 
   factory PostModel.fromJson(String str) => PostModel.fromMap(json.decode(str));
@@ -59,8 +61,8 @@ class PostModel {
         imageUrl: json["imageUrl"],
         title: json["title"],
         description: json["description"],
-        options: List<String>.from(json["options"].map((x) => x)),
         totalVotes: json["totalVotes"],
+        detailVotes: DetailVotes.fromMap(json["detailVotes"]),
       );
 
   Map<String, dynamic> toMap() => {
@@ -71,7 +73,41 @@ class PostModel {
         "imageUrl": imageUrl,
         "title": title,
         "description": description,
-        "options": List<dynamic>.from(options.map((x) => x)),
         "totalVotes": totalVotes,
+        "detailVotes": detailVotes.toMap(),
+      };
+}
+
+class DetailVotes {
+  DetailVotes({
+    @required this.jogja,
+    @required this.bali,
+  });
+
+  final int jogja;
+  final int bali;
+
+  DetailVotes copyWith({
+    int jogja,
+    int bali,
+  }) =>
+      DetailVotes(
+        jogja: jogja ?? this.jogja,
+        bali: bali ?? this.bali,
+      );
+
+  factory DetailVotes.fromJson(String str) =>
+      DetailVotes.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory DetailVotes.fromMap(Map<String, dynamic> json) => DetailVotes(
+        jogja: json["Jogja"],
+        bali: json["Bali"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "Jogja": jogja,
+        "Bali": bali,
       };
 }

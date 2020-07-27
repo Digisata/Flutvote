@@ -1,12 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutvote/commons/commons.dart';
+import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 
 class AlertDialogWidget {
   final FirebaseService _firebaseService = FirebaseService();
+  final FirestoreService _firestoreService = FirestoreService();
 
   createAlertDialogWidget(
     BuildContext _context,
@@ -21,14 +24,20 @@ class AlertDialogWidget {
     isSignOut = false,
     isSignUp = false,
     isForgotPassword = false,
-    isSubmit = false,
+    isVote = false,
+    isConfirmVote = false,
     isEditProfile = false,
     isChangePassword = false,
+    DocumentSnapshot documentSnapshot,
+    AppProviders appProviders,
+    SignUpProviders signUpProviders,
+    DetailPostProviders detailPostProviders,
+    ChangePasswordProviders changePasswordProviders,
   }) {
     final bool _isStay = isEditProfile || isChangePassword || isExit;
     final bool _isBack = isSignUp ||
         isForgotPassword ||
-        isSubmit ||
+        isVote ||
         isEditProfile ||
         isChangePassword;
 
@@ -121,6 +130,7 @@ class AlertDialogWidget {
                   fontSize: ContentSizes.dp18(_context),
                 ),
           ),
+          // TODO FIX THIS ROUTING
           onCancelButtonPressed: () {
             Navigator.pop(_context);
           },
@@ -134,10 +144,43 @@ class AlertDialogWidget {
                 throw 'Sign out error: $error';
               }
             } else if (_isBack) {
+              if (isSignUp) {
+                signUpProviders.isPasswordSignUpVisible = false;
+                signUpProviders.isRepeatPasswordSignUpVisible = false;
+              } else if (isVote) {
+                detailPostProviders.selectedOption = '';
+              } else if (isChangePassword) {
+                changePasswordProviders.isOldPasswordChangeVisible = false;
+                changePasswordProviders.isNewPasswordChangeVisible = false;
+                changePasswordProviders.isNewRepeatPasswordChangeVisible =
+                    false;
+              }
               Navigator.pop(_context, true);
               Navigator.pop(_context, true);
             } else if (isExit) {
               SystemNavigator.pop();
+            } else if (isConfirmVote) {
+              try {
+                appProviders.isLoading = true;
+                await _firestoreService.updateVoteData(
+                  documentSnapshot,
+                  detailPostProviders.selectedOption,
+                  detailPostProviders.index,
+                );
+                appProviders.isLoading = false;
+                Navigator.pop(_context, true);
+                createAlertDialogWidget(
+                  _context,
+                  ContentTexts.thankYou,
+                  ContentTexts.thankYouDescription,
+                  ContentTexts.ok,
+                  routeName: '/homeRoute',
+                  isOnlyCancelButton: false,
+                  isOnlyOkButton: true,
+                );
+              } catch (error) {
+                throw 'Update vote data error: $error';
+              }
             } else {
               Navigator.pop(_context, true);
               Navigator.pushReplacementNamed(_context, routeName);

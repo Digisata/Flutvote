@@ -90,6 +90,16 @@ class ContentTexts {
   static const String voted = 'Voted';
 
   static const String vote = 'Vote';
+  static const String chooseFirst = 'Choose first';
+  static const String chooseDescription =
+      'Please choose one of the options that available, and then confirm your option!';
+  static const String confirm = 'Confirm';
+  static const String confirmVote = 'Confirm vote';
+  static const String confirmVoteDescription =
+      'Please remember, you can only vote once each post, so please vote wisely!';
+  static const String thankYou = 'Thank you';
+  static const String thankYouDescription =
+      'Your choice has been recorded successfully in our system, have a nice day!';
 
   static const String editProfile = 'Edit profile';
   static const String changePassword = 'Change password';

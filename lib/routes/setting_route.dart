@@ -23,7 +23,7 @@ class SettingRoute extends StatelessWidget {
       context,
       ContentTexts.backToHomeRoute,
       () {
-        Navigator.pop(context);
+        _onBackButtonPressed();
       },
     );
 

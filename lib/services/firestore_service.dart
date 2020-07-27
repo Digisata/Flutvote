@@ -52,10 +52,12 @@ class FirestoreService {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
-      await _collectionReference.document(_user.uid).updateData({
-        'username': userModel.username,
-        'displayName': userModel.displayName,
-      });
+      await _collectionReference.document(_user.uid).updateData(
+        {
+          'username': userModel.username,
+          'displayName': userModel.displayName,
+        },
+      );
     } catch (error) {
       throw 'update username and display name error: $error';
     }
@@ -65,11 +67,41 @@ class FirestoreService {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
-      await _collectionReference.document(_user.uid).updateData({
-        'isSetupCompleted': userModel.isSetupCompleted,
-      });
+      await _collectionReference.document(_user.uid).updateData(
+        {
+          'isSetupCompleted': userModel.isSetupCompleted,
+        },
+      );
     } catch (error) {
       throw 'update is setup completed error: $error';
+    }
+  }
+
+  Future<void> updateVoteData(
+    DocumentSnapshot documentSnapshot,
+    String key,
+    int index,
+  ) async {
+    try {
+      Firestore.instance.runTransaction(
+        (transaction) async {
+          final DocumentSnapshot _freshSnapshot =
+              await transaction.get(documentSnapshot.reference);
+          assert(_freshSnapshot != null);
+          final PostModel _postModel = PostModel.fromMap(_freshSnapshot.data);
+          assert(_postModel != null);
+          await transaction.update(
+            _freshSnapshot.reference,
+            {
+              'detailVotes': {
+                key: _postModel.detailVotes.toMap().values.elementAt(index) + 1,
+              },
+            },
+          );
+        },
+      );
+    } catch (error) {
+      throw 'update vote data error: $error';
     }
   }
 }

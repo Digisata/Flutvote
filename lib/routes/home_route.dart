@@ -85,10 +85,12 @@ class HomeRoute extends StatelessWidget {
       stream: _postSnapshots,
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
-          return Loading(
-            color: ContentColors.orange,
-            indicator: BallPulseIndicator(),
-            size: ContentSizes.height(context) * 0.1,
+          return Expanded(
+            child: Loading(
+              color: ContentColors.orange,
+              indicator: BallPulseIndicator(),
+              size: ContentSizes.height(context) * 0.1,
+            ),
           );
         } else if (snapshots.hasError) {
           return _alertDialogWidget.createAlertDialogWidget(

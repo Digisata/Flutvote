@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/model/models.dart';
@@ -19,7 +20,9 @@ class DetailPostRoute extends StatelessWidget {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final DetailPostProviders _detailPostProviders =
         Provider.of<DetailPostProviders>(context);
-    final PostModel _postModel = ModalRoute.of(context).settings.arguments;
+    final DocumentSnapshot _documentSnapshot =
+        ModalRoute.of(context).settings.arguments;
+    final PostModel _postModel = PostModel.fromMap(_documentSnapshot.data);
 
     _onBackButtonPressed() {
       if (_detailPostProviders.selectedOption == '') {
@@ -31,7 +34,8 @@ class DetailPostRoute extends StatelessWidget {
           ContentTexts.leaveConfirmation,
           ContentTexts.leave,
           isOnlyCancelButton: false,
-          isSubmit: true,
+          isVote: true,
+          detailPostProviders: _detailPostProviders,
         );
       }
     }
@@ -40,18 +44,7 @@ class DetailPostRoute extends StatelessWidget {
       context,
       ContentTexts.backToHomeRoute,
       () {
-        if (_detailPostProviders.selectedOption == '') {
-          Navigator.pop(context);
-        } else {
-          _alertDialogWidget.createAlertDialogWidget(
-            context,
-            ContentTexts.leavePage,
-            ContentTexts.leaveConfirmation,
-            ContentTexts.leave,
-            isOnlyCancelButton: false,
-            isSubmit: true,
-          );
-        }
+        _onBackButtonPressed();
       },
       isVote: true,
     );
@@ -109,19 +102,20 @@ class DetailPostRoute extends StatelessWidget {
 
     final Expanded _optionsList = Expanded(
       child: ListView.builder(
-        itemCount: _postModel.options.length,
+        itemCount: _postModel.detailVotes.toMap().length,
         itemBuilder: (context, index) {
           return ListTile(
             leading: Radio(
               activeColor: ContentColors.orange,
-              value: _postModel.options[index],
+              value: _postModel.detailVotes.toMap().keys.elementAt(index),
               groupValue: _detailPostProviders.selectedOption,
               onChanged: (value) {
                 _detailPostProviders.selectedOption = value;
+                _detailPostProviders.index = index;
               },
             ),
             title: Text(
-              _postModel.options[index],
+              _postModel.detailVotes.toMap().keys.elementAt(index),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
@@ -141,7 +135,28 @@ class DetailPostRoute extends StatelessWidget {
       ContentColors.orange,
       ContentColors.white,
       ContentTexts.vote,
-      () async {},
+      () async {
+        if (_detailPostProviders.selectedOption == '') {
+          _alertDialogWidget.createAlertDialogWidget(
+            context,
+            ContentTexts.chooseFirst,
+            ContentTexts.chooseDescription,
+            ContentTexts.ok,
+          );
+        } else {
+          _alertDialogWidget.createAlertDialogWidget(
+            context,
+            ContentTexts.confirmVote,
+            ContentTexts.confirmVoteDescription,
+            ContentTexts.confirm,
+            isOnlyCancelButton: false,
+            isConfirmVote: true,
+            documentSnapshot: _documentSnapshot,
+            appProviders: _appProviders,
+            detailPostProviders: _detailPostProviders,
+          );
+        }
+      },
     );
 
     final CircleAvatar _photoProfile =

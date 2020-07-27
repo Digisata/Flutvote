@@ -137,12 +137,15 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
       ContentTexts.voteDescriptionIntroduction,
     );
 
-    final Center _setupDisplayNameAndUsername = _appProviders.isLoading
-        ? Center(
-            child: Loading(
-              color: ContentColors.orange,
-              indicator: BallSpinFadeLoaderIndicator(),
-              size: ContentSizes.height(context) * 0.1,
+    final _setupDisplayNameAndUsername = _appProviders.isLoading
+        ? WillPopScope(
+            onWillPop: () async => false,
+            child: Center(
+              child: Loading(
+                color: ContentColors.orange,
+                indicator: BallSpinFadeLoaderIndicator(),
+                size: ContentSizes.height(context) * 0.1,
+              ),
             ),
           )
         : Center(

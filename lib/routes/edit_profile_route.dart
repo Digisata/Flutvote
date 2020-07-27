@@ -27,16 +27,18 @@ class EditProfileRoute extends StatelessWidget {
     final UserProfileProviders _userProfileProviders =
         Provider.of<UserProfileProviders>(context);
 
-    _onBackButtonPressed() {
+    _onBackButtonPressed({bool isDiscard = false}) {
       if (_textEditingControllerDisplayName.text.isEmpty &&
           _textEditingControllerUsername.text.isEmpty) {
         Navigator.pop(context);
       } else {
         _alertDialogWidget.createAlertDialogWidget(
           context,
-          ContentTexts.leavePage,
-          ContentTexts.leaveConfirmation,
-          ContentTexts.leave,
+          isDiscard ? ContentTexts.discardChanges : ContentTexts.leavePage,
+          isDiscard
+              ? ContentTexts.discardConfirmation
+              : ContentTexts.leaveConfirmation,
+          isDiscard ? ContentTexts.discard : ContentTexts.leave,
           isOnlyCancelButton: false,
           isEditProfile: true,
         );
@@ -47,19 +49,7 @@ class EditProfileRoute extends StatelessWidget {
       context,
       ContentTexts.backToSettingRoute,
       () {
-        if (_textEditingControllerDisplayName.text.isEmpty &&
-            _textEditingControllerUsername.text.isEmpty) {
-          Navigator.pop(context);
-        } else {
-          _alertDialogWidget.createAlertDialogWidget(
-            context,
-            ContentTexts.leavePage,
-            ContentTexts.leaveConfirmation,
-            ContentTexts.leave,
-            isOnlyCancelButton: false,
-            isEditProfile: true,
-          );
-        }
+        _onBackButtonPressed();
       },
     );
 
@@ -165,19 +155,7 @@ class EditProfileRoute extends StatelessWidget {
       ContentColors.grey,
       ContentTexts.discard,
       () {
-        if (_textEditingControllerDisplayName.text.isEmpty &&
-            _textEditingControllerUsername.text.isEmpty) {
-          Navigator.pop(context);
-        } else {
-          _alertDialogWidget.createAlertDialogWidget(
-            context,
-            ContentTexts.discardChanges,
-            ContentTexts.discardConfirmation,
-            ContentTexts.discard,
-            isOnlyCancelButton: false,
-            isEditProfile: true,
-          );
-        }
+        _onBackButtonPressed(isDiscard: true);
       },
     );
 

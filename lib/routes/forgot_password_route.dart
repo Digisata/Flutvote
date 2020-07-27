@@ -31,7 +31,7 @@ class ForgotPasswordRoute extends StatelessWidget {
       context,
       ContentTexts.backToSignInRoute,
       () {
-        Navigator.pop(context);
+        _onBackButtonPressed();
       },
     );
 

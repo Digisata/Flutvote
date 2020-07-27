@@ -5,13 +5,18 @@ import 'package:flutvote/model/models.dart';
 
 class PostItemWidget {
   GestureDetector createPostItemWidget(
-      BuildContext _context, DocumentSnapshot _document) {
+    BuildContext _context,
+    DocumentSnapshot _document,
+  ) {
     final PostModel _postModel = PostModel.fromMap(_document.data);
 
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(_context, '/detailPostRoute',
-            arguments: _postModel);
+        Navigator.pushNamed(
+          _context,
+          '/detailPostRoute',
+          arguments: _document,
+        );
       },
       child: Container(
         padding: EdgeInsets.fromLTRB(

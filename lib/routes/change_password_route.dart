@@ -26,19 +26,25 @@ class ChangePasswordRoute extends StatelessWidget {
         Provider.of<ChangePasswordProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
 
-    _onBackButtonPressed() {
+    _onBackButtonPressed({bool isDiscard = false}) {
       if (_textEditingControllerOldPassword.text.isEmpty &&
           _textEditingControllerNewPassword.text.isEmpty &&
           _textEditingControllerNewRepeatPassword.text.isEmpty) {
+        _changePasswordProviders.isOldPasswordChangeVisible = false;
+        _changePasswordProviders.isNewPasswordChangeVisible = false;
+        _changePasswordProviders.isNewRepeatPasswordChangeVisible = false;
         Navigator.pop(context);
       } else {
         _alertDialogWidget.createAlertDialogWidget(
           context,
-          ContentTexts.leavePage,
-          ContentTexts.leaveConfirmation,
-          ContentTexts.leave,
+          isDiscard ? ContentTexts.discardChanges : ContentTexts.leavePage,
+          isDiscard
+              ? ContentTexts.discardConfirmation
+              : ContentTexts.leaveConfirmation,
+          isDiscard ? ContentTexts.discard : ContentTexts.leave,
           isOnlyCancelButton: false,
           isChangePassword: true,
+          changePasswordProviders: _changePasswordProviders,
         );
       }
     }
@@ -47,20 +53,7 @@ class ChangePasswordRoute extends StatelessWidget {
       context,
       ContentTexts.backToSettingRoute,
       () {
-        if (_textEditingControllerOldPassword.text.isEmpty &&
-            _textEditingControllerNewPassword.text.isEmpty &&
-            _textEditingControllerNewRepeatPassword.text.isEmpty) {
-          Navigator.pop(context);
-        } else {
-          _alertDialogWidget.createAlertDialogWidget(
-            context,
-            ContentTexts.leavePage,
-            ContentTexts.leaveConfirmation,
-            ContentTexts.leave,
-            isOnlyCancelButton: false,
-            isChangePassword: true,
-          );
-        }
+        _onBackButtonPressed();
       },
     );
 
@@ -164,6 +157,7 @@ class ChangePasswordRoute extends StatelessWidget {
               isOnlyOkButton: true,
               isSignOut: true,
               isChangePassword: true,
+              changePasswordProviders: _changePasswordProviders,
             );
           } catch (error) {
             _appProviders.isLoading = false;
@@ -185,20 +179,7 @@ class ChangePasswordRoute extends StatelessWidget {
       ContentColors.grey,
       ContentTexts.discard,
       () {
-        if (_textEditingControllerOldPassword.text.isEmpty &&
-            _textEditingControllerNewPassword.text.isEmpty &&
-            _textEditingControllerNewRepeatPassword.text.isEmpty) {
-          Navigator.pop(context);
-        } else {
-          _alertDialogWidget.createAlertDialogWidget(
-            context,
-            ContentTexts.discardChanges,
-            ContentTexts.discardConfirmation,
-            ContentTexts.discard,
-            isOnlyCancelButton: false,
-            isChangePassword: true,
-          );
-        }
+        _onBackButtonPressed(isDiscard: true);
       },
     );
 

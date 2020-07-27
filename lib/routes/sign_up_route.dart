@@ -36,7 +36,7 @@ class SignUpRoute extends StatelessWidget {
       context,
       ContentTexts.backToSignInRoute,
       () {
-        Navigator.pop(context);
+        _onBackButtonPressed();
       },
     );
 
@@ -134,6 +134,7 @@ class SignUpRoute extends StatelessWidget {
               isOnlyCancelButton: false,
               isOnlyOkButton: true,
               isSignUp: true,
+              signUpProviders: _signUpProviders,
             );
           } catch (error) {
             _appProviders.isLoading = false;
