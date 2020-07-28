@@ -9,16 +9,45 @@ class FirestoreService {
       Firestore.instance.collection('users');
   final FirebaseService _firebaseService = FirebaseService();
 
-  Future<bool> isUserExist() async {
+  Future<bool> isAlreadyRegistered() async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
-      final DocumentSnapshot _document =
+      final DocumentSnapshot _documentSnapshot =
           await _collectionReference.document(_user.uid).get();
-      assert(_document != null);
-      return _document.exists;
+      assert(_documentSnapshot != null);
+      return _documentSnapshot.exists;
     } catch (error) {
       throw 'is user exist error: $error';
+    }
+  }
+
+  Future<bool> isPostOwner(DocumentSnapshot documentSnapshot) async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      final PostModel _postModel = PostModel.fromMap(documentSnapshot.data);
+      assert(_postModel != null);
+      return _postModel.uid == _user.uid;
+    } catch (error) {
+      throw 'is post owener error: $error';
+    }
+  }
+
+  Future<bool> isAlreadyVoted(DocumentSnapshot documentSnapshot) async {
+    try {
+      final CollectionReference _subCollectionReference = Firestore.instance
+          .collection('posts')
+          .document(documentSnapshot.documentID)
+          .collection('voter');
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      final DocumentSnapshot _documentSnapshot =
+          await _subCollectionReference.document(_user.uid).get();
+      assert(_documentSnapshot != null);
+      return _documentSnapshot.exists;
+    } catch (error) {
+      throw 'is already voted error: $error';
     }
   }
 
@@ -45,6 +74,23 @@ class FirestoreService {
           );
     } catch (error) {
       throw 'set data error: $error';
+    }
+  }
+
+  Future<void> setVoterData(DocumentSnapshot documentSnapshot) async {
+    try {
+      final CollectionReference _subCollectionReference = Firestore.instance
+          .collection('posts')
+          .document(documentSnapshot.documentID)
+          .collection('voter');
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _subCollectionReference.document(_user.uid).setData(
+            AppProviders.userModel.toMap(),
+            merge: true,
+          );
+    } catch (error) {
+      throw 'set voter data error: $error';
     }
   }
 
@@ -93,9 +139,10 @@ class FirestoreService {
           await transaction.update(
             _freshSnapshot.reference,
             {
-              'detailVotes': {
+              'totalVotes': _postModel.totalVotes + 1,
+              /* 'detailVotes': {
                 key: _postModel.detailVotes.toMap().values.elementAt(index) + 1,
-              },
+              }, */
             },
           );
         },

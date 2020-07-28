@@ -17,7 +17,7 @@ class AlertDialogWidget {
     String _description,
     String _textOkButton, {
     String textCancelButton,
-    String routeName = '/signInRoute',
+    String routeName = ContentTexts.signInRoute,
     bool isOnlyCancelButton = true,
     isOnlyOkButton = false,
     isExit = false,
@@ -135,18 +135,64 @@ class AlertDialogWidget {
             Navigator.pop(_context);
           },
           onOkButtonPressed: () async {
-            if (isSignOut) {
+            if (isConfirmVote) {
               try {
-                await _firebaseService.signOut();
                 Navigator.pop(_context, true);
-                Navigator.pushReplacementNamed(_context, routeName);
+                appProviders.isLoading = true;
+                if (!await _firestoreService.isPostOwner(documentSnapshot)) {
+                  if (!await _firestoreService
+                      .isAlreadyVoted(documentSnapshot)) {
+                    await _firestoreService.setVoterData(documentSnapshot);
+                    await _firestoreService.updateVoteData(
+                      documentSnapshot,
+                      detailPostProviders.selectedOption,
+                      detailPostProviders.index,
+                    );
+                    appProviders.isLoading = false;
+                    createAlertDialogWidget(
+                      _context,
+                      ContentTexts.yeay,
+                      ContentTexts.voteSuccessfully,
+                      ContentTexts.ok,
+                      isOnlyCancelButton: false,
+                      isOnlyOkButton: true,
+                      isVote: true,
+                      detailPostProviders: detailPostProviders,
+                    );
+                  } else {
+                    appProviders.isLoading = false;
+                    createAlertDialogWidget(
+                      _context,
+                      ContentTexts.oops,
+                      ContentTexts.alreadyVoted,
+                      ContentTexts.ok,
+                      isOnlyCancelButton: false,
+                      isOnlyOkButton: true,
+                      isVote: true,
+                      detailPostProviders: detailPostProviders,
+                    );
+                  }
+                } else {
+                  appProviders.isLoading = false;
+                  createAlertDialogWidget(
+                    _context,
+                    ContentTexts.oops,
+                    ContentTexts.cantVote,
+                    ContentTexts.ok,
+                    isOnlyCancelButton: false,
+                    isOnlyOkButton: true,
+                    isVote: true,
+                    detailPostProviders: detailPostProviders,
+                  );
+                }
               } catch (error) {
-                throw 'Sign out error: $error';
+                throw 'Update vote data error: $error';
               }
             } else if (_isBack) {
               if (isSignUp) {
                 signUpProviders.isPasswordSignUpVisible = false;
                 signUpProviders.isRepeatPasswordSignUpVisible = false;
+                signUpProviders.isTermsAndConditionsAccepted = false;
               } else if (isVote) {
                 detailPostProviders.selectedOption = '';
               } else if (isChangePassword) {
@@ -157,30 +203,18 @@ class AlertDialogWidget {
               }
               Navigator.pop(_context, true);
               Navigator.pop(_context, true);
-            } else if (isExit) {
-              SystemNavigator.pop();
-            } else if (isConfirmVote) {
+            } else if (isSignOut) {
               try {
                 appProviders.isLoading = true;
-                await _firestoreService.updateVoteData(
-                  documentSnapshot,
-                  detailPostProviders.selectedOption,
-                  detailPostProviders.index,
-                );
+                await _firebaseService.signOut();
                 appProviders.isLoading = false;
                 Navigator.pop(_context, true);
-                createAlertDialogWidget(
-                  _context,
-                  ContentTexts.thankYou,
-                  ContentTexts.thankYouDescription,
-                  ContentTexts.ok,
-                  routeName: '/homeRoute',
-                  isOnlyCancelButton: false,
-                  isOnlyOkButton: true,
-                );
+                Navigator.pushReplacementNamed(_context, routeName);
               } catch (error) {
-                throw 'Update vote data error: $error';
+                throw 'Sign out error: $error';
               }
+            } else if (isExit) {
+              SystemNavigator.pop();
             } else {
               Navigator.pop(_context, true);
               Navigator.pushReplacementNamed(_context, routeName);

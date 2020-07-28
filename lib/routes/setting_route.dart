@@ -13,6 +13,7 @@ class SettingRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
 
     _onBackButtonPressed() {
@@ -62,7 +63,7 @@ class SettingRoute extends StatelessWidget {
       context,
       ContentTexts.editProfile,
       () {
-        Navigator.pushNamed(context, '/editProfileRoute');
+        Navigator.pushNamed(context, ContentTexts.editProfileRoute);
       },
     );
 
@@ -71,7 +72,7 @@ class SettingRoute extends StatelessWidget {
       context,
       ContentTexts.changePassword,
       () {
-        Navigator.pushNamed(context, '/changePasswordRoute');
+        Navigator.pushNamed(context, ContentTexts.changePasswordRoute);
       },
     );
 
@@ -103,6 +104,7 @@ class SettingRoute extends StatelessWidget {
           ContentTexts.signOut,
           isOnlyCancelButton: false,
           isSignOut: true,
+          appProviders: _appProviders,
         );
       },
     );

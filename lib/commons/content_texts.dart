@@ -1,4 +1,17 @@
 class ContentTexts {
+  static const String splashRoute = '/';
+  static const String welcomeRoute = '/welcomeRoute';
+  static const String signInRoute = '/signInRoute';
+  static const String signUpRoute = '/signUpRoute';
+  static const String forgotPasswordRoute = '/forgotPasswordRoute';
+  static const String introductionRoute = '/introductionRoute';
+  static const String homeRoute = '/homeRoute';
+  static const String historyRoute = '/historyRoute';
+  static const String settingRoute = '/settingRoute';
+  static const String editProfileRoute = '/editProfileRoute';
+  static const String changePasswordRoute = '/changePasswordRoute';
+  static const String detailPostRoute = '/detailPostRoute';
+
   static const String welcome = 'Welcome to Flutvote';
   static const String welcomeDesciption =
       'A place where you can share your opinions throught voting, so let\'s get started ^^';
@@ -48,6 +61,10 @@ class ContentTexts {
       'Badly formated email, please check it again!';
   static const String errorEmailAlreadyInUse =
       'Email already registered!, try another one!';
+  static const String acceptOur = 'Accept our ';
+  static const String pleaseAccept =
+      'Please accept our terms and conditions first, it\'s usefull to protect your data!';
+  static const String termsAndConditions = 'Terms and Conditions';
   static const String oops = 'Oops';
   static const String yeay = 'Yeaay';
   static const String ok = 'Ok';
@@ -96,9 +113,12 @@ class ContentTexts {
   static const String confirm = 'Confirm';
   static const String confirmVote = 'Confirm vote';
   static const String confirmVoteDescription =
-      'Please remember, you can only vote once each post, so please vote wisely!';
-  static const String thankYou = 'Thank you';
-  static const String thankYouDescription =
+      'Please remember, you can only vote once to each post, so please vote wisely!';
+  static const String cantVote =
+      'You can\'t vote on your own post, please try another post!';
+  static const String alreadyVoted =
+      'You already voted to this post, please try other post!';
+  static const String voteSuccessfully =
       'Your choice has been recorded successfully in our system, have a nice day!';
 
   static const String editProfile = 'Edit profile';

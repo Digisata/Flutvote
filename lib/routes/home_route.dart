@@ -110,8 +110,8 @@ class HomeRoute extends StatelessWidget {
               ),
               children: snapshots.data.documents
                   .map(
-                    (document) =>
-                        _postItemWidget.createPostItemWidget(context, document),
+                    (documentSnapshot) =>
+                        _postItemWidget.createPostItemWidget(context, documentSnapshot),
                   )
                   .toList(),
             ),
@@ -160,7 +160,7 @@ class HomeRoute extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () {
                                       Navigator.pushNamed(
-                                          context, '/settingRoute');
+                                          context, ContentTexts.settingRoute);
                                     },
                                     child: _photoProfile,
                                   ),

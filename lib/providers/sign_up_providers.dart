@@ -1,12 +1,16 @@
 import 'package:flutter/foundation.dart';
 
 class SignUpProviders with ChangeNotifier {
-  bool _isPasswordSignUpVisible = false, _isRepeatPasswordSignUpVisible = false;
+  bool _isPasswordSignUpVisible = false,
+      _isRepeatPasswordSignUpVisible = false,
+      _isTermsAndConditionsAccepted = false;
   String _emailSignUp = '', _passwordSignUp = '', _repeatPasswordSignUp = '';
 
   bool get isPasswordSignUpVisible => _isPasswordSignUpVisible;
 
   bool get isRepeatPasswordSignUpVisible => _isRepeatPasswordSignUpVisible;
+
+  bool get isTermsAndConditionsAccepted => _isTermsAndConditionsAccepted;
 
   String get emailSignUp => _emailSignUp;
 
@@ -21,6 +25,11 @@ class SignUpProviders with ChangeNotifier {
 
   set isRepeatPasswordSignUpVisible(bool value) {
     _isRepeatPasswordSignUpVisible = value;
+    notifyListeners();
+  }
+
+  set isTermsAndConditionsAccepted(bool value) {
+    _isTermsAndConditionsAccepted = value;
     notifyListeners();
   }
 

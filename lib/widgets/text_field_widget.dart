@@ -14,11 +14,12 @@ class TextFieldWidget {
     bool isRegistered = false,
     isSignUp = false,
     isEmail = false,
+    isPasswordSignIn = false,
+    isPasswordSignUp = false,
+    isSetupProfile = false,
     isEditProfile = false,
     isUsername = false,
     isDisplayName = false,
-    isPasswordSignIn = false,
-    isPasswordSignUp = false,
     isOldPassword = false,
     isNewPassword = false,
     isRepeatPasswordSignUp = false,
@@ -34,7 +35,7 @@ class TextFieldWidget {
             isRepeatPasswordSignUp ||
             isNewPassword ||
             isRepeatChangePassword,
-        _isPlainText = isEmail || isEditProfile;
+        _isPlainText = isEmail || isSetupProfile || isEditProfile;
 
     return Container(
       height: ContentSizes.height(_context) * 0.06,
@@ -69,11 +70,15 @@ class TextFieldWidget {
               }
             : (input) {
                 if (input.isEmpty) {
-                  return isDisplayName
-                      ? 'Please input ${ContentTexts.displayName.toLowerCase()}'
-                      : isUsername
-                          ? 'Please input ${ContentTexts.username.toLowerCase()}'
-                          : 'Please input ${_hint.toLowerCase()}!';
+                  if (isSetupProfile) {
+                    return isDisplayName
+                        ? 'Please input ${ContentTexts.displayName.toLowerCase()}'
+                        : 'Please input ${ContentTexts.username.toLowerCase()}';
+                  } else {
+                    if (!isEditProfile) {
+                      return 'Please input ${_hint.toLowerCase()}!';
+                    }
+                  }
                 } else {
                   if (isEmail) {
                     if (!EmailValidator.validate(input)) {

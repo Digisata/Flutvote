@@ -13,28 +13,20 @@ class _SplashRouteState extends State<SplashRoute> {
   final FirebaseService _firebaseService = FirebaseService();
   final FirestoreService _firestoreService = FirestoreService();
 
-  void _fetchUserData() async {
-    await _firestoreService.fetchUserData();
-  }
-
-  void _syncUserData() async {
-    await HiveProviders.syncUserData();
-  }
-
   void _navigateTo() async {
     if (await _firebaseService.getCurrentUser() == null ||
         !await _firebaseService.isEmailVerified()) {
       if (!HiveProviders.getFirstOpened()) {
-        Navigator.pushReplacementNamed(context, '/signInRoute');
+        Navigator.pushReplacementNamed(context, ContentTexts.signInRoute);
       } else {
-        Navigator.pushReplacementNamed(context, '/welcomeRoute');
+        Navigator.pushReplacementNamed(context, ContentTexts.welcomeRoute);
       }
     } else if (!HiveProviders.getIsSetupCompleted()) {
-      Navigator.pushReplacementNamed(context, '/introductionRoute');
+      Navigator.pushReplacementNamed(context, ContentTexts.introductionRoute);
     } else {
-      _fetchUserData();
-      _syncUserData();
-      Navigator.pushReplacementNamed(context, '/homeRoute');
+      await _firestoreService.fetchUserData();
+      await HiveProviders.syncUserData();
+      Navigator.pushReplacementNamed(context, ContentTexts.homeRoute);
     }
   }
 

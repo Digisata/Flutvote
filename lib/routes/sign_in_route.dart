@@ -96,7 +96,7 @@ class SignInRoute extends StatelessWidget {
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, '/forgotPasswordRoute');
+            Navigator.pushNamed(context, ContentTexts.forgotPasswordRoute);
           },
           child: Text(
             ContentTexts.forgotPassword,
@@ -128,7 +128,7 @@ class SignInRoute extends StatelessWidget {
               _signInProviders.passwordSignIn,
             );
             final FirebaseUser _user = await _firebaseService.getCurrentUser();
-            if (!await _firestoreService.isUserExist()) {
+            if (!await _firestoreService.isAlreadyRegistered()) {
               AppProviders.setUserModel = UserModel(
                 email: _user.email,
                 deviceId: _hiveProviders.deviceId,
@@ -142,17 +142,19 @@ class SignInRoute extends StatelessWidget {
             await HiveProviders.syncUserData();
             if (!HiveProviders.getFirstSignedIn()) {
               if (!HiveProviders.getIsSetupCompleted()) {
-                Navigator.pushReplacementNamed(context, '/introductionRoute');
+                Navigator.pushReplacementNamed(
+                    context, ContentTexts.introductionRoute);
               } else {
-                Navigator.pushReplacementNamed(context, '/homeRoute');
+                Navigator.pushReplacementNamed(context, ContentTexts.homeRoute);
               }
-            } else if (await _firestoreService.isUserExist() &&
+            } else if (await _firestoreService.isAlreadyRegistered() &&
                 HiveProviders.getIsSetupCompleted()) {
               HiveProviders.setFirstSignedIn();
-              Navigator.pushReplacementNamed(context, '/homeRoute');
+              Navigator.pushReplacementNamed(context, ContentTexts.homeRoute);
             } else {
               HiveProviders.setFirstSignedIn();
-              Navigator.pushReplacementNamed(context, '/introductionRoute');
+              Navigator.pushReplacementNamed(
+                  context, ContentTexts.introductionRoute);
             }
             _signInProviders.isPasswordSignInVisible = false;
             _appProviders.isLoading = false;
@@ -193,7 +195,7 @@ class SignInRoute extends StatelessWidget {
                     ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    Navigator.pushNamed(context, '/signUpRoute');
+                    Navigator.pushNamed(context, ContentTexts.signUpRoute);
                   },
               ),
             ],
@@ -242,9 +244,10 @@ class SignInRoute extends StatelessWidget {
           _appProviders.isLoading = true;
           await _facebookService.signInWithFacebook();
           if (!HiveProviders.getFirstSignedIn()) {
-            Navigator.pushReplacementNamed(context, '/homeRoute');
+            Navigator.pushReplacementNamed(context, ContentTexts.homeRoute);
           } else {
-            Navigator.pushReplacementNamed(context, '/introductionRoute');
+            Navigator.pushReplacementNamed(
+                context, ContentTexts.introductionRoute);
           }
           _appProviders.isLoading = false;
         } catch (error) {

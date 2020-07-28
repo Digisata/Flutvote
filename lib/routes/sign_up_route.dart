@@ -7,6 +7,7 @@ import 'package:flutvote/widgets/widgets.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignUpRoute extends StatelessWidget {
   final TextEditingController _textEditingControllerEmail =
@@ -106,6 +107,64 @@ class SignUpRoute extends StatelessWidget {
       ),
     );
 
+    final Checkbox _termsAndConditionsCheckbox = Checkbox(
+      value: _signUpProviders.isTermsAndConditionsAccepted,
+      activeColor: ContentColors.orange,
+      onChanged: (value) {
+        _signUpProviders.isTermsAndConditionsAccepted = value;
+      },
+    );
+
+    final Row _termsAndConditionsText = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        RichText(
+          text: TextSpan(
+            style: Theme.of(context).textTheme.headline2.copyWith(
+                  fontSize: ContentSizes.dp14(context),
+                ),
+            children: <TextSpan>[
+              TextSpan(
+                text: ContentTexts.acceptOur,
+                style: Theme.of(context).textTheme.headline2.copyWith(
+                      fontSize: ContentSizes.dp12(context),
+                    ),
+              ),
+              TextSpan(
+                text: ContentTexts.termsAndConditions,
+                style: Theme.of(context).textTheme.headline2.copyWith(
+                      color: ContentColors.orange,
+                      fontSize: ContentSizes.dp12(context),
+                    ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () async {
+                    const String _url = 'https://flutvote.web.app/#/';
+                    if (await canLaunch(_url)) {
+                      await launch(_url);
+                    } else {
+                      throw 'Could not launch $_url';
+                    }
+                  },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+    final Row _termsAndConditions = Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        _termsAndConditionsCheckbox,
+        SizedBox(
+          width: ContentSizes.width(context) * 0.01,
+        ),
+        _termsAndConditionsText,
+      ],
+    );
+
     final Material _signUpEmailAndPaswordButton =
         _actionButtonWidget.createActionButtonWidget(
       context,
@@ -119,29 +178,38 @@ class SignUpRoute extends StatelessWidget {
             _textEditingControllerRepeatPassword.text.trim();
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
-          try {
-            _appProviders.isLoading = true;
-            await _firebaseService.signUpWithEmailAndPassword(
-              _signUpProviders.emailSignUp,
-              _signUpProviders.passwordSignUp,
-            );
-            _appProviders.isLoading = false;
-            _alertDialogWidget.createAlertDialogWidget(
-              context,
-              ContentTexts.yeay,
-              'We sent an email verification to ${_signUpProviders.emailSignUp}, please confirm that',
-              ContentTexts.signIn,
-              isOnlyCancelButton: false,
-              isOnlyOkButton: true,
-              isSignUp: true,
-              signUpProviders: _signUpProviders,
-            );
-          } catch (error) {
-            _appProviders.isLoading = false;
+          if (_signUpProviders.isTermsAndConditionsAccepted) {
+            try {
+              _appProviders.isLoading = true;
+              await _firebaseService.signUpWithEmailAndPassword(
+                _signUpProviders.emailSignUp,
+                _signUpProviders.passwordSignUp,
+              );
+              _appProviders.isLoading = false;
+              _alertDialogWidget.createAlertDialogWidget(
+                context,
+                ContentTexts.yeay,
+                'We sent an email verification to ${_signUpProviders.emailSignUp}, please confirm that',
+                ContentTexts.signIn,
+                isOnlyCancelButton: false,
+                isOnlyOkButton: true,
+                isSignUp: true,
+                signUpProviders: _signUpProviders,
+              );
+            } catch (error) {
+              _appProviders.isLoading = false;
+              _alertDialogWidget.createAlertDialogWidget(
+                context,
+                ContentTexts.oops,
+                error,
+                ContentTexts.ok,
+              );
+            }
+          } else {
             _alertDialogWidget.createAlertDialogWidget(
               context,
               ContentTexts.oops,
-              error,
+              ContentTexts.pleaseAccept,
               ContentTexts.ok,
             );
           }
@@ -221,8 +289,10 @@ class SignUpRoute extends StatelessWidget {
                       ),
                       _signUpForm,
                       SizedBox(
-                        height: ContentSizes.height(context) * 0.05,
+                        height: ContentSizes.height(context) * 0.025,
                       ),
+                      _termsAndConditions,
+                      SizedBox(height: ContentSizes.height(context) * 0.025),
                       _signUpEmailAndPaswordButton,
                       SizedBox(
                         height: ContentSizes.height(context) * 0.05,

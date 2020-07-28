@@ -74,7 +74,7 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
       (input) {
         _userProfileProviders.displayName = input.trim();
       },
-      isEditProfile: true,
+      isSetupProfile: true,
       isDisplayName: true,
     );
 
@@ -86,7 +86,7 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
       (input) {
         _userProfileProviders.username = input.trim();
       },
-      isEditProfile: true,
+      isSetupProfile: true,
       isUsername: true,
     );
 
@@ -137,127 +137,125 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
       ContentTexts.voteDescriptionIntroduction,
     );
 
-    final _setupDisplayNameAndUsername = _appProviders.isLoading
+    return _appProviders.isLoading
         ? WillPopScope(
             onWillPop: () async => false,
-            child: Center(
-              child: Loading(
-                color: ContentColors.orange,
-                indicator: BallSpinFadeLoaderIndicator(),
-                size: ContentSizes.height(context) * 0.1,
-              ),
-            ),
-          )
-        : Center(
-            child: _setupProfileForm,
-          );
-
-    return WillPopScope(
-      onWillPop: () async => _exitApp(),
-      child: Scaffold(
-        body: SafeArea(
-          child: IntroductionScreen(
-            key: _introductionKey,
-            pages: [
-              PageViewModel(
-                title: '',
-                bodyWidget: _introductionSearch,
-              ),
-              PageViewModel(
-                title: '',
-                bodyWidget: _introductionInput,
-              ),
-              PageViewModel(
-                title: '',
-                bodyWidget: _introductionVote,
-              ),
-              PageViewModel(
-                title: '',
-                bodyWidget: _setupDisplayNameAndUsername,
-              ),
-            ],
-            onDone: () async {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                try {
-                  _appProviders.isLoading = true;
-                  AppProviders.setUserModel = UserModel(
-                    username: _userProfileProviders.username,
-                    displayName: _userProfileProviders.displayName,
-                    isSetupCompleted: true,
-                  );
-                  await _firestoreService
-                      .updateUsernameAndDisplayName(AppProviders.userModel);
-                  await _firestoreService
-                      .updateIsSetupCompleted(AppProviders.userModel);
-                  await HiveProviders.syncUserData();
-                  _appProviders.isLoading = false;
-                  _alertDialogWidget.createAlertDialogWidget(
-                    context,
-                    ContentTexts.yeay,
-                    ContentTexts.setupProfileSuccessfully,
-                    ContentTexts.homePage,
-                    routeName: '/homeRoute',
-                    isOnlyCancelButton: false,
-                    isOnlyOkButton: true,
-                  );
-                } catch (error) {
-                  throw 'set up profile error: $error';
-                }
-              }
-            },
-            isProgress: true,
-            showSkipButton: true,
-            showNextButton: true,
-            skipFlex: 0,
-            nextFlex: 0,
-            skip: Text(
-              ContentTexts.skip,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              textDirection: TextDirection.ltr,
-              style: Theme.of(context).textTheme.headline1.copyWith(
-                    color: ContentColors.orange,
-                    fontSize: ContentSizes.dp20(context),
-                  ),
-            ),
-            next: Icon(
-              Icons.arrow_forward,
-              color: ContentColors.orange,
-              size: ContentSizes.width(context) * 0.07,
-            ),
-            done: Text(
-              ContentTexts.done,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              textDirection: TextDirection.ltr,
-              style: Theme.of(context).textTheme.headline1.copyWith(
-                    color: ContentColors.orange,
-                    fontSize: ContentSizes.dp20(context),
-                  ),
-            ),
-            dotsDecorator: DotsDecorator(
-              size: Size(
-                ContentSizes.width(context) * 0.02,
-                ContentSizes.height(context) * 0.01,
-              ),
-              color: ContentColors.backgroundDarkGrey,
-              activeSize: Size(
-                ContentSizes.width(context) * 0.05,
-                ContentSizes.height(context) * 0.01,
-              ),
-              activeColor: ContentColors.orange,
-              activeShape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(25.0),
+            child: Scaffold(
+              body: Center(
+                child: Loading(
+                  color: ContentColors.orange,
+                  indicator: BallSpinFadeLoaderIndicator(),
+                  size: ContentSizes.height(context) * 0.1,
                 ),
               ),
             ),
-          ),
-        ),
-      ),
-    );
+          )
+        : WillPopScope(
+            onWillPop: () async => _exitApp(),
+            child: Scaffold(
+              body: SafeArea(
+                child: IntroductionScreen(
+                  key: _introductionKey,
+                  pages: [
+                    PageViewModel(
+                      title: '',
+                      bodyWidget: _introductionSearch,
+                    ),
+                    PageViewModel(
+                      title: '',
+                      bodyWidget: _introductionInput,
+                    ),
+                    PageViewModel(
+                      title: '',
+                      bodyWidget: _introductionVote,
+                    ),
+                    PageViewModel(
+                      title: '',
+                      bodyWidget: _setupProfileForm,
+                    ),
+                  ],
+                  onDone: () async {
+                    if (_formKey.currentState.validate()) {
+                      _formKey.currentState.save();
+                      try {
+                        _appProviders.isLoading = true;
+                        AppProviders.setUserModel = UserModel(
+                          username: _userProfileProviders.username,
+                          displayName: _userProfileProviders.displayName,
+                          isSetupCompleted: true,
+                        );
+                        await _firestoreService.updateUsernameAndDisplayName(
+                            AppProviders.userModel);
+                        await _firestoreService
+                            .updateIsSetupCompleted(AppProviders.userModel);
+                        await HiveProviders.syncUserData();
+                        _appProviders.isLoading = false;
+                        _alertDialogWidget.createAlertDialogWidget(
+                          context,
+                          ContentTexts.yeay,
+                          ContentTexts.setupProfileSuccessfully,
+                          ContentTexts.homePage,
+                          routeName: ContentTexts.homeRoute,
+                          isOnlyCancelButton: false,
+                          isOnlyOkButton: true,
+                        );
+                      } catch (error) {
+                        throw 'set up profile error: $error';
+                      }
+                    }
+                  },
+                  isProgress: true,
+                  showSkipButton: true,
+                  showNextButton: true,
+                  skipFlex: 0,
+                  nextFlex: 0,
+                  skip: Text(
+                    ContentTexts.skip,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.ltr,
+                    style: Theme.of(context).textTheme.headline1.copyWith(
+                          color: ContentColors.orange,
+                          fontSize: ContentSizes.dp20(context),
+                        ),
+                  ),
+                  next: Icon(
+                    Icons.arrow_forward,
+                    color: ContentColors.orange,
+                    size: ContentSizes.width(context) * 0.07,
+                  ),
+                  done: Text(
+                    ContentTexts.done,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.ltr,
+                    style: Theme.of(context).textTheme.headline1.copyWith(
+                          color: ContentColors.orange,
+                          fontSize: ContentSizes.dp20(context),
+                        ),
+                  ),
+                  dotsDecorator: DotsDecorator(
+                    size: Size(
+                      ContentSizes.width(context) * 0.02,
+                      ContentSizes.height(context) * 0.01,
+                    ),
+                    color: ContentColors.backgroundDarkGrey,
+                    activeSize: Size(
+                      ContentSizes.width(context) * 0.05,
+                      ContentSizes.height(context) * 0.01,
+                    ),
+                    activeColor: ContentColors.orange,
+                    activeShape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(25.0),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 }

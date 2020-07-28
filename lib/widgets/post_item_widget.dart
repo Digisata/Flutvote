@@ -6,16 +6,16 @@ import 'package:flutvote/model/models.dart';
 class PostItemWidget {
   GestureDetector createPostItemWidget(
     BuildContext _context,
-    DocumentSnapshot _document,
+    DocumentSnapshot _documentSnapshot,
   ) {
-    final PostModel _postModel = PostModel.fromMap(_document.data);
+    final PostModel _postModel = PostModel.fromMap(_documentSnapshot.data);
 
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(
           _context,
-          '/detailPostRoute',
-          arguments: _document,
+          ContentTexts.detailPostRoute,
+          arguments: _documentSnapshot,
         );
       },
       child: Container(

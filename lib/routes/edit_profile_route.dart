@@ -79,7 +79,11 @@ class EditProfileRoute extends StatelessWidget {
       _hiveProviders.displayName,
       Icons.account_circle,
       (input) {
-        _userProfileProviders.displayName = input.trim();
+        if (input.trim() != null) {
+          _userProfileProviders.displayName = input.trim();
+        } else {
+          _userProfileProviders.displayName = _hiveProviders.displayName;
+        }
       },
       isEditProfile: true,
       isDisplayName: true,
@@ -91,7 +95,11 @@ class EditProfileRoute extends StatelessWidget {
       _hiveProviders.username,
       Icons.alternate_email,
       (input) {
-        _userProfileProviders.username = input.trim();
+        if (input.trim() != null) {
+          _userProfileProviders.username = input.trim();
+        } else {
+          _userProfileProviders.username = _hiveProviders.username;
+        }
       },
       isEditProfile: true,
       isUsername: true,

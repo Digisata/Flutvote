@@ -36,7 +36,7 @@ class WelcomeRoute extends StatelessWidget {
     final GestureDetector _createAccountButton = GestureDetector(
       onTap: () {
         HiveProviders.setFirstOpened();
-        Navigator.pushReplacementNamed(context, '/signInRoute');
+        Navigator.pushReplacementNamed(context, ContentTexts.signInRoute);
       },
       child: Container(
         height: ContentSizes.height(context) * 0.07,

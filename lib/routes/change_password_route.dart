@@ -157,6 +157,7 @@ class ChangePasswordRoute extends StatelessWidget {
               isOnlyOkButton: true,
               isSignOut: true,
               isChangePassword: true,
+              appProviders: _appProviders,
               changePasswordProviders: _changePasswordProviders,
             );
           } catch (error) {
