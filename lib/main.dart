@@ -61,7 +61,6 @@ class Flutvote extends StatelessWidget {
     return MaterialApp(
       title: 'Flutvote',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
       routes: <String, WidgetBuilder>{
         ContentTexts.splashRoute: (context) => SplashRoute(),
         ContentTexts.welcomeRoute: (context) => WelcomeRoute(),

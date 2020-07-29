@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
@@ -11,6 +10,7 @@ class PostModel {
     @required this.imageUrl,
     @required this.title,
     @required this.description,
+    @required this.category,
     @required this.totalVotes,
     @required this.detailVotes,
   });
@@ -22,6 +22,7 @@ class PostModel {
   final String imageUrl;
   final String title;
   final String description;
+  final String category;
   final int totalVotes;
   final DetailVotes detailVotes;
 
@@ -33,9 +34,9 @@ class PostModel {
     String imageUrl,
     String title,
     String description,
+    String category,
     int totalVotes,
     DetailVotes detailVotes,
-    DocumentReference reference,
   }) =>
       PostModel(
         uid: uid ?? this.uid,
@@ -45,6 +46,7 @@ class PostModel {
         imageUrl: imageUrl ?? this.imageUrl,
         title: title ?? this.title,
         description: description ?? this.description,
+        category: category ?? this.category,
         totalVotes: totalVotes ?? this.totalVotes,
         detailVotes: detailVotes ?? this.detailVotes,
       );
@@ -61,6 +63,7 @@ class PostModel {
         imageUrl: json["imageUrl"],
         title: json["title"],
         description: json["description"],
+        category: json["category"],
         totalVotes: json["totalVotes"],
         detailVotes: DetailVotes.fromMap(json["detailVotes"]),
       );
@@ -73,6 +76,7 @@ class PostModel {
         "imageUrl": imageUrl,
         "title": title,
         "description": description,
+        "category": category,
         "totalVotes": totalVotes,
         "detailVotes": detailVotes.toMap(),
       };

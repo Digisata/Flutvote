@@ -101,19 +101,21 @@ class HomeRoute extends StatelessWidget {
           );
         } else {
           return Expanded(
-            child: ListView(
+            child: ListView.builder(
               padding: EdgeInsets.fromLTRB(
                 ContentSizes.width(context) * 0.05,
                 ContentSizes.height(context) * 0.05,
                 ContentSizes.width(context) * 0.05,
                 0,
               ),
-              children: snapshots.data.documents
-                  .map(
-                    (documentSnapshot) =>
-                        _postItemWidget.createPostItemWidget(context, documentSnapshot),
-                  )
-                  .toList(),
+              itemCount: snapshots.data.documents.length,
+              itemBuilder: (context, index) {
+                return _postItemWidget.createPostItemWidget(
+                  context,
+                  snapshots.data.documents.elementAt(index),
+                  index,
+                );
+              },
             ),
           );
         }
@@ -171,11 +173,9 @@ class HomeRoute extends StatelessWidget {
                               height: ContentSizes.height(context) * 0.03,
                             ),
                             Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                ContentSizes.width(context) * 0.05,
-                                0,
-                                ContentSizes.width(context) * 0.05,
-                                0,
+                              padding: EdgeInsets.only(
+                                left: ContentSizes.width(context) * 0.05,
+                                right: ContentSizes.width(context) * 0.05,
                               ),
                               child: _searchBar,
                             ),
@@ -183,11 +183,9 @@ class HomeRoute extends StatelessWidget {
                               height: ContentSizes.height(context) * 0.03,
                             ),
                             Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                ContentSizes.width(context) * 0.05,
-                                0,
-                                ContentSizes.width(context) * 0.05,
-                                0,
+                              padding: EdgeInsets.only(
+                                left: ContentSizes.width(context) * 0.05,
+                                right: ContentSizes.width(context) * 0.05,
                               ),
                               child: _categoriesText,
                             ),

@@ -42,6 +42,7 @@ class ChangePasswordRoute extends StatelessWidget {
               ? ContentTexts.discardConfirmation
               : ContentTexts.leaveConfirmation,
           isDiscard ? ContentTexts.discard : ContentTexts.leave,
+          routeName: ContentTexts.settingRoute,
           isOnlyCancelButton: false,
           isChangePassword: true,
           changePasswordProviders: _changePasswordProviders,

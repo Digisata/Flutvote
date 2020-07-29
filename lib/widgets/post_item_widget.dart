@@ -7,6 +7,7 @@ class PostItemWidget {
   GestureDetector createPostItemWidget(
     BuildContext _context,
     DocumentSnapshot _documentSnapshot,
+    int index,
   ) {
     final PostModel _postModel = PostModel.fromMap(_documentSnapshot.data);
 
@@ -15,7 +16,10 @@ class PostItemWidget {
         Navigator.pushNamed(
           _context,
           ContentTexts.detailPostRoute,
-          arguments: _documentSnapshot,
+          arguments: {
+            'documentSnapshot': _documentSnapshot,
+            'index': index,
+          },
         );
       },
       child: Container(
@@ -25,7 +29,7 @@ class PostItemWidget {
           ContentSizes.width(_context) * 0.03,
           ContentSizes.height(_context) * 0.01,
         ),
-        margin: EdgeInsets.only(bottom: ContentSizes.height(_context) * 0.01),
+        margin: EdgeInsets.only(bottom: ContentSizes.height(_context) * 0.02),
         height: ContentSizes.height(_context) * 0.15,
         width: ContentSizes.width(_context),
         decoration: BoxDecoration(
@@ -42,7 +46,7 @@ class PostItemWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Hero(
-                  tag: 'postImage',
+                  tag: 'postImage$index',
                   child: Container(
                     height: ContentSizes.height(_context),
                     width: ContentSizes.width(_context) * 0.25,
@@ -98,7 +102,7 @@ class PostItemWidget {
                       ],
                     ),
                     Text(
-                      '@${_postModel.username}',
+                      _postModel.category,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,

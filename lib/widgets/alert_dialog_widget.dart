@@ -137,7 +137,7 @@ class AlertDialogWidget {
           onOkButtonPressed: () async {
             if (isConfirmVote) {
               try {
-                Navigator.pop(_context, true);
+                Navigator.pop(_context);
                 appProviders.isLoading = true;
                 if (!await _firestoreService.isPostOwner(documentSnapshot)) {
                   if (!await _firestoreService
@@ -154,6 +154,7 @@ class AlertDialogWidget {
                       ContentTexts.yeay,
                       ContentTexts.voteSuccessfully,
                       ContentTexts.ok,
+                      routeName: ContentTexts.homeRoute,
                       isOnlyCancelButton: false,
                       isOnlyOkButton: true,
                       isVote: true,
@@ -166,6 +167,7 @@ class AlertDialogWidget {
                       ContentTexts.oops,
                       ContentTexts.alreadyVoted,
                       ContentTexts.ok,
+                      routeName: ContentTexts.homeRoute,
                       isOnlyCancelButton: false,
                       isOnlyOkButton: true,
                       isVote: true,
@@ -179,6 +181,7 @@ class AlertDialogWidget {
                     ContentTexts.oops,
                     ContentTexts.cantVote,
                     ContentTexts.ok,
+                    routeName: ContentTexts.homeRoute,
                     isOnlyCancelButton: false,
                     isOnlyOkButton: true,
                     isVote: true,
@@ -187,6 +190,16 @@ class AlertDialogWidget {
                 }
               } catch (error) {
                 throw 'Update vote data error: $error';
+              }
+            } else if (isSignOut) {
+              try {
+                appProviders.isLoading = true;
+                await _firebaseService.signOut();
+                appProviders.isLoading = false;
+                Navigator.pop(_context);
+                Navigator.pushReplacementNamed(_context, routeName);
+              } catch (error) {
+                throw 'Sign out error: $error';
               }
             } else if (_isBack) {
               if (isSignUp) {
@@ -201,22 +214,11 @@ class AlertDialogWidget {
                 changePasswordProviders.isNewRepeatPasswordChangeVisible =
                     false;
               }
-              Navigator.pop(_context, true);
-              Navigator.pop(_context, true);
-            } else if (isSignOut) {
-              try {
-                appProviders.isLoading = true;
-                await _firebaseService.signOut();
-                appProviders.isLoading = false;
-                Navigator.pop(_context, true);
-                Navigator.pushReplacementNamed(_context, routeName);
-              } catch (error) {
-                throw 'Sign out error: $error';
-              }
+              Navigator.popUntil(_context, ModalRoute.withName(routeName));
             } else if (isExit) {
               SystemNavigator.pop();
             } else {
-              Navigator.pop(_context, true);
+              Navigator.pop(_context);
               Navigator.pushReplacementNamed(_context, routeName);
             }
           },

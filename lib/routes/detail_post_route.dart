@@ -20,8 +20,9 @@ class DetailPostRoute extends StatelessWidget {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final DetailPostProviders _detailPostProviders =
         Provider.of<DetailPostProviders>(context);
-    final DocumentSnapshot _documentSnapshot =
+    final Map<String, dynamic> _object =
         ModalRoute.of(context).settings.arguments;
+    final DocumentSnapshot _documentSnapshot = _object['documentSnapshot'];
     final PostModel _postModel = PostModel.fromMap(_documentSnapshot.data);
 
     _onBackButtonPressed() {
@@ -33,6 +34,7 @@ class DetailPostRoute extends StatelessWidget {
           ContentTexts.leavePage,
           ContentTexts.leaveConfirmation,
           ContentTexts.leave,
+          routeName: ContentTexts.homeRoute,
           isOnlyCancelButton: false,
           isVote: true,
           detailPostProviders: _detailPostProviders,
@@ -50,7 +52,7 @@ class DetailPostRoute extends StatelessWidget {
     );
 
     final Hero _postImage = Hero(
-      tag: 'postImage',
+      tag: 'postImage${_object['index']}',
       child: CachedNetworkImage(
         fit: BoxFit.cover,
         imageUrl: _postModel.imageUrl,
@@ -88,6 +90,10 @@ class DetailPostRoute extends StatelessWidget {
 
     final Expanded _postDescription = Expanded(
       child: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          left: ContentSizes.width(context) * 0.05,
+          right: ContentSizes.width(context) * 0.05,
+        ),
         child: Text(
           _postModel.description,
           textAlign: TextAlign.start,
@@ -102,6 +108,10 @@ class DetailPostRoute extends StatelessWidget {
 
     final Expanded _optionsList = Expanded(
       child: ListView.builder(
+        padding: EdgeInsets.only(
+          left: ContentSizes.width(context) * 0.05,
+          right: ContentSizes.width(context) * 0.05,
+        ),
         itemCount: _postModel.detailVotes.toMap().length,
         itemBuilder: (context, index) {
           return ListTile(
@@ -187,6 +197,23 @@ class DetailPostRoute extends StatelessWidget {
           ),
     );
 
+    final Image _categoryIcon = Image.asset(
+      'assets/icons/category_icon.png',
+      height: ContentSizes.height(context) * 0.03,
+      width: ContentSizes.height(context) * 0.03,
+    );
+
+    final Text _category = Text(
+      _postModel.category,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+      style: Theme.of(context).textTheme.headline1.copyWith(
+            fontSize: ContentSizes.dp12(context),
+          ),
+    );
+
     final Image _voteIcon = Image.asset(
       'assets/icons/vote_icon.png',
       height: ContentSizes.height(context) * 0.03,
@@ -220,6 +247,18 @@ class DetailPostRoute extends StatelessWidget {
             _username,
           ],
         ),
+      ],
+    );
+
+    final Row _categoryInfo = Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        _categoryIcon,
+        SizedBox(
+          width: ContentSizes.width(context) * 0.02,
+        ),
+        _category,
       ],
     );
 
@@ -279,14 +318,17 @@ class DetailPostRoute extends StatelessWidget {
     );
 
     final Container _secondLayer = Container(
+      height: ContentSizes.height(context) * 0.15,
+      margin: EdgeInsets.only(
+        left: ContentSizes.width(context) * 0.05,
+        right: ContentSizes.width(context) * 0.05,
+      ),
       padding: EdgeInsets.fromLTRB(
         ContentSizes.width(context) * 0.05,
         ContentSizes.height(context) * 0.015,
         ContentSizes.width(context) * 0.05,
         ContentSizes.height(context) * 0.015,
       ),
-      height: ContentSizes.height(context) * 0.15,
-      width: ContentSizes.width(context) * 0.8,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
         color: Colors.white,
@@ -310,6 +352,7 @@ class DetailPostRoute extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               _postOwner,
+              _categoryInfo,
               _voteInfo,
             ],
           ),

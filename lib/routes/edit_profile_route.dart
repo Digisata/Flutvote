@@ -39,6 +39,7 @@ class EditProfileRoute extends StatelessWidget {
               ? ContentTexts.discardConfirmation
               : ContentTexts.leaveConfirmation,
           isDiscard ? ContentTexts.discard : ContentTexts.leave,
+          routeName: ContentTexts.settingRoute,
           isOnlyCancelButton: false,
           isEditProfile: true,
         );
@@ -79,7 +80,7 @@ class EditProfileRoute extends StatelessWidget {
       _hiveProviders.displayName,
       Icons.account_circle,
       (input) {
-        if (input.trim() != null) {
+        if (input.trim() != '') {
           _userProfileProviders.displayName = input.trim();
         } else {
           _userProfileProviders.displayName = _hiveProviders.displayName;
@@ -95,7 +96,7 @@ class EditProfileRoute extends StatelessWidget {
       _hiveProviders.username,
       Icons.alternate_email,
       (input) {
-        if (input.trim() != null) {
+        if (input.trim() != '') {
           _userProfileProviders.username = input.trim();
         } else {
           _userProfileProviders.username = _hiveProviders.username;
@@ -129,28 +130,35 @@ class EditProfileRoute extends StatelessWidget {
       () async {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
-          try {
-            _appProviders.isLoading = true;
-            AppProviders.setUserModel = UserModel(
-              username: _userProfileProviders.username,
-              displayName: _userProfileProviders.displayName,
-            );
-            await _firestoreService
-                .updateUsernameAndDisplayName(AppProviders.userModel);
-            await HiveProviders.syncUserData();
-            _hiveProviders.refreshUserData();
-            _appProviders.isLoading = false;
-            _alertDialogWidget.createAlertDialogWidget(
-              context,
-              ContentTexts.yeay,
-              ContentTexts.editProfileSuccessfully,
-              ContentTexts.ok,
-              isOnlyCancelButton: false,
-              isOnlyOkButton: true,
-              isEditProfile: true,
-            );
-          } catch (error) {
-            throw 'edit profile error: $error';
+          if (_userProfileProviders.displayName != _hiveProviders.displayName ||
+              _userProfileProviders.username != _hiveProviders.username) {
+            try {
+              _appProviders.isLoading = true;
+              AppProviders.setUserModel = UserModel(
+                username: _userProfileProviders.username,
+                displayName: _userProfileProviders.displayName,
+              );
+              await _firestoreService
+                  .updateUsernameAndDisplayName(AppProviders.userModel);
+              await _firestoreService.fetchUserData();
+              await HiveProviders.syncUserData();
+              _hiveProviders.refreshUserData();
+              _appProviders.isLoading = false;
+              _alertDialogWidget.createAlertDialogWidget(
+                context,
+                ContentTexts.yeay,
+                ContentTexts.editProfileSuccessfully,
+                ContentTexts.ok,
+                routeName: ContentTexts.settingRoute,
+                isOnlyCancelButton: false,
+                isOnlyOkButton: true,
+                isEditProfile: true,
+              );
+            } catch (error) {
+              throw 'edit profile error: $error';
+            }
+          } else {
+            Navigator.pop(context);
           }
         }
       },
