@@ -40,6 +40,43 @@ class SignInRoute extends StatelessWidget {
       );
     }
 
+    void _signIn({bool isSignInWithFacebook = false}) async {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      if (!await _firestoreService.isAlreadyRegistered()) {
+        AppProviders.setUserModel = UserModel(
+          email: _user.email,
+          deviceId: _hiveProviders.deviceId,
+          isSetupCompleted: false,
+        );
+        await _firestoreService.setUserData(AppProviders.userModel);
+      } else {
+        await _firestoreService.fetchUserData();
+      }
+      if (!isSignInWithFacebook) {
+        _hiveProviders.setPassword(_signInProviders.passwordSignIn);
+      }
+      await HiveProviders.syncUserData();
+      if (!HiveProviders.getFirstSignedIn()) {
+        if (!HiveProviders.getIsSetupCompleted()) {
+          Navigator.pushReplacementNamed(
+              context, ContentTexts.introductionRoute);
+        } else {
+          Navigator.pushReplacementNamed(context, ContentTexts.homeRoute);
+        }
+      } else if (await _firestoreService.isAlreadyRegistered() &&
+          HiveProviders.getIsSetupCompleted()) {
+        HiveProviders.setFirstSignedIn();
+        Navigator.pushReplacementNamed(context, ContentTexts.homeRoute);
+      } else {
+        HiveProviders.setFirstSignedIn();
+        Navigator.pushReplacementNamed(context, ContentTexts.introductionRoute);
+      }
+      if (!isSignInWithFacebook) {
+        _signInProviders.isPasswordSignInVisible = false;
+      }
+      _appProviders.isLoading = false;
+    }
+
     final Text _signInText = Text(
       ContentTexts.signIn,
       maxLines: 1,
@@ -127,37 +164,7 @@ class SignInRoute extends StatelessWidget {
               _signInProviders.emailSignIn,
               _signInProviders.passwordSignIn,
             );
-            final FirebaseUser _user = await _firebaseService.getCurrentUser();
-            if (!await _firestoreService.isAlreadyRegistered()) {
-              AppProviders.setUserModel = UserModel(
-                email: _user.email,
-                deviceId: _hiveProviders.deviceId,
-                isSetupCompleted: false,
-              );
-              await _firestoreService.setUserData(AppProviders.userModel);
-            } else {
-              await _firestoreService.fetchUserData();
-            }
-            _hiveProviders.setPassword(_signInProviders.passwordSignIn);
-            await HiveProviders.syncUserData();
-            if (!HiveProviders.getFirstSignedIn()) {
-              if (!HiveProviders.getIsSetupCompleted()) {
-                Navigator.pushReplacementNamed(
-                    context, ContentTexts.introductionRoute);
-              } else {
-                Navigator.pushReplacementNamed(context, ContentTexts.homeRoute);
-              }
-            } else if (await _firestoreService.isAlreadyRegistered() &&
-                HiveProviders.getIsSetupCompleted()) {
-              HiveProviders.setFirstSignedIn();
-              Navigator.pushReplacementNamed(context, ContentTexts.homeRoute);
-            } else {
-              HiveProviders.setFirstSignedIn();
-              Navigator.pushReplacementNamed(
-                  context, ContentTexts.introductionRoute);
-            }
-            _signInProviders.isPasswordSignInVisible = false;
-            _appProviders.isLoading = false;
+            _signIn();
           } catch (error) {
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
@@ -243,13 +250,7 @@ class SignInRoute extends StatelessWidget {
         try {
           _appProviders.isLoading = true;
           await _facebookService.signInWithFacebook();
-          if (!HiveProviders.getFirstSignedIn()) {
-            Navigator.pushReplacementNamed(context, ContentTexts.homeRoute);
-          } else {
-            Navigator.pushReplacementNamed(
-                context, ContentTexts.introductionRoute);
-          }
-          _appProviders.isLoading = false;
+          _signIn(isSignInWithFacebook: true);
         } catch (error) {
           _appProviders.isLoading = false;
           _alertDialogWidget.createAlertDialogWidget(

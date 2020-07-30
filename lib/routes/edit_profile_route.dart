@@ -46,6 +46,25 @@ class EditProfileRoute extends StatelessWidget {
       }
     }
 
+    void _updateUsernameAndDisplayName() async {
+      await _firestoreService
+          .updateUsernameAndDisplayName(AppProviders.userModel);
+      await _firestoreService.fetchUserData();
+      await HiveProviders.syncUserData();
+      _hiveProviders.refreshUserData();
+      _appProviders.isLoading = false;
+      _alertDialogWidget.createAlertDialogWidget(
+        context,
+        ContentTexts.yeay,
+        ContentTexts.editProfileSuccessfully,
+        ContentTexts.ok,
+        routeName: ContentTexts.settingRoute,
+        isOnlyCancelButton: false,
+        isOnlyOkButton: true,
+        isEditProfile: true,
+      );
+    }
+
     final IconButton _backButton = _backButtonWidget.createBackButton(
       context,
       ContentTexts.backToSettingRoute,
@@ -138,22 +157,24 @@ class EditProfileRoute extends StatelessWidget {
                 username: _userProfileProviders.username,
                 displayName: _userProfileProviders.displayName,
               );
-              await _firestoreService
-                  .updateUsernameAndDisplayName(AppProviders.userModel);
-              await _firestoreService.fetchUserData();
-              await HiveProviders.syncUserData();
-              _hiveProviders.refreshUserData();
-              _appProviders.isLoading = false;
-              _alertDialogWidget.createAlertDialogWidget(
-                context,
-                ContentTexts.yeay,
-                ContentTexts.editProfileSuccessfully,
-                ContentTexts.ok,
-                routeName: ContentTexts.settingRoute,
-                isOnlyCancelButton: false,
-                isOnlyOkButton: true,
-                isEditProfile: true,
-              );
+              if (_userProfileProviders.displayName !=
+                      _hiveProviders.displayName &&
+                  _userProfileProviders.username == _hiveProviders.username) {
+                _updateUsernameAndDisplayName();
+              } else {
+                if (!await _firestoreService
+                    .isUsernameExist(_userProfileProviders.username)) {
+                  _updateUsernameAndDisplayName();
+                } else {
+                  _appProviders.isLoading = false;
+                  _alertDialogWidget.createAlertDialogWidget(
+                    context,
+                    ContentTexts.oops,
+                    ContentTexts.usernameExistDescription,
+                    ContentTexts.ok,
+                  );
+                }
+              }
             } catch (error) {
               throw 'edit profile error: $error';
             }

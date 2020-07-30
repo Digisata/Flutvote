@@ -9,6 +9,20 @@ class FirestoreService {
       Firestore.instance.collection('users');
   final FirebaseService _firebaseService = FirebaseService();
 
+  Future<bool> isUsernameExist(String username) async {
+    try {
+      final QuerySnapshot _querySnapshot = await _collectionReference
+          .where('username'.toLowerCase(), isEqualTo: username.toLowerCase())
+          .limit(1)
+          .getDocuments();
+      assert(_querySnapshot != null);
+      final List<DocumentSnapshot> _documents = _querySnapshot.documents;
+      return _documents.length == 1;
+    } catch (error) {
+      throw 'is username exist error: $error';
+    }
+  }
+
   Future<bool> isAlreadyRegistered() async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();

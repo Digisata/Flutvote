@@ -130,7 +130,6 @@ class AlertDialogWidget {
                   fontSize: ContentSizes.dp18(_context),
                 ),
           ),
-          // TODO FIX THIS ROUTING
           onCancelButtonPressed: () {
             Navigator.pop(_context);
           },

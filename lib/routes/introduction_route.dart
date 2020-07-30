@@ -184,21 +184,33 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                           displayName: _userProfileProviders.displayName,
                           isSetupCompleted: true,
                         );
-                        await _firestoreService.updateUsernameAndDisplayName(
-                            AppProviders.userModel);
-                        await _firestoreService
-                            .updateIsSetupCompleted(AppProviders.userModel);
-                        await HiveProviders.syncUserData();
-                        _appProviders.isLoading = false;
-                        _alertDialogWidget.createAlertDialogWidget(
-                          context,
-                          ContentTexts.yeay,
-                          ContentTexts.setupProfileSuccessfully,
-                          ContentTexts.homePage,
-                          routeName: ContentTexts.homeRoute,
-                          isOnlyCancelButton: false,
-                          isOnlyOkButton: true,
-                        );
+                        if (!await _firestoreService
+                            .isUsernameExist(_userProfileProviders.username)) {
+                          await _firestoreService.updateUsernameAndDisplayName(
+                              AppProviders.userModel);
+                          await _firestoreService
+                              .updateIsSetupCompleted(AppProviders.userModel);
+                          await _firestoreService.fetchUserData();
+                          await HiveProviders.syncUserData();
+                          _appProviders.isLoading = false;
+                          _alertDialogWidget.createAlertDialogWidget(
+                            context,
+                            ContentTexts.yeay,
+                            ContentTexts.setupProfileSuccessfully,
+                            ContentTexts.homePage,
+                            routeName: ContentTexts.homeRoute,
+                            isOnlyCancelButton: false,
+                            isOnlyOkButton: true,
+                          );
+                        } else {
+                          _appProviders.isLoading = false;
+                          _alertDialogWidget.createAlertDialogWidget(
+                            context,
+                            ContentTexts.oops,
+                            ContentTexts.usernameExistDescription,
+                            ContentTexts.ok,
+                          );
+                        }
                       } catch (error) {
                         throw 'set up profile error: $error';
                       }

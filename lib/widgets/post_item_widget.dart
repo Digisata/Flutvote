@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
@@ -47,19 +48,29 @@ class PostItemWidget {
               children: <Widget>[
                 Hero(
                   tag: 'postImage$index',
-                  child: Container(
-                    height: ContentSizes.height(_context),
-                    width: ContentSizes.width(_context) * 0.25,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          _postModel.imageUrl,
-                        ),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.center,
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    imageUrl: _postModel.imageUrl,
+                    progressIndicatorBuilder: (context, url, download) =>
+                        Center(
+                      child: CircularProgressIndicator(
+                        value: download.progress,
                       ),
-                      shape: BoxShape.rectangle,
+                    ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    imageBuilder: (context, imageProvider) => Container(
+                      alignment: Alignment.center,
+                      height: ContentSizes.height(_context),
+                      width: ContentSizes.width(_context) * 0.25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                        shape: BoxShape.rectangle,
+                        color: Colors.transparent,
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -96,6 +96,8 @@ class ContentTexts {
       'One last step, please set up your display name and username to complete your profile';
   static const String setupProfileSuccessfully =
       'Your profile has been set up successfully, you can change it later if you want!';
+  static const String usernameExistDescription =
+      'Username already exist, please try another unique username!';
 
   static const String createPost = 'Create new post';
   static const String speakYourVote = 'Speak your\nVote out loud';
