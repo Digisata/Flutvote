@@ -40,21 +40,22 @@ class SignInRoute extends StatelessWidget {
       );
     }
 
-    void _signIn({bool isSignInWithFacebook = false}) async {
+    Future<void> _signIn({bool isSignInWithFacebook = false}) async {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       if (!await _firestoreService.isAlreadyRegistered()) {
         AppProviders.setUserModel = UserModel(
           email: _user.email,
           deviceId: _hiveProviders.deviceId,
+          imageUrl:
+              'https://sairajfilmsproduction.com/application/assets/images/nopic.jpg',
           isSetupCompleted: false,
         );
         await _firestoreService.setUserData(AppProviders.userModel);
-      } else {
-        await _firestoreService.fetchUserData();
       }
       if (!isSignInWithFacebook) {
         _hiveProviders.setPassword(_signInProviders.passwordSignIn);
       }
+      await _firestoreService.fetchUserData();
       await HiveProviders.syncUserData();
       if (!HiveProviders.getFirstSignedIn()) {
         if (!HiveProviders.getIsSetupCompleted()) {
@@ -72,7 +73,9 @@ class SignInRoute extends StatelessWidget {
         Navigator.pushReplacementNamed(context, ContentTexts.introductionRoute);
       }
       if (!isSignInWithFacebook) {
-        _signInProviders.isPasswordSignInVisible = false;
+        if (_signInProviders.isPasswordSignInVisible) {
+          _signInProviders.isPasswordSignInVisible = false;
+        }
       }
       _appProviders.isLoading = false;
     }
@@ -164,7 +167,7 @@ class SignInRoute extends StatelessWidget {
               _signInProviders.emailSignIn,
               _signInProviders.passwordSignIn,
             );
-            _signIn();
+            await _signIn();
           } catch (error) {
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
@@ -250,7 +253,7 @@ class SignInRoute extends StatelessWidget {
         try {
           _appProviders.isLoading = true;
           await _facebookService.signInWithFacebook();
-          _signIn(isSignInWithFacebook: true);
+          await _signIn(isSignInWithFacebook: true);
         } catch (error) {
           _appProviders.isLoading = false;
           _alertDialogWidget.createAlertDialogWidget(

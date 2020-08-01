@@ -1,18 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutvote/providers/providers.dart';
 
 class PhotoProfileWidget {
   CircleAvatar createPhotoProfileWidget(
     double _radius,
-    _size,
-  ) {
+    _size, {
+    HiveProviders hiveProviders,
+  }) {
     return CircleAvatar(
       backgroundColor: Colors.transparent,
       radius: _radius,
       child: CachedNetworkImage(
         fit: BoxFit.cover,
-        imageUrl:
-            'https://sairajfilmsproduction.com/application/assets/images/nopic.jpg',
+        imageUrl: hiveProviders.imageUrl,
         progressIndicatorBuilder: (context, url, download) =>
             CircularProgressIndicator(
           value: download.progress,

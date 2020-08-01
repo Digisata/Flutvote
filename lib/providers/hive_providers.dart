@@ -31,11 +31,13 @@ class HiveProviders with ChangeNotifier {
     UserModel _userModel = AppProviders.userModel;
     if (_userData.get('username') != _userModel.username ||
         _userData.get('email') != _userModel.email ||
+        _userData.get('imageUrl') != _userModel.imageUrl ||
         _userData.get('displayName') != _userModel.displayName ||
         _userData.get('deviceId') != _userModel.deviceId ||
         _userData.get('isSetupCompleted') != _userModel.isSetupCompleted) {
       await _userData.put('username', _userModel.username);
       await _userData.put('email', _userModel.email);
+      await _userData.put('imageUrl', _userModel.imageUrl);
       await _userData.put('displayName', _userModel.displayName);
       await _userData.put('deviceId', _userModel.deviceId);
       await _userData.put('isSetupCompleted', _userModel.isSetupCompleted);
@@ -51,6 +53,8 @@ class HiveProviders with ChangeNotifier {
   String get email => _userData.get('email');
 
   String get password => _userData.get('password');
+
+  String get imageUrl => _userData.get('imageUrl');
 
   String get displayName => _userData.get('displayName');
 

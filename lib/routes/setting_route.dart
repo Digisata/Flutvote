@@ -33,6 +33,7 @@ class SettingRoute extends StatelessWidget {
       child: _photoProfileWidget.createPhotoProfileWidget(
         ContentSizes.height(context) * 0.06,
         ContentSizes.height(context) * 0.12,
+        hiveProviders: _hiveProviders,
       ),
     );
 

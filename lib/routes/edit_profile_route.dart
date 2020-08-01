@@ -1,18 +1,23 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
-import 'package:flutvote/model/models.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart';
 
 class EditProfileRoute extends StatelessWidget {
   final TextEditingController _textEditingControllerDisplayName =
           TextEditingController(),
       _textEditingControllerUsername = TextEditingController();
   final FirestoreService _firestoreService = FirestoreService();
+  final FirebaseStorageService _firebaseStorageService =
+      FirebaseStorageService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
   final BackButtonWidget _backButtonWidget = BackButtonWidget();
@@ -24,6 +29,8 @@ class EditProfileRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
+    final EditProfileProviders _editProfileProviders =
+        Provider.of<EditProfileProviders>(context);
     final UserProfileProviders _userProfileProviders =
         Provider.of<UserProfileProviders>(context);
 
@@ -46,9 +53,25 @@ class EditProfileRoute extends StatelessWidget {
       }
     }
 
-    void _updateUsernameAndDisplayName() async {
-      await _firestoreService
-          .updateUsernameAndDisplayName(AppProviders.userModel);
+    Future<void> _updateUserProfile() async {
+      if (_editProfileProviders.image != null) {
+        final String _imageName = basename(_editProfileProviders.image.path);
+        final String _imageUrl =
+            await _firebaseStorageService.uploadPhotoProfile(
+          _editProfileProviders.image,
+          _imageName,
+        );
+        _userProfileProviders.imageUrl = _imageUrl;
+        _editProfileProviders.image = null;
+        await _firestoreService.updateImageUrl(_imageUrl);
+      }
+      if (_userProfileProviders.displayName != _hiveProviders.displayName) {
+        await _firestoreService
+            .updateDisplayName(_userProfileProviders.displayName);
+      }
+      if (_userProfileProviders.username != _hiveProviders.username) {
+        await _firestoreService.updateUsername(_userProfileProviders.username);
+      }
       await _firestoreService.fetchUserData();
       await HiveProviders.syncUserData();
       _hiveProviders.refreshUserData();
@@ -86,9 +109,36 @@ class EditProfileRoute extends StatelessWidget {
 
     final Hero _photoProfile = Hero(
       tag: 'photoProfile',
-      child: _photoProfileWidget.createPhotoProfileWidget(
-        ContentSizes.height(context) * 0.06,
-        ContentSizes.height(context) * 0.12,
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          _photoProfileWidget.createPhotoProfileWidget(
+            ContentSizes.height(context) * 0.06,
+            ContentSizes.height(context) * 0.12,
+            hiveProviders: _hiveProviders,
+          ),
+          GestureDetector(
+            onTap: () async {
+              try {
+                final PickedFile _pickedFile =
+                    await ImagePicker().getImage(source: ImageSource.gallery);
+                final File _image = File(_pickedFile.path);
+                _editProfileProviders.image = _image;
+              } catch (error) {
+                throw 'get image error: $error';
+              }
+            },
+            child: CircleAvatar(
+              backgroundColor: ContentColors.black,
+              radius: ContentSizes.height(context) * 0.06,
+              child: Icon(
+                Icons.camera_alt,
+                color: ContentColors.white,
+                size: 35.0,
+              ),
+            ),
+          ),
+        ],
       ),
     );
 
@@ -150,21 +200,19 @@ class EditProfileRoute extends StatelessWidget {
         if (_formKey.currentState.validate()) {
           _formKey.currentState.save();
           if (_userProfileProviders.displayName != _hiveProviders.displayName ||
-              _userProfileProviders.username != _hiveProviders.username) {
+              _userProfileProviders.username != _hiveProviders.username ||
+              _editProfileProviders.image != null) {
             try {
               _appProviders.isLoading = true;
-              AppProviders.setUserModel = UserModel(
-                username: _userProfileProviders.username,
-                displayName: _userProfileProviders.displayName,
-              );
-              if (_userProfileProviders.displayName !=
-                      _hiveProviders.displayName &&
+              if ((_userProfileProviders.displayName !=
+                          _hiveProviders.displayName ||
+                      _editProfileProviders.image != null) &&
                   _userProfileProviders.username == _hiveProviders.username) {
-                _updateUsernameAndDisplayName();
+                await _updateUserProfile();
               } else {
                 if (!await _firestoreService
                     .isUsernameExist(_userProfileProviders.username)) {
-                  _updateUsernameAndDisplayName();
+                  await _updateUserProfile();
                 } else {
                   _appProviders.isLoading = false;
                   _alertDialogWidget.createAlertDialogWidget(
@@ -176,7 +224,7 @@ class EditProfileRoute extends StatelessWidget {
                 }
               }
             } catch (error) {
-              throw 'edit profile error: $error';
+              throw 'update user profile error: $error';
             }
           } else {
             Navigator.pop(context);

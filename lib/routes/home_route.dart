@@ -22,6 +22,7 @@ class HomeRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
+    final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
 
     _exitApp() {
       _alertDialogWidget.createAlertDialogWidget(
@@ -50,6 +51,7 @@ class HomeRoute extends StatelessWidget {
       child: _photoProfileWidget.createPhotoProfileWidget(
         ContentSizes.height(context) * 0.025,
         ContentSizes.height(context) * 0.05,
+        hiveProviders: _hiveProviders,
       ),
     );
 

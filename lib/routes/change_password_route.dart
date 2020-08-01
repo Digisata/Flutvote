@@ -30,9 +30,15 @@ class ChangePasswordRoute extends StatelessWidget {
       if (_textEditingControllerOldPassword.text.isEmpty &&
           _textEditingControllerNewPassword.text.isEmpty &&
           _textEditingControllerNewRepeatPassword.text.isEmpty) {
-        _changePasswordProviders.isOldPasswordChangeVisible = false;
-        _changePasswordProviders.isNewPasswordChangeVisible = false;
-        _changePasswordProviders.isNewRepeatPasswordChangeVisible = false;
+        if (_changePasswordProviders.isOldPasswordChangeVisible) {
+          _changePasswordProviders.isOldPasswordChangeVisible = false;
+        }
+        if (_changePasswordProviders.isNewPasswordChangeVisible) {
+          _changePasswordProviders.isNewPasswordChangeVisible = false;
+        }
+        if (_changePasswordProviders.isNewRepeatPasswordChangeVisible) {
+          _changePasswordProviders.isNewRepeatPasswordChangeVisible = false;
+        }
         Navigator.pop(context);
       } else {
         _alertDialogWidget.createAlertDialogWidget(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
-import 'package:flutvote/model/models.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
@@ -179,17 +178,13 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                       _formKey.currentState.save();
                       try {
                         _appProviders.isLoading = true;
-                        AppProviders.setUserModel = UserModel(
-                          username: _userProfileProviders.username,
-                          displayName: _userProfileProviders.displayName,
-                          isSetupCompleted: true,
-                        );
                         if (!await _firestoreService
                             .isUsernameExist(_userProfileProviders.username)) {
-                          await _firestoreService.updateUsernameAndDisplayName(
-                              AppProviders.userModel);
                           await _firestoreService
-                              .updateIsSetupCompleted(AppProviders.userModel);
+                              .updateUsername(_userProfileProviders.username);
+                          await _firestoreService.updateDisplayName(
+                              _userProfileProviders.displayName);
+                          await _firestoreService.updateIsSetupCompleted(true);
                           await _firestoreService.fetchUserData();
                           await HiveProviders.syncUserData();
                           _appProviders.isLoading = false;

@@ -202,16 +202,30 @@ class AlertDialogWidget {
               }
             } else if (_isBack) {
               if (isSignUp) {
-                signUpProviders.isPasswordSignUpVisible = false;
-                signUpProviders.isRepeatPasswordSignUpVisible = false;
-                signUpProviders.isTermsAndConditionsAccepted = false;
+                if (signUpProviders.isPasswordSignUpVisible) {
+                  signUpProviders.isPasswordSignUpVisible = false;
+                }
+                if (signUpProviders.isRepeatPasswordSignUpVisible) {
+                  signUpProviders.isRepeatPasswordSignUpVisible = false;
+                }
+                if (signUpProviders.isTermsAndConditionsAccepted) {
+                  signUpProviders.isTermsAndConditionsAccepted = false;
+                }
               } else if (isVote) {
-                detailPostProviders.selectedOption = '';
+                if (detailPostProviders.selectedOption != '') {
+                  detailPostProviders .selectedOption = '';
+                }
               } else if (isChangePassword) {
-                changePasswordProviders.isOldPasswordChangeVisible = false;
-                changePasswordProviders.isNewPasswordChangeVisible = false;
-                changePasswordProviders.isNewRepeatPasswordChangeVisible =
-                    false;
+                if (changePasswordProviders.isOldPasswordChangeVisible) {
+                  changePasswordProviders.isOldPasswordChangeVisible = false;
+                }
+                if (changePasswordProviders.isNewPasswordChangeVisible) {
+                  changePasswordProviders.isNewPasswordChangeVisible = false;
+                }
+                if (changePasswordProviders.isNewRepeatPasswordChangeVisible) {
+                  changePasswordProviders.isNewRepeatPasswordChangeVisible =
+                      false;
+                }
               }
               Navigator.popUntil(_context, ModalRoute.withName(routeName));
             } else if (isExit) {

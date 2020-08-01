@@ -108,28 +108,55 @@ class FirestoreService {
     }
   }
 
-  Future<void> updateUsernameAndDisplayName(UserModel userModel) async {
+  Future<void> updateImageUrl(String imageUrl) async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
       await _collectionReference.document(_user.uid).updateData(
         {
-          'username': userModel.username,
-          'displayName': userModel.displayName,
+          'imageUrl': imageUrl,
         },
       );
     } catch (error) {
-      throw 'update username and display name error: $error';
+      throw 'update image url error: $error';
     }
   }
 
-  Future<void> updateIsSetupCompleted(UserModel userModel) async {
+  Future<void> updateUsername(String username) async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
       await _collectionReference.document(_user.uid).updateData(
         {
-          'isSetupCompleted': userModel.isSetupCompleted,
+          'username': username,
+        },
+      );
+    } catch (error) {
+      throw 'update username error: $error';
+    }
+  }
+
+  Future<void> updateDisplayName(String displayName) async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _collectionReference.document(_user.uid).updateData(
+        {
+          'displayName': displayName,
+        },
+      );
+    } catch (error) {
+      throw 'update display name error: $error';
+    }
+  }
+
+  Future<void> updateIsSetupCompleted(bool isSetupCompleted) async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _collectionReference.document(_user.uid).updateData(
+        {
+          'isSetupCompleted': isSetupCompleted,
         },
       );
     } catch (error) {

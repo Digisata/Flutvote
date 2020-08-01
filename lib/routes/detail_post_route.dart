@@ -168,7 +168,7 @@ class DetailPostRoute extends StatelessWidget {
         }
       },
     );
-
+    // TODO FIX IMAGE URL
     final CircleAvatar _photoProfile =
         _photoProfileWidget.createPhotoProfileWidget(
       ContentSizes.height(context) * 0.025,

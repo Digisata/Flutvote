@@ -53,8 +53,18 @@ class PostItemWidget {
                     imageUrl: _postModel.imageUrl,
                     progressIndicatorBuilder: (context, url, download) =>
                         Center(
-                      child: CircularProgressIndicator(
-                        value: download.progress,
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: ContentSizes.height(_context),
+                        width: ContentSizes.width(_context) * 0.25,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          shape: BoxShape.rectangle,
+                          color: Colors.transparent,
+                        ),
+                        child: CircularProgressIndicator(
+                          value: download.progress,
+                        ),
                       ),
                     ),
                     errorWidget: (context, url, error) => Icon(Icons.error),

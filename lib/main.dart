@@ -43,6 +43,9 @@ void main() async {
         ChangeNotifierProvider<DetailPostProviders>(
           create: (context) => DetailPostProviders(),
         ),
+        ChangeNotifierProvider<EditProfileProviders>(
+          create: (context) => EditProfileProviders(),
+        ),
       ],
       child: Flutvote(),
     ),

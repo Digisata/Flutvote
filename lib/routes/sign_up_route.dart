@@ -28,8 +28,15 @@ class SignUpRoute extends StatelessWidget {
         Provider.of<SignUpProviders>(context);
 
     _onBackButtonPressed() {
-      _signUpProviders.isPasswordSignUpVisible = false;
-      _signUpProviders.isRepeatPasswordSignUpVisible = false;
+      if (_signUpProviders.isPasswordSignUpVisible) {
+        _signUpProviders.isPasswordSignUpVisible = false;
+      }
+      if (_signUpProviders.isRepeatPasswordSignUpVisible) {
+        _signUpProviders.isRepeatPasswordSignUpVisible = false;
+      }
+      if (_signUpProviders.isTermsAndConditionsAccepted) {
+        _signUpProviders.isTermsAndConditionsAccepted = false;
+      }
       Navigator.pop(context, true);
     }
 
