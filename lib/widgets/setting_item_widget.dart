@@ -20,7 +20,7 @@ class SettingItemWidget {
         width: ContentSizes.width(_context),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15.0),
-          color: ContentColors.white,
+          color: Colors.white,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

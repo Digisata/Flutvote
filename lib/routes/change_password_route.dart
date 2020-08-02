@@ -135,7 +135,7 @@ class ChangePasswordRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
-      ContentColors.white,
+      Colors.white,
       ContentTexts.changePassword,
       () async {
         _changePasswordProviders.newPasswordChange =
@@ -210,7 +210,7 @@ class ChangePasswordRoute extends StatelessWidget {
               appBar: AppBar(
                 elevation: 0.0,
                 leading: _backButton,
-                backgroundColor: ContentColors.white,
+                backgroundColor: Colors.white,
               ),
               body: SingleChildScrollView(
                 child: Padding(

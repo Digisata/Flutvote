@@ -24,6 +24,7 @@ class EditProfileRoute extends StatelessWidget {
   final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget();
   final TextFieldWidget _textFieldWidget = TextFieldWidget();
   final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
+  final BottomSheetWidget _bottomSheetWidget = BottomSheetWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,8 @@ class EditProfileRoute extends StatelessWidget {
 
     _onBackButtonPressed({bool isDiscard = false}) {
       if (_textEditingControllerDisplayName.text.isEmpty &&
-          _textEditingControllerUsername.text.isEmpty) {
+          _textEditingControllerUsername.text.isEmpty &&
+          _editProfileProviders.image == null) {
         Navigator.pop(context);
       } else {
         _alertDialogWidget.createAlertDialogWidget(
@@ -49,6 +51,7 @@ class EditProfileRoute extends StatelessWidget {
           routeName: ContentTexts.settingRoute,
           isOnlyCancelButton: false,
           isEditProfile: true,
+          editProfileProviders: _editProfileProviders,
         );
       }
     }
@@ -63,7 +66,7 @@ class EditProfileRoute extends StatelessWidget {
         );
         _userProfileProviders.imageUrl = _imageUrl;
         _editProfileProviders.image = null;
-        await _firestoreService.updateImageUrl(_imageUrl);
+        await _firestoreService.updatePhotoUrl(_imageUrl);
       }
       if (_userProfileProviders.displayName != _hiveProviders.displayName) {
         await _firestoreService
@@ -84,7 +87,7 @@ class EditProfileRoute extends StatelessWidget {
         routeName: ContentTexts.settingRoute,
         isOnlyCancelButton: false,
         isOnlyOkButton: true,
-        isEditProfile: true,
+        isEditProfileSuccess: true,
       );
     }
 
@@ -109,36 +112,34 @@ class EditProfileRoute extends StatelessWidget {
 
     final Hero _photoProfile = Hero(
       tag: 'photoProfile',
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          _photoProfileWidget.createPhotoProfileWidget(
-            ContentSizes.height(context) * 0.06,
-            ContentSizes.height(context) * 0.12,
-            hiveProviders: _hiveProviders,
-          ),
-          GestureDetector(
-            onTap: () async {
-              try {
-                final PickedFile _pickedFile =
-                    await ImagePicker().getImage(source: ImageSource.gallery);
-                final File _image = File(_pickedFile.path);
-                _editProfileProviders.image = _image;
-              } catch (error) {
-                throw 'get image error: $error';
-              }
-            },
-            child: CircleAvatar(
-              backgroundColor: ContentColors.black,
-              radius: ContentSizes.height(context) * 0.06,
-              child: Icon(
-                Icons.camera_alt,
-                color: ContentColors.white,
-                size: 35.0,
-              ),
+      child: GestureDetector(
+        onTap: () {
+          _bottomSheetWidget.createBottomSheetWidget(
+            context,
+            _editProfileProviders,
+          );
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            _photoProfileWidget.createPhotoProfileWidget(
+              ContentSizes.height(context) * 0.06,
+              ContentSizes.height(context) * 0.12,
+              isEditProfile: true,
+              hiveProviders: _hiveProviders,
+              editProfileProviders: _editProfileProviders,
             ),
-          ),
-        ],
+            CircleAvatar(
+              backgroundColor: Colors.black.withOpacity(0.3),
+              radius: ContentSizes.height(context) * 0.06,
+            ),
+            Icon(
+              Icons.image,
+              color: Colors.white,
+              size: 35.0,
+            ),
+          ],
+        ),
       ),
     );
 
@@ -194,7 +195,7 @@ class EditProfileRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
-      ContentColors.white,
+      Colors.white,
       ContentTexts.save,
       () async {
         if (_formKey.currentState.validate()) {
@@ -263,7 +264,7 @@ class EditProfileRoute extends StatelessWidget {
               appBar: AppBar(
                 elevation: 0.0,
                 leading: _backButton,
-                backgroundColor: ContentColors.white,
+                backgroundColor: Colors.white,
               ),
               body: SingleChildScrollView(
                 child: Padding(

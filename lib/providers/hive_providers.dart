@@ -29,17 +29,27 @@ class HiveProviders with ChangeNotifier {
 
   static Future<void> syncUserData() async {
     UserModel _userModel = AppProviders.userModel;
-    if (_userData.get('username') != _userModel.username ||
-        _userData.get('email') != _userModel.email ||
-        _userData.get('imageUrl') != _userModel.imageUrl ||
-        _userData.get('displayName') != _userModel.displayName ||
-        _userData.get('deviceId') != _userModel.deviceId ||
-        _userData.get('isSetupCompleted') != _userModel.isSetupCompleted) {
+    if (_userData.get('username') != _userModel.username) {
       await _userData.put('username', _userModel.username);
+    }
+
+    if (_userData.get('email') != _userModel.email) {
       await _userData.put('email', _userModel.email);
-      await _userData.put('imageUrl', _userModel.imageUrl);
+    }
+
+    if (_userData.get('photoUrl') != _userModel.photoUrl) {
+      await _userData.put('photoUrl', _userModel.photoUrl);
+    }
+
+    if (_userData.get('displayName') != _userModel.displayName) {
       await _userData.put('displayName', _userModel.displayName);
+    }
+
+    if (_userData.get('deviceId') != _userModel.deviceId) {
       await _userData.put('deviceId', _userModel.deviceId);
+    }
+
+    if (_userData.get('isSetupCompleted') != _userModel.isSetupCompleted) {
       await _userData.put('isSetupCompleted', _userModel.isSetupCompleted);
     }
   }
@@ -54,7 +64,7 @@ class HiveProviders with ChangeNotifier {
 
   String get password => _userData.get('password');
 
-  String get imageUrl => _userData.get('imageUrl');
+  String get photoUrl => _userData.get('photoUrl');
 
   String get displayName => _userData.get('displayName');
 

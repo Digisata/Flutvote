@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart';
 
 class IntroductionRoute extends StatefulWidget {
   @override
@@ -18,18 +22,25 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
           TextEditingController(),
       _textEditingControllerUsername = TextEditingController();
   final FirestoreService _firestoreService = FirestoreService();
+  final FirebaseStorageService _firebaseStorageService =
+      FirebaseStorageService();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<IntroductionScreenState> _introductionKey =
       GlobalKey<IntroductionScreenState>();
   final IntroductionWidget _introductionWidget = IntroductionWidget();
+  final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget();
   final TextFieldWidget _textFieldWidget = TextFieldWidget();
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
+  final BottomSheetWidget _bottomSheetWidget = BottomSheetWidget();
 
   @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final UserProfileProviders _userProfileProviders =
         Provider.of<UserProfileProviders>(context);
+    final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
+    final EditProfileProviders _editProfileProviders =
+        Provider.of<EditProfileProviders>(context);
 
     _exitApp() {
       _alertDialogWidget.createAlertDialogWidget(
@@ -64,6 +75,39 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
           ),
     );
 
+    final Hero _photoProfile = Hero(
+      tag: 'photoProfile',
+      child: GestureDetector(
+        onTap: () {
+          _bottomSheetWidget.createBottomSheetWidget(
+            context,
+            _editProfileProviders,
+          );
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            _photoProfileWidget.createPhotoProfileWidget(
+              ContentSizes.height(context) * 0.06,
+              ContentSizes.height(context) * 0.12,
+              isSetupProfile: true,
+              hiveProviders: _hiveProviders,
+              editProfileProviders: _editProfileProviders,
+            ),
+            CircleAvatar(
+              backgroundColor: Colors.black.withOpacity(0.5),
+              radius: ContentSizes.height(context) * 0.06,
+            ),
+            Icon(
+              Icons.image,
+              color: Colors.white,
+              size: 35.0,
+            ),
+          ],
+        ),
+      ),
+    );
+
     final Container _textFieldDisplayName =
         _textFieldWidget.createTextFieldWidget(
       context,
@@ -95,14 +139,6 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _setupProfileText,
-          SizedBox(
-            height: ContentSizes.height(context) * 0.02,
-          ),
-          _descriptionText,
-          SizedBox(
-            height: ContentSizes.height(context) * 0.05,
-          ),
           _textFieldDisplayName,
           SizedBox(
             height: ContentSizes.height(context) * 0.03,
@@ -170,44 +206,81 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                     ),
                     PageViewModel(
                       title: '',
-                      bodyWidget: _setupProfileForm,
+                      bodyWidget: Column(
+                        children: <Widget>[
+                          _setupProfileText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.02,
+                          ),
+                          _descriptionText,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _photoProfile,
+                          SizedBox(
+                            height: ContentSizes.height(context) * 0.05,
+                          ),
+                          _setupProfileForm,
+                        ],
+                      ),
                     ),
                   ],
                   onDone: () async {
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
-                      try {
-                        _appProviders.isLoading = true;
-                        if (!await _firestoreService
-                            .isUsernameExist(_userProfileProviders.username)) {
-                          await _firestoreService
-                              .updateUsername(_userProfileProviders.username);
-                          await _firestoreService.updateDisplayName(
-                              _userProfileProviders.displayName);
-                          await _firestoreService.updateIsSetupCompleted(true);
-                          await _firestoreService.fetchUserData();
-                          await HiveProviders.syncUserData();
-                          _appProviders.isLoading = false;
-                          _alertDialogWidget.createAlertDialogWidget(
-                            context,
-                            ContentTexts.yeay,
-                            ContentTexts.setupProfileSuccessfully,
-                            ContentTexts.homePage,
-                            routeName: ContentTexts.homeRoute,
-                            isOnlyCancelButton: false,
-                            isOnlyOkButton: true,
-                          );
-                        } else {
-                          _appProviders.isLoading = false;
-                          _alertDialogWidget.createAlertDialogWidget(
-                            context,
-                            ContentTexts.oops,
-                            ContentTexts.usernameExistDescription,
-                            ContentTexts.ok,
-                          );
+                      if (_editProfileProviders.image != null) {
+                        try {
+                          _appProviders.isLoading = true;
+                          if (!await _firestoreService.isUsernameExist(
+                              _userProfileProviders.username)) {
+                            final String _imageName =
+                                basename(_editProfileProviders.image.path);
+                            final String _imageUrl =
+                                await _firebaseStorageService
+                                    .uploadPhotoProfile(
+                              _editProfileProviders.image,
+                              _imageName,
+                            );
+                            _userProfileProviders.imageUrl = _imageUrl;
+                            _editProfileProviders.image = null;
+                            await _firestoreService.updatePhotoUrl(_imageUrl);
+                            await _firestoreService.updateDisplayName(
+                                _userProfileProviders.displayName);
+                            await _firestoreService
+                                .updateUsername(_userProfileProviders.username);
+                            await _firestoreService
+                                .updateIsSetupCompleted(true);
+                            await _firestoreService.fetchUserData();
+                            await HiveProviders.syncUserData();
+                            _appProviders.isLoading = false;
+                            _alertDialogWidget.createAlertDialogWidget(
+                              context,
+                              ContentTexts.yeay,
+                              ContentTexts.setupProfileSuccessfully,
+                              ContentTexts.homePage,
+                              routeName: ContentTexts.homeRoute,
+                              isOnlyCancelButton: false,
+                              isOnlyOkButton: true,
+                            );
+                          } else {
+                            _appProviders.isLoading = false;
+                            _alertDialogWidget.createAlertDialogWidget(
+                              context,
+                              ContentTexts.oops,
+                              ContentTexts.usernameExistDescription,
+                              ContentTexts.ok,
+                            );
+                          }
+                        } catch (error) {
+                          throw 'set up profile error: $error';
                         }
-                      } catch (error) {
-                        throw 'set up profile error: $error';
+                      } else {
+                        _alertDialogWidget.createAlertDialogWidget(
+                          context,
+                          ContentTexts.pickPhotoFirst,
+                          ContentTexts.pickPhotoDescription,
+                          ContentTexts.ok,
+                        );
                       }
                     }
                   },

@@ -27,18 +27,21 @@ class AlertDialogWidget {
     isVote = false,
     isConfirmVote = false,
     isEditProfile = false,
+    isEditProfileSuccess = false,
     isChangePassword = false,
     DocumentSnapshot documentSnapshot,
     AppProviders appProviders,
     SignUpProviders signUpProviders,
     DetailPostProviders detailPostProviders,
     ChangePasswordProviders changePasswordProviders,
+    EditProfileProviders editProfileProviders,
   }) {
     final bool _isStay = isEditProfile || isChangePassword || isExit;
     final bool _isBack = isSignUp ||
         isForgotPassword ||
         isVote ||
         isEditProfile ||
+        isEditProfileSuccess ||
         isChangePassword;
 
     showDialog(
@@ -93,9 +96,7 @@ class AlertDialogWidget {
             textAlign: TextAlign.center,
             textDirection: TextDirection.ltr,
             style: Theme.of(_context).textTheme.headline1.copyWith(
-                  color: isOnlyCancelButton
-                      ? ContentColors.white
-                      : ContentColors.grey,
+                  color: isOnlyCancelButton ? Colors.white : ContentColors.grey,
                   fontSize: ContentSizes.dp16(_context),
                 ),
           ),
@@ -106,7 +107,7 @@ class AlertDialogWidget {
             textAlign: TextAlign.center,
             textDirection: TextDirection.ltr,
             style: Theme.of(_context).textTheme.headline1.copyWith(
-                  color: ContentColors.white,
+                  color: Colors.white,
                   fontSize: ContentSizes.dp16(_context),
                 ),
           ),
@@ -213,7 +214,11 @@ class AlertDialogWidget {
                 }
               } else if (isVote) {
                 if (detailPostProviders.selectedOption != '') {
-                  detailPostProviders .selectedOption = '';
+                  detailPostProviders.selectedOption = '';
+                }
+              } else if (isEditProfile) {
+                if (editProfileProviders.image != null) {
+                  editProfileProviders.image = null;
                 }
               } else if (isChangePassword) {
                 if (changePasswordProviders.isOldPasswordChangeVisible) {

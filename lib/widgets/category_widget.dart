@@ -52,7 +52,7 @@ class CategoryWidget {
                 style: Theme.of(context).textTheme.headline2.copyWith(
                       color: !_isSelectedCategory
                           ? ContentColors.grey
-                          : ContentColors.white,
+                          : Colors.white,
                       fontSize: ContentSizes.dp16(context),
                     ),
               ),

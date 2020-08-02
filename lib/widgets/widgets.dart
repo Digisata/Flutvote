@@ -8,3 +8,4 @@ export 'category_widget.dart';
 export 'photo_profile_widget.dart';
 export 'setting_item_widget.dart';
 export 'post_item_widget.dart';
+export 'bottom_sheet_widget.dart';

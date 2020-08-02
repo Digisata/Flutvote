@@ -227,7 +227,7 @@ class HomeRoute extends StatelessWidget {
                   backgroundColor: ContentColors.orange,
                   child: Icon(
                     Icons.add,
-                    color: ContentColors.white,
+                    color: Colors.white,
                   ),
                   elevation: 3.0,
                   tooltip: ContentTexts.createPost,

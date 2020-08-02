@@ -143,7 +143,7 @@ class DetailPostRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
-      ContentColors.white,
+      Colors.white,
       ContentTexts.vote,
       () async {
         if (_detailPostProviders.selectedOption == '') {
@@ -168,11 +168,13 @@ class DetailPostRoute extends StatelessWidget {
         }
       },
     );
-    // TODO FIX IMAGE URL
+
     final CircleAvatar _photoProfile =
         _photoProfileWidget.createPhotoProfileWidget(
       ContentSizes.height(context) * 0.025,
       ContentSizes.height(context) * 0.05,
+      isDetailPost: true,
+      photoUrl: _postModel.photoUrl,
     );
 
     final Text _displayName = Text(
@@ -277,7 +279,7 @@ class DetailPostRoute extends StatelessWidget {
     final Container _firstLayer = Container(
       height: ContentSizes.height(context),
       width: ContentSizes.width(context),
-      color: ContentColors.white,
+      color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -295,7 +297,7 @@ class DetailPostRoute extends StatelessWidget {
                 ContentSizes.width(context) * 0.05,
                 ContentSizes.height(context) * 0.01,
               ),
-              color: ContentColors.white,
+              color: Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -335,7 +337,7 @@ class DetailPostRoute extends StatelessWidget {
         shape: BoxShape.rectangle,
         boxShadow: [
           BoxShadow(
-            color: ContentColors.black,
+            color: Colors.black,
             spreadRadius: 0.01,
             blurRadius: 15,
             offset: Offset(3, 3),

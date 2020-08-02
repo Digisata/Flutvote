@@ -93,11 +93,17 @@ class ContentTexts {
   static const String setupProfile = 'Set up profile';
   static const String homePage = 'Home page';
   static const String setupProfileDescription =
-      'One last step, please set up your display name and username to complete your profile';
+      'One last step, please set up your profile to complete this introdcution tour!';
   static const String setupProfileSuccessfully =
       'Your profile has been set up successfully, you can change it later if you want!';
   static const String usernameExistDescription =
       'Username already exist, please try another unique username!';
+  static const String selectFrom = 'Select from';
+  static const String gallery = 'Gallery';
+  static const String camera = 'Camera';
+  static const String pickPhotoFirst = 'Pick photo first';
+  static const String pickPhotoDescription =
+      'Please pick your photo profile first, you can choose either from gallery or camera!';
 
   static const String createPost = 'Create new post';
   static const String speakYourVote = 'Speak your\nVote out loud';

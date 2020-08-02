@@ -94,13 +94,13 @@ class Flutvote extends StatelessWidget {
             fontStyle: FontStyle.normal,
           ),
           headline3: TextStyle(
-            color: ContentColors.white,
+            color: Colors.white,
             fontSize: 20.0,
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.bold,
           ),
           headline4: TextStyle(
-            color: ContentColors.black,
+            color: Colors.black,
             fontSize: 25.0,
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.bold,

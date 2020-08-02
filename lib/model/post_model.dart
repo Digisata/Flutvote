@@ -7,6 +7,7 @@ class PostModel {
     @required this.username,
     @required this.email,
     @required this.displayName,
+    @required this.photoUrl,
     @required this.imageUrl,
     @required this.title,
     @required this.description,
@@ -19,6 +20,7 @@ class PostModel {
   final String username;
   final String email;
   final String displayName;
+  final String photoUrl;
   final String imageUrl;
   final String title;
   final String description;
@@ -31,6 +33,7 @@ class PostModel {
     String username,
     String email,
     String displayName,
+    String photoUrl,
     String imageUrl,
     String title,
     String description,
@@ -43,6 +46,7 @@ class PostModel {
         username: username ?? this.username,
         email: email ?? this.email,
         displayName: displayName ?? this.displayName,
+        photoUrl: photoUrl ?? this.photoUrl,
         imageUrl: imageUrl ?? this.imageUrl,
         title: title ?? this.title,
         description: description ?? this.description,
@@ -60,6 +64,7 @@ class PostModel {
         username: json["username"],
         email: json["email"],
         displayName: json["displayName"],
+        photoUrl: json["photoUrl"],
         imageUrl: json["imageUrl"],
         title: json["title"],
         description: json["description"],
@@ -73,6 +78,7 @@ class PostModel {
         "username": username,
         "email": email,
         "displayName": displayName,
+        "photoUrl": photoUrl,
         "imageUrl": imageUrl,
         "title": title,
         "description": description,

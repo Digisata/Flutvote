@@ -45,9 +45,9 @@ class SignInRoute extends StatelessWidget {
       if (!await _firestoreService.isAlreadyRegistered()) {
         AppProviders.setUserModel = UserModel(
           email: _user.email,
-          deviceId: _hiveProviders.deviceId,
-          imageUrl:
+          photoUrl:
               'https://sairajfilmsproduction.com/application/assets/images/nopic.jpg',
+          deviceId: _hiveProviders.deviceId,
           isSetupCompleted: false,
         );
         await _firestoreService.setUserData(AppProviders.userModel);
@@ -156,7 +156,7 @@ class SignInRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
-      ContentColors.white,
+      Colors.white,
       ContentTexts.signIn,
       () async {
         if (_formKey.currentState.validate()) {
@@ -247,7 +247,7 @@ class SignInRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.facebook,
-      ContentColors.white,
+      Colors.white,
       ContentTexts.signInWithFacebook,
       () async {
         try {

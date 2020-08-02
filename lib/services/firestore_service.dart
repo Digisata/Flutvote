@@ -108,17 +108,17 @@ class FirestoreService {
     }
   }
 
-  Future<void> updateImageUrl(String imageUrl) async {
+  Future<void> updatePhotoUrl(String photoUrl) async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
       await _collectionReference.document(_user.uid).updateData(
         {
-          'imageUrl': imageUrl,
+          'photoUrl': photoUrl,
         },
       );
     } catch (error) {
-      throw 'update image url error: $error';
+      throw 'update photo url error: $error';
     }
   }
 
