@@ -1,37 +1,38 @@
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class UserModel {
   UserModel({
-    this.username,
-    this.email,
-    this.photoUrl,
-    this.displayName,
-    this.deviceId,
-    this.isSetupCompleted,
+    @required this.deviceId,
+    @required this.displayName,
+    @required this.email,
+    @required this.isSetupCompleted,
+    @required this.photoUrl,
+    @required this.username,
   });
 
-  final String username;
-  final String email;
-  final String photoUrl;
-  final String displayName;
   final String deviceId;
+  final String displayName;
+  final String email;
   final bool isSetupCompleted;
+  final String photoUrl;
+  final String username;
 
   UserModel copyWith({
-    String username,
-    String email,
-    String photoUrl,
-    String displayName,
     String deviceId,
+    String displayName,
+    String email,
     bool isSetupCompleted,
+    String photoUrl,
+    String username,
   }) =>
       UserModel(
-        username: username ?? this.username,
-        email: email ?? this.email,
-        photoUrl: photoUrl ?? this.photoUrl,
-        displayName: displayName ?? this.displayName,
         deviceId: deviceId ?? this.deviceId,
+        displayName: displayName ?? this.displayName,
+        email: email ?? this.email,
         isSetupCompleted: isSetupCompleted ?? this.isSetupCompleted,
+        photoUrl: photoUrl ?? this.photoUrl,
+        username: username ?? this.username,
       );
 
   factory UserModel.fromJson(String str) => UserModel.fromMap(json.decode(str));
@@ -39,20 +40,20 @@ class UserModel {
   String toJson() => json.encode(toMap());
 
   factory UserModel.fromMap(Map<String, dynamic> json) => UserModel(
-        username: json["username"],
-        email: json["email"],
-        photoUrl: json["photoUrl"],
-        displayName: json["displayName"],
         deviceId: json["deviceId"],
+        displayName: json["displayName"],
+        email: json["email"],
         isSetupCompleted: json["isSetupCompleted"],
+        photoUrl: json["photoUrl"],
+        username: json["username"],
       );
 
   Map<String, dynamic> toMap() => {
-        "username": username,
-        "email": email,
-        "photoUrl": photoUrl,
-        "displayName": displayName,
         "deviceId": deviceId,
+        "displayName": displayName,
+        "email": email,
         "isSetupCompleted": isSetupCompleted,
+        "photoUrl": photoUrl,
+        "username": username,
       };
 }

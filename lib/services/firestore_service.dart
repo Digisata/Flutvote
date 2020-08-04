@@ -5,13 +5,15 @@ import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 
 class FirestoreService {
-  final CollectionReference _collectionReference =
+  final CollectionReference _usersCollectionReference =
       Firestore.instance.collection('users');
+  final CollectionReference _postsCollectionReference =
+      Firestore.instance.collection('posts');
   final FirebaseService _firebaseService = FirebaseService();
 
   Future<bool> isUsernameExist(String username) async {
     try {
-      final QuerySnapshot _querySnapshot = await _collectionReference
+      final QuerySnapshot _querySnapshot = await _usersCollectionReference
           .where('username'.toLowerCase(), isEqualTo: username.toLowerCase())
           .limit(1)
           .getDocuments();
@@ -28,11 +30,10 @@ class FirestoreService {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
       final DocumentSnapshot _documentSnapshot =
-          await _collectionReference.document(_user.uid).get();
-      assert(_documentSnapshot != null);
+          await _usersCollectionReference.document(_user.uid).get();
       return _documentSnapshot.exists;
     } catch (error) {
-      throw 'is user exist error: $error';
+      throw 'is already registered error: $error';
     }
   }
 
@@ -50,15 +51,14 @@ class FirestoreService {
 
   Future<bool> isAlreadyVoted(DocumentSnapshot documentSnapshot) async {
     try {
-      final CollectionReference _subCollectionReference = Firestore.instance
-          .collection('posts')
-          .document(documentSnapshot.documentID)
-          .collection('voter');
+      final CollectionReference _subCollectionReference =
+          _postsCollectionReference
+              .document(documentSnapshot.documentID)
+              .collection('voter');
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
       final DocumentSnapshot _documentSnapshot =
           await _subCollectionReference.document(_user.uid).get();
-      assert(_documentSnapshot != null);
       return _documentSnapshot.exists;
     } catch (error) {
       throw 'is already voted error: $error';
@@ -70,8 +70,8 @@ class FirestoreService {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
       final DocumentSnapshot _document =
-          await _collectionReference.document(_user.uid).get();
-      assert(_document != null);
+          await _usersCollectionReference.document(_user.uid).get();
+      assert(_document.exists);
       AppProviders.setUserModel = UserModel.fromMap(_document.data);
     } catch (error) {
       throw 'get data error: $error';
@@ -82,7 +82,7 @@ class FirestoreService {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
-      await _collectionReference.document(_user.uid).setData(
+      await _usersCollectionReference.document(_user.uid).setData(
             userModel.toMap(),
             merge: true,
           );
@@ -93,13 +93,13 @@ class FirestoreService {
 
   Future<void> setVoterData(DocumentSnapshot documentSnapshot) async {
     try {
-      final CollectionReference _subCollectionReference = Firestore.instance
-          .collection('posts')
-          .document(documentSnapshot.documentID)
-          .collection('voter');
+      final CollectionReference _voterCollectionReference =
+          _postsCollectionReference
+              .document(documentSnapshot.documentID)
+              .collection('voter');
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
-      await _subCollectionReference.document(_user.uid).setData(
+      await _voterCollectionReference.document(_user.uid).setData(
             AppProviders.userModel.toMap(),
             merge: true,
           );
@@ -112,7 +112,7 @@ class FirestoreService {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
-      await _collectionReference.document(_user.uid).updateData(
+      await _usersCollectionReference.document(_user.uid).updateData(
         {
           'photoUrl': photoUrl,
         },
@@ -122,25 +122,11 @@ class FirestoreService {
     }
   }
 
-  Future<void> updateUsername(String username) async {
-    try {
-      final FirebaseUser _user = await _firebaseService.getCurrentUser();
-      assert(_user != null);
-      await _collectionReference.document(_user.uid).updateData(
-        {
-          'username': username,
-        },
-      );
-    } catch (error) {
-      throw 'update username error: $error';
-    }
-  }
-
   Future<void> updateDisplayName(String displayName) async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
-      await _collectionReference.document(_user.uid).updateData(
+      await _usersCollectionReference.document(_user.uid).updateData(
         {
           'displayName': displayName,
         },
@@ -150,11 +136,25 @@ class FirestoreService {
     }
   }
 
+  Future<void> updateUsername(String username) async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _usersCollectionReference.document(_user.uid).updateData(
+        {
+          'username': username,
+        },
+      );
+    } catch (error) {
+      throw 'update username error: $error';
+    }
+  }
+
   Future<void> updateIsSetupCompleted(bool isSetupCompleted) async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
-      await _collectionReference.document(_user.uid).updateData(
+      await _usersCollectionReference.document(_user.uid).updateData(
         {
           'isSetupCompleted': isSetupCompleted,
         },
@@ -164,26 +164,86 @@ class FirestoreService {
     }
   }
 
+  Future<void> updateUsersPost() async {
+    final FirebaseUser _user = await _firebaseService.getCurrentUser();
+    assert(_user != null);
+    final UserModel _userModel = AppProviders.userModel;
+    assert(_userModel != null);
+    final QuerySnapshot _querySnapshot = await _postsCollectionReference
+        .where('uid', isEqualTo: _user.uid)
+        .getDocuments();
+    assert(_querySnapshot != null);
+    final List<DocumentSnapshot> _documents = _querySnapshot.documents;
+    if (_documents.isNotEmpty) {
+      _documents.forEach(
+        (documentSnapshot) {
+          documentSnapshot.reference.updateData(
+            {
+              'photoUrl': _userModel.photoUrl,
+              'displayName': _userModel.displayName,
+              'username': _userModel.username,
+            },
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> updatePostVoter() async {
+    final FirebaseUser _user = await _firebaseService.getCurrentUser();
+    assert(_user != null);
+    final UserModel _userModel = AppProviders.userModel;
+    assert(_userModel != null);
+    final QuerySnapshot _querySnapshot =
+        await _postsCollectionReference.getDocuments();
+    assert(_querySnapshot != null);
+    final List<DocumentSnapshot> _documents = _querySnapshot.documents;
+    if (_documents.isNotEmpty) {
+      _documents.forEach(
+        (documentSnapshot) {
+          documentSnapshot.reference
+              .collection('voter')
+              .document(_user.uid)
+              .updateData(
+            {
+              'photoUrl': _userModel.photoUrl,
+              'displayName': _userModel.displayName,
+              'username': _userModel.username,
+            },
+          );
+        },
+      );
+    }
+  }
+
+  // TODO FIX UPDATE VOTE DATA
   Future<void> updateVoteData(
     DocumentSnapshot documentSnapshot,
     String key,
     int index,
   ) async {
     try {
-      Firestore.instance.runTransaction(
+      await Firestore.instance.runTransaction(
         (transaction) async {
           final DocumentSnapshot _freshSnapshot =
               await transaction.get(documentSnapshot.reference);
-          assert(_freshSnapshot != null);
+          assert(_freshSnapshot.exists);
           final PostModel _postModel = PostModel.fromMap(_freshSnapshot.data);
           assert(_postModel != null);
           await transaction.update(
             _freshSnapshot.reference,
             {
               'totalVotes': _postModel.totalVotes + 1,
-              /* 'detailVotes': {
-                key: _postModel.detailVotes.toMap().values.elementAt(index) + 1,
-              }, */
+              'options': [
+                {
+                  'option': key,
+                  'votes': _postModel.options[index]
+                          .toMap()
+                          .values
+                          .elementAt(index) +
+                      1,
+                }
+              ]
             },
           );
         },

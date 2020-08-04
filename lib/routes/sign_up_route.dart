@@ -146,11 +146,21 @@ class SignUpRoute extends StatelessWidget {
                     ),
                 recognizer: TapGestureRecognizer()
                   ..onTap = () async {
-                    const String _url = 'https://flutvote.web.app/#/';
-                    if (await canLaunch(_url)) {
-                      await launch(_url);
-                    } else {
-                      throw 'Could not launch $_url';
+                    const String _url = ContentTexts.defaultPrivacyAndPolicyUrl;
+                    _appProviders.isLoading = true;
+                    try {
+                      if (await canLaunch(_url)) {
+                        _appProviders.isLoading = false;
+                        await launch(_url);
+                      }
+                    } catch (error) {
+                      _appProviders.isLoading = false;
+                      _alertDialogWidget.createAlertDialogWidget(
+                        context,
+                        ContentTexts.oops,
+                        ContentTexts.errorLaunchUrl,
+                        ContentTexts.ok,
+                      );
                     }
                   },
               ),

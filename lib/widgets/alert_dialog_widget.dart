@@ -57,8 +57,7 @@ class AlertDialogWidget {
             fadeOutCurve: Curves.bounceOut,
             fadeInDuration: Duration(milliseconds: 500),
             fadeOutDuration: Duration(milliseconds: 500),
-            imageUrl:
-                'https://raw.githubusercontent.com/Shashank02051997/FancyGifDialog-Android/master/GIF\'s/gif14.gif',
+            imageUrl: ContentTexts.defaultGifUrl,
             progressIndicatorBuilder: (context, url, download) => Center(
               child: Container(
                 height: ContentSizes.height(context) * 0.1,
@@ -142,12 +141,12 @@ class AlertDialogWidget {
                 if (!await _firestoreService.isPostOwner(documentSnapshot)) {
                   if (!await _firestoreService
                       .isAlreadyVoted(documentSnapshot)) {
-                    await _firestoreService.setVoterData(documentSnapshot);
                     await _firestoreService.updateVoteData(
                       documentSnapshot,
                       detailPostProviders.selectedOption,
-                      detailPostProviders.index,
+                      detailPostProviders.selectedIndex,
                     );
+                    await _firestoreService.setVoterData(documentSnapshot);
                     appProviders.isLoading = false;
                     createAlertDialogWidget(
                       _context,
@@ -189,7 +188,13 @@ class AlertDialogWidget {
                   );
                 }
               } catch (error) {
-                throw 'Update vote data error: $error';
+                appProviders.isLoading = false;
+                createAlertDialogWidget(
+                  _context,
+                  ContentTexts.oops,
+                  ContentTexts.errorUpdateVoteData,
+                  ContentTexts.ok,
+                );
               }
             } else if (isSignOut) {
               try {
@@ -199,7 +204,13 @@ class AlertDialogWidget {
                 Navigator.pop(_context);
                 Navigator.pushReplacementNamed(_context, routeName);
               } catch (error) {
-                throw 'Sign out error: $error';
+                appProviders.isLoading = false;
+                createAlertDialogWidget(
+                  _context,
+                  ContentTexts.oops,
+                  ContentTexts.errorSignOut,
+                  ContentTexts.ok,
+                );
               }
             } else if (_isBack) {
               if (isSignUp) {

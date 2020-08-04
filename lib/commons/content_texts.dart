@@ -12,6 +12,15 @@ class ContentTexts {
   static const String changePasswordRoute = '/changePasswordRoute';
   static const String detailPostRoute = '/detailPostRoute';
 
+  static const String defaultPhotoUrl =
+      'https://sairajfilmsproduction.com/application/assets/images/nopic.jpg';
+  static const String defaultPrivacyAndPolicyUrl =
+      'https://flutvote.web.app/#/';
+  static const String defaultGifUrl =
+      'https://raw.githubusercontent.com/Shashank02051997/FancyGifDialog-Android/master/GIF\'s/gif14.gif';
+  static const String photoProfileTag = 'photoProfile';
+  static const String postImageTag = 'postImage';
+
   static const String welcome = 'Welcome to Flutvote';
   static const String welcomeDesciption =
       'A place where you can share your opinions throught voting, so let\'s get started ^^';
@@ -69,6 +78,8 @@ class ContentTexts {
   static const String yeay = 'Yeaay';
   static const String ok = 'Ok';
   static const String repeatPassword = 'Repeat password';
+  static const String errorLaunchUrl =
+      'Something went wrong, launch url failed!';
 
   static const String resetPassword = 'Reset Password';
   static const String resetPasswordDescription =
@@ -104,6 +115,12 @@ class ContentTexts {
   static const String pickPhotoFirst = 'Pick photo first';
   static const String pickPhotoDescription =
       'Please pick your photo profile first, you can choose either from gallery or camera!';
+  static const String errorGetImageFromGallery =
+      'Something went wrong, get image from gallery failed!';
+  static const String errorGetImageFromCamera =
+      'Something went wrong, get image from camera failed!';
+  static const String errorSetupUserProfile =
+      'Something went wrong, setup profile failed!';
 
   static const String createPost = 'Create new post';
   static const String speakYourVote = 'Speak your\nVote out loud';
@@ -128,6 +145,8 @@ class ContentTexts {
       'You already voted to this post, please try other post!';
   static const String voteSuccessfully =
       'Your choice has been recorded successfully in our system, have a nice day!';
+  static const String errorUpdateVoteData =
+      'Something went wrong, update vote data failed!';
 
   static const String editProfile = 'Edit profile';
   static const String changePassword = 'Change password';
@@ -137,6 +156,7 @@ class ContentTexts {
       'Are you sure want to sign out? please stay here with us!';
   static const String cancel = 'Cancel';
   static const String yes = 'Yes';
+  static const String errorSignOut = 'Something went wrong, sign out failed!';
 
   static const String displayName = 'Display name';
   static const String username = 'Username';
@@ -154,6 +174,8 @@ class ContentTexts {
       'Your profile has been edited successfully, you can change it again whenever you want!';
   static const String invalidUsername =
       'Username can only contains alphanumeric characters, underscore and between 6 - 15 charaters!';
+  static const String errorUpdateUserProfile =
+      'Something went wrong, edit profile failed!';
 
   static const String backToSettingRoute = 'Back to setting page.';
   static const String changePasswordSuccessfully =

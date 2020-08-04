@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
@@ -59,14 +56,14 @@ class EditProfileRoute extends StatelessWidget {
     Future<void> _updateUserProfile() async {
       if (_editProfileProviders.image != null) {
         final String _imageName = basename(_editProfileProviders.image.path);
-        final String _imageUrl =
-            await _firebaseStorageService.uploadPhotoProfile(
+        final String _photoUrl =
+            await _firebaseStorageService.getPhotoProfileUrl(
           _editProfileProviders.image,
           _imageName,
         );
-        _userProfileProviders.imageUrl = _imageUrl;
+        _userProfileProviders.photoUrl = _photoUrl;
         _editProfileProviders.image = null;
-        await _firestoreService.updatePhotoUrl(_imageUrl);
+        await _firestoreService.updatePhotoUrl(_photoUrl);
       }
       if (_userProfileProviders.displayName != _hiveProviders.displayName) {
         await _firestoreService
@@ -77,6 +74,8 @@ class EditProfileRoute extends StatelessWidget {
       }
       await _firestoreService.fetchUserData();
       await HiveProviders.syncUserData();
+      await _firestoreService.updateUsersPost();
+      await _firestoreService.updatePostVoter();
       _hiveProviders.refreshUserData();
       _appProviders.isLoading = false;
       _alertDialogWidget.createAlertDialogWidget(
@@ -111,7 +110,7 @@ class EditProfileRoute extends StatelessWidget {
     );
 
     final Hero _photoProfile = Hero(
-      tag: 'photoProfile',
+      tag: ContentTexts.photoProfileTag,
       child: GestureDetector(
         onTap: () {
           _bottomSheetWidget.createBottomSheetWidget(
@@ -225,7 +224,13 @@ class EditProfileRoute extends StatelessWidget {
                 }
               }
             } catch (error) {
-              throw 'update user profile error: $error';
+              _appProviders.isLoading = false;
+              _alertDialogWidget.createAlertDialogWidget(
+                context,
+                ContentTexts.oops,
+                ContentTexts.errorUpdateUserProfile,
+                ContentTexts.ok,
+              );
             }
           } else {
             Navigator.pop(context);

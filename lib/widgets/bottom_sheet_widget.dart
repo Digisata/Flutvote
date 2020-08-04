@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
+import 'package:flutvote/widgets/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 
 class BottomSheetWidget {
+  final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
+
   createBottomSheetWidget(
     BuildContext _context,
     EditProfileProviders _editProfileProviders,
@@ -56,7 +59,12 @@ class BottomSheetWidget {
                     _editProfileProviders.image = _image;
                     Navigator.pop(context);
                   } catch (error) {
-                    throw 'get image from gallery error: $error';
+                    _alertDialogWidget.createAlertDialogWidget(
+                      context,
+                      ContentTexts.oops,
+                      ContentTexts.errorGetImageFromGallery,
+                      ContentTexts.ok,
+                    );
                   }
                 },
               ),
@@ -77,7 +85,12 @@ class BottomSheetWidget {
                     _editProfileProviders.image = _image;
                     Navigator.pop(context);
                   } catch (error) {
-                    throw 'get image from camera error: $error';
+                    _alertDialogWidget.createAlertDialogWidget(
+                      context,
+                      ContentTexts.oops,
+                      ContentTexts.errorGetImageFromCamera,
+                      ContentTexts.ok,
+                    );
                   }
                 },
               ),

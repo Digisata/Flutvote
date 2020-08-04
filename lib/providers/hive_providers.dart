@@ -28,29 +28,29 @@ class HiveProviders with ChangeNotifier {
   }
 
   static Future<void> syncUserData() async {
-    UserModel _userModel = AppProviders.userModel;
-    if (_userData.get('username') != _userModel.username) {
-      await _userData.put('username', _userModel.username);
-    }
-
-    if (_userData.get('email') != _userModel.email) {
-      await _userData.put('email', _userModel.email);
-    }
-
-    if (_userData.get('photoUrl') != _userModel.photoUrl) {
-      await _userData.put('photoUrl', _userModel.photoUrl);
+    final UserModel _userModel = AppProviders.userModel;
+    if (_userData.get('deviceId') != _userModel.deviceId) {
+      await _userData.put('deviceId', _userModel.deviceId);
     }
 
     if (_userData.get('displayName') != _userModel.displayName) {
       await _userData.put('displayName', _userModel.displayName);
     }
 
-    if (_userData.get('deviceId') != _userModel.deviceId) {
-      await _userData.put('deviceId', _userModel.deviceId);
+    if (_userData.get('email') != _userModel.email) {
+      await _userData.put('email', _userModel.email);
     }
 
     if (_userData.get('isSetupCompleted') != _userModel.isSetupCompleted) {
       await _userData.put('isSetupCompleted', _userModel.isSetupCompleted);
+    }
+
+    if (_userData.get('photoUrl') != _userModel.photoUrl) {
+      await _userData.put('photoUrl', _userModel.photoUrl);
+    }
+
+    if (_userData.get('username') != _userModel.username) {
+      await _userData.put('username', _userModel.username);
     }
   }
 
@@ -58,25 +58,25 @@ class HiveProviders with ChangeNotifier {
     notifyListeners();
   }
 
-  String get username => _userData.get('username');
-
-  String get email => _userData.get('email');
-
-  String get password => _userData.get('password');
-
-  String get photoUrl => _userData.get('photoUrl');
-
-  String get displayName => _userData.get('displayName');
+  String get appVersion => _appVersion;
 
   String get deviceId => _deviceId;
 
-  String get appVersion => _appVersion;
+  String get displayName => _userData.get('displayName');
+
+  String get email => _userData.get('email');
 
   static bool getFirstOpened() => _userData.get('isFirstOpened');
 
   static bool getFirstSignedIn() => _userData.get('isFirstSignedIn');
 
   static bool getIsSetupCompleted() => _userData.get('isSetupCompleted');
+
+  String get password => _userData.get('password');
+
+  String get photoUrl => _userData.get('photoUrl');
+
+  String get username => _userData.get('username');
 
   static void setAndroidId() async {
     final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
@@ -98,10 +98,6 @@ class HiveProviders with ChangeNotifier {
     }
   }
 
-  void setPassword(String password) async {
-    await _userData.put('password', password);
-  }
-
   static void setFirstOpened() async {
     if (getFirstOpened()) {
       await _userData.put('isFirstOpened', false);
@@ -112,5 +108,9 @@ class HiveProviders with ChangeNotifier {
     if (getFirstSignedIn()) {
       await _userData.put('isFirstSignedIn', false);
     }
+  }
+
+  void setPassword(String password) async {
+    await _userData.put('password', password);
   }
 }

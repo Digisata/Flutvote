@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 class UserProfileProviders with ChangeNotifier {
-  String _username = '', _imageUrl = '', _displayName = '';
+  String _username = '', _photoUrl = '', _displayName = '';
 
   String get username => _username;
 
-  String get imageUrl => _imageUrl;
+  String get photoUrl => _photoUrl;
 
   String get displayName => _displayName;
 
@@ -14,8 +14,8 @@ class UserProfileProviders with ChangeNotifier {
     notifyListeners();
   }
 
-  set imageUrl(String value) {
-    _imageUrl = value;
+  set photoUrl(String value) {
+    _photoUrl = value;
     notifyListeners();
   }
 

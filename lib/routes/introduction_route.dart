@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/services/services.dart';
 import 'package:flutvote/widgets/widgets.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:loading/indicator/ball_spin_fade_loader_indicator.dart';
 import 'package:loading/loading.dart';
@@ -76,7 +73,7 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
     );
 
     final Hero _photoProfile = Hero(
-      tag: 'photoProfile',
+      tag: ContentTexts.photoProfileTag,
       child: GestureDetector(
         onTap: () {
           _bottomSheetWidget.createBottomSheetWidget(
@@ -235,15 +232,15 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                               _userProfileProviders.username)) {
                             final String _imageName =
                                 basename(_editProfileProviders.image.path);
-                            final String _imageUrl =
+                            final String _photoUrl =
                                 await _firebaseStorageService
-                                    .uploadPhotoProfile(
+                                    .getPhotoProfileUrl(
                               _editProfileProviders.image,
                               _imageName,
                             );
-                            _userProfileProviders.imageUrl = _imageUrl;
+                            _userProfileProviders.photoUrl = _photoUrl;
                             _editProfileProviders.image = null;
-                            await _firestoreService.updatePhotoUrl(_imageUrl);
+                            await _firestoreService.updatePhotoUrl(_photoUrl);
                             await _firestoreService.updateDisplayName(
                                 _userProfileProviders.displayName);
                             await _firestoreService
@@ -272,7 +269,13 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                             );
                           }
                         } catch (error) {
-                          throw 'set up profile error: $error';
+                          _appProviders.isLoading = false;
+                          _alertDialogWidget.createAlertDialogWidget(
+                            context,
+                            ContentTexts.oops,
+                            ContentTexts.errorSetupUserProfile,
+                            ContentTexts.ok,
+                          );
                         }
                       } else {
                         _alertDialogWidget.createAlertDialogWidget(

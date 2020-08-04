@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseStorageService {
-  Future<dynamic> uploadPhotoProfile(File image, String imageName) async {
+  Future<dynamic> getPhotoProfileUrl(File image, String imageName) async {
     try {
       final StorageReference _storageReference = FirebaseStorage.instance
           .ref()

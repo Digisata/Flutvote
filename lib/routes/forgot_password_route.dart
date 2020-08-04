@@ -60,7 +60,7 @@ class ForgotPasswordRoute extends StatelessWidget {
     final Container _textFieldEmail = _textFieldWidget.createTextFieldWidget(
       context,
       _textEditingControllerEmail,
-      'Email',
+      ContentTexts.email,
       Icons.email,
       (input) {
         _forgotPasswordProviders.emailForgotPassword = input.trim();

@@ -44,11 +44,12 @@ class SignInRoute extends StatelessWidget {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       if (!await _firestoreService.isAlreadyRegistered()) {
         AppProviders.setUserModel = UserModel(
-          email: _user.email,
-          photoUrl:
-              'https://sairajfilmsproduction.com/application/assets/images/nopic.jpg',
           deviceId: _hiveProviders.deviceId,
+          displayName: ContentTexts.displayName,
+          email: _user.email,
           isSetupCompleted: false,
+          photoUrl: ContentTexts.defaultPhotoUrl,
+          username: ContentTexts.username,
         );
         await _firestoreService.setUserData(AppProviders.userModel);
       }

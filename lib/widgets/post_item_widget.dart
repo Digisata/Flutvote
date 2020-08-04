@@ -47,7 +47,7 @@ class PostItemWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Hero(
-                  tag: 'postImage$index',
+                  tag: '${ContentTexts.postImageTag}$index',
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
                     imageUrl: _postModel.imageUrl,

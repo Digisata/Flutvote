@@ -29,7 +29,7 @@ class SettingRoute extends StatelessWidget {
     );
 
     final Hero _photoProfile = Hero(
-      tag: 'photoProfile',
+      tag: ContentTexts.photoProfileTag,
       child: _photoProfileWidget.createPhotoProfileWidget(
         ContentSizes.height(context) * 0.06,
         ContentSizes.height(context) * 0.12,

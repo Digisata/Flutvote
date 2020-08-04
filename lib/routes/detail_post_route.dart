@@ -52,7 +52,7 @@ class DetailPostRoute extends StatelessWidget {
     );
 
     final Hero _postImage = Hero(
-      tag: 'postImage${_object['index']}',
+      tag: '${ContentTexts.postImageTag}${_object['index']}',
       child: CachedNetworkImage(
         fit: BoxFit.cover,
         imageUrl: _postModel.imageUrl,
@@ -112,20 +112,20 @@ class DetailPostRoute extends StatelessWidget {
           left: ContentSizes.width(context) * 0.05,
           right: ContentSizes.width(context) * 0.05,
         ),
-        itemCount: _postModel.detailVotes.toMap().length,
+        itemCount: _postModel.options.length,
         itemBuilder: (context, index) {
           return ListTile(
             leading: Radio(
               activeColor: ContentColors.orange,
-              value: _postModel.detailVotes.toMap().keys.elementAt(index),
+              value: _postModel.options[index].toMap().values.elementAt(0),
               groupValue: _detailPostProviders.selectedOption,
               onChanged: (value) {
                 _detailPostProviders.selectedOption = value;
-                _detailPostProviders.index = index;
+                _detailPostProviders.selectedIndex = index;
               },
             ),
             title: Text(
-              _postModel.detailVotes.toMap().keys.elementAt(index),
+              _postModel.options[index].toMap().values.elementAt(0),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
