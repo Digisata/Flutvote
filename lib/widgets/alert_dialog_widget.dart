@@ -147,6 +147,8 @@ class AlertDialogWidget {
                       detailPostProviders.selectedIndex,
                     );
                     await _firestoreService.setVoterData(documentSnapshot);
+                    await _firestoreService.fetchPostData(documentSnapshot);
+                    await _firestoreService.setVotedData(documentSnapshot);
                     appProviders.isLoading = false;
                     createAlertDialogWidget(
                       _context,

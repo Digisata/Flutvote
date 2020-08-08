@@ -69,12 +69,24 @@ class FirestoreService {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
-      final DocumentSnapshot _document =
+      final DocumentSnapshot _documentSnapshot =
           await _usersCollectionReference.document(_user.uid).get();
-      assert(_document.exists);
-      AppProviders.setUserModel = UserModel.fromMap(_document.data);
+      assert(_documentSnapshot.exists);
+      AppProviders.setUserModel = UserModel.fromMap(_documentSnapshot.data);
     } catch (error) {
-      throw 'get data error: $error';
+      throw 'fetch user data error: $error';
+    }
+  }
+
+  Future<void> fetchPostData(DocumentSnapshot documentSnapshot) async {
+    try {
+      final DocumentSnapshot _documentSnapshot = await _postsCollectionReference
+          .document(documentSnapshot.documentID)
+          .get();
+      assert(_documentSnapshot.exists);
+      AppProviders.setPostModel = PostModel.fromMap(_documentSnapshot.data);
+    } catch (error) {
+      throw 'fetch post data error: $error';
     }
   }
 
@@ -100,15 +112,47 @@ class FirestoreService {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
       await _voterCollectionReference.document(_user.uid).setData(
-            AppProviders.userModel.toMap(),
-            merge: true,
-          );
+        {
+          'deviceId': AppProviders.userModel.deviceId,
+          'displayName': AppProviders.userModel.displayName,
+          'photoUrl': AppProviders.userModel.photoUrl,
+          'username': AppProviders.userModel.username,
+        },
+        merge: true,
+      );
     } catch (error) {
       throw 'set voter data error: $error';
     }
   }
 
-  Future<void> updatePhotoUrl(String photoUrl) async {
+  Future<void> setVotedData(DocumentSnapshot documentSnapshot) async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      final CollectionReference _votedCollectionReference =
+          _usersCollectionReference.document(_user.uid).collection('voted');
+      await _votedCollectionReference
+          .document(documentSnapshot.documentID)
+          .setData(
+        {
+          'category': AppProviders.postModel.category,
+          'description': AppProviders.postModel.description,
+          'deviceId': AppProviders.postModel.deviceId,
+          'displayName': AppProviders.postModel.displayName,
+          'imageUrl': AppProviders.postModel.imageUrl,
+          'photoUrl': AppProviders.postModel.photoUrl,
+          'title': AppProviders.postModel.title,
+          'uid': AppProviders.postModel.uid,
+          'username': AppProviders.postModel.username,
+        },
+        merge: true,
+      );
+    } catch (error) {
+      throw 'set voted data error: $error';
+    }
+  }
+
+  Future<void> updatePhotoProfileUrl(String photoUrl) async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
       assert(_user != null);
@@ -165,58 +209,106 @@ class FirestoreService {
   }
 
   Future<void> updateUsersPost() async {
-    final FirebaseUser _user = await _firebaseService.getCurrentUser();
-    assert(_user != null);
-    final UserModel _userModel = AppProviders.userModel;
-    assert(_userModel != null);
-    final QuerySnapshot _querySnapshot = await _postsCollectionReference
-        .where('uid', isEqualTo: _user.uid)
-        .getDocuments();
-    assert(_querySnapshot != null);
-    final List<DocumentSnapshot> _documents = _querySnapshot.documents;
-    if (_documents.isNotEmpty) {
-      _documents.forEach(
-        (documentSnapshot) {
-          documentSnapshot.reference.updateData(
-            {
-              'photoUrl': _userModel.photoUrl,
-              'displayName': _userModel.displayName,
-              'username': _userModel.username,
-            },
-          );
-        },
-      );
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      final UserModel _userModel = AppProviders.userModel;
+      assert(_userModel != null);
+      final QuerySnapshot _querySnapshot = await _postsCollectionReference
+          .where('uid', isEqualTo: _user.uid)
+          .getDocuments();
+      assert(_querySnapshot != null);
+      final List<DocumentSnapshot> _documents = _querySnapshot.documents;
+      if (_documents.isNotEmpty) {
+        _documents.forEach(
+          (documentSnapshot) {
+            documentSnapshot.reference.updateData(
+              {
+                'photoUrl': _userModel.photoUrl,
+                'displayName': _userModel.displayName,
+                'username': _userModel.username,
+              },
+            );
+          },
+        );
+      }
+    } catch (error) {
+      throw 'update user post error: $error';
     }
   }
 
   Future<void> updatePostVoter() async {
-    final FirebaseUser _user = await _firebaseService.getCurrentUser();
-    assert(_user != null);
-    final UserModel _userModel = AppProviders.userModel;
-    assert(_userModel != null);
-    final QuerySnapshot _querySnapshot =
-        await _postsCollectionReference.getDocuments();
-    assert(_querySnapshot != null);
-    final List<DocumentSnapshot> _documents = _querySnapshot.documents;
-    if (_documents.isNotEmpty) {
-      _documents.forEach(
-        (documentSnapshot) {
-          documentSnapshot.reference
-              .collection('voter')
-              .document(_user.uid)
-              .updateData(
-            {
-              'photoUrl': _userModel.photoUrl,
-              'displayName': _userModel.displayName,
-              'username': _userModel.username,
-            },
-          );
-        },
-      );
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      final UserModel _userModel = AppProviders.userModel;
+      assert(_userModel != null);
+      final QuerySnapshot _querySnapshot =
+          await _postsCollectionReference.getDocuments();
+      assert(_querySnapshot != null);
+      final List<DocumentSnapshot> _documents = _querySnapshot.documents;
+      if (_documents.isNotEmpty) {
+        _documents.forEach(
+          (documentSnapshot) {
+            documentSnapshot.reference
+                .collection('voter')
+                .document(_user.uid)
+                .updateData(
+              {
+                'photoUrl': _userModel.photoUrl,
+                'displayName': _userModel.displayName,
+                'username': _userModel.username,
+              },
+            );
+          },
+        );
+      }
+    } catch (error) {
+      throw 'update post voter error: $error';
     }
   }
 
-  // TODO FIX UPDATE VOTE DATA
+  Future<void> updateUserVoted() async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      final UserModel _userModel = AppProviders.userModel;
+      assert(_userModel != null);
+      final QuerySnapshot _querySnapshot =
+          await _usersCollectionReference.getDocuments();
+      assert(_querySnapshot != null);
+      final List<DocumentSnapshot> _documents = _querySnapshot.documents;
+      if (_documents.isNotEmpty) {
+        _documents.forEach(
+          (documentSnapshot) async {
+            final QuerySnapshot _querySnapshot = await documentSnapshot
+                .reference
+                .collection('voted')
+                .where('uid', isEqualTo: _user.uid)
+                .getDocuments();
+            assert(_querySnapshot != null);
+            final List<DocumentSnapshot> _documents = _querySnapshot.documents;
+            if (_documents.isNotEmpty) {
+              _documents.forEach(
+                (documentSnapshot) {
+                  documentSnapshot.reference.updateData(
+                    {
+                      'photoUrl': _userModel.photoUrl,
+                      'displayName': _userModel.displayName,
+                      'username': _userModel.username,
+                    },
+                  );
+                },
+              );
+            }
+          },
+        );
+      }
+    } catch (error) {
+      throw 'update user voted error: $error';
+    }
+  }
+
   Future<void> updateVoteData(
     DocumentSnapshot documentSnapshot,
     String key,
@@ -233,17 +325,31 @@ class FirestoreService {
           await transaction.update(
             _freshSnapshot.reference,
             {
+              'options': FieldValue.arrayRemove(
+                [
+                  {
+                    'option': key,
+                    'votes':
+                        _postModel.options[index].toMap().values.elementAt(1),
+                  },
+                ],
+              ),
+            },
+          );
+          await transaction.update(
+            _freshSnapshot.reference,
+            {
+              'options': FieldValue.arrayUnion(
+                [
+                  {
+                    'option': key,
+                    'votes':
+                        _postModel.options[index].toMap().values.elementAt(1) +
+                            1,
+                  },
+                ],
+              ),
               'totalVotes': _postModel.totalVotes + 1,
-              'options': [
-                {
-                  'option': key,
-                  'votes': _postModel.options[index]
-                          .toMap()
-                          .values
-                          .elementAt(index) +
-                      1,
-                }
-              ]
             },
           );
         },

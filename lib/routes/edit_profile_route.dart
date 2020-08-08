@@ -55,27 +55,69 @@ class EditProfileRoute extends StatelessWidget {
 
     Future<void> _updateUserProfile() async {
       if (_editProfileProviders.image != null) {
-        final String _imageName = basename(_editProfileProviders.image.path);
-        final String _photoUrl =
-            await _firebaseStorageService.getPhotoProfileUrl(
-          _editProfileProviders.image,
-          _imageName,
-        );
-        _userProfileProviders.photoUrl = _photoUrl;
-        _editProfileProviders.image = null;
-        await _firestoreService.updatePhotoUrl(_photoUrl);
+        try {
+          final String _imageName = basename(_editProfileProviders.image.path);
+          final String _photoUrl =
+              await _firebaseStorageService.getPhotoProfileUrl(
+            _editProfileProviders.image,
+            _imageName,
+          );
+          try {
+            _userProfileProviders.photoUrl = _photoUrl;
+            _editProfileProviders.image = null;
+            await _firestoreService.updatePhotoProfileUrl(_photoUrl);
+          } catch (error) {
+            _appProviders.isLoading = false;
+            _alertDialogWidget.createAlertDialogWidget(
+              context,
+              ContentTexts.oops,
+              ContentTexts.errorUpdatePhotoProfileUrl,
+              ContentTexts.ok,
+            );
+          }
+        } catch (error) {
+          _appProviders.isLoading = false;
+          _alertDialogWidget.createAlertDialogWidget(
+            context,
+            ContentTexts.oops,
+            ContentTexts.errorGetPhotoProfileUrl,
+            ContentTexts.ok,
+          );
+        }
       }
       if (_userProfileProviders.displayName != _hiveProviders.displayName) {
-        await _firestoreService
-            .updateDisplayName(_userProfileProviders.displayName);
+        try {
+          await _firestoreService
+              .updateDisplayName(_userProfileProviders.displayName);
+        } catch (error) {
+          _appProviders.isLoading = false;
+          _alertDialogWidget.createAlertDialogWidget(
+            context,
+            ContentTexts.oops,
+            ContentTexts.errorUpdateDisplayName,
+            ContentTexts.ok,
+          );
+        }
       }
       if (_userProfileProviders.username != _hiveProviders.username) {
-        await _firestoreService.updateUsername(_userProfileProviders.username);
+        try {
+          await _firestoreService
+              .updateUsername(_userProfileProviders.username);
+        } catch (error) {
+          _appProviders.isLoading = false;
+          _alertDialogWidget.createAlertDialogWidget(
+            context,
+            ContentTexts.oops,
+            ContentTexts.errorUpdateUsername,
+            ContentTexts.ok,
+          );
+        }
       }
       await _firestoreService.fetchUserData();
       await HiveProviders.syncUserData();
       await _firestoreService.updateUsersPost();
       await _firestoreService.updatePostVoter();
+      await _firestoreService.updateUserVoted();
       _hiveProviders.refreshUserData();
       _appProviders.isLoading = false;
       _alertDialogWidget.createAlertDialogWidget(

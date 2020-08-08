@@ -174,6 +174,14 @@ class ContentTexts {
       'Your profile has been edited successfully, you can change it again whenever you want!';
   static const String invalidUsername =
       'Username can only contains alphanumeric characters, underscore and between 6 - 15 charaters!';
+  static const String errorGetPhotoProfileUrl =
+      'Something went wrong, get photo profile url failed!';
+  static const String errorUpdatePhotoProfileUrl =
+      'Something went wrong, update photo profile url failed!';
+  static const String errorUpdateDisplayName =
+      'Something went wrong, update display name failed!';
+  static const String errorUpdateUsername =
+      'Something went wrong, update username failed!';
   static const String errorUpdateUserProfile =
       'Something went wrong, edit profile failed!';
 

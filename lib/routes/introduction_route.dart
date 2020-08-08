@@ -240,11 +240,44 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                             );
                             _userProfileProviders.photoUrl = _photoUrl;
                             _editProfileProviders.image = null;
-                            await _firestoreService.updatePhotoUrl(_photoUrl);
-                            await _firestoreService.updateDisplayName(
-                                _userProfileProviders.displayName);
-                            await _firestoreService
-                                .updateUsername(_userProfileProviders.username);
+                            try {
+                              _userProfileProviders.photoUrl = _photoUrl;
+                              _editProfileProviders.image = null;
+                              await _firestoreService
+                                  .updatePhotoProfileUrl(_photoUrl);
+                            } catch (error) {
+                              _appProviders.isLoading = false;
+                              _alertDialogWidget.createAlertDialogWidget(
+                                context,
+                                ContentTexts.oops,
+                                ContentTexts.errorUpdatePhotoProfileUrl,
+                                ContentTexts.ok,
+                              );
+                            }
+                            try {
+                              await _firestoreService.updateDisplayName(
+                                  _userProfileProviders.displayName);
+                            } catch (error) {
+                              _appProviders.isLoading = false;
+                              _alertDialogWidget.createAlertDialogWidget(
+                                context,
+                                ContentTexts.oops,
+                                ContentTexts.errorUpdateDisplayName,
+                                ContentTexts.ok,
+                              );
+                            }
+                            try {
+                              await _firestoreService.updateUsername(
+                                  _userProfileProviders.username);
+                            } catch (error) {
+                              _appProviders.isLoading = false;
+                              _alertDialogWidget.createAlertDialogWidget(
+                                context,
+                                ContentTexts.oops,
+                                ContentTexts.errorUpdateUsername,
+                                ContentTexts.ok,
+                              );
+                            }
                             await _firestoreService
                                 .updateIsSetupCompleted(true);
                             await _firestoreService.fetchUserData();
