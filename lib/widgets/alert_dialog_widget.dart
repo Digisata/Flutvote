@@ -141,7 +141,7 @@ class AlertDialogWidget {
                 if (!await _firestoreService.isPostOwner(documentSnapshot)) {
                   if (!await _firestoreService
                       .isAlreadyVoted(documentSnapshot)) {
-                    await _firestoreService.updateVoteData(
+                    await _firestoreService.updatePostsVote(
                       documentSnapshot,
                       detailPostProviders.selectedOption,
                       detailPostProviders.selectedIndex,

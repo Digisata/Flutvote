@@ -8,8 +8,10 @@ class PostItemWidget {
   GestureDetector createPostItemWidget(
     BuildContext _context,
     DocumentSnapshot _documentSnapshot,
-    int index,
-  ) {
+    int index, {
+    bool isMyPost = false,
+    isMyVoted = false,
+  }) {
     final PostModel _postModel = PostModel.fromMap(_documentSnapshot.data);
 
     return GestureDetector(
@@ -20,6 +22,8 @@ class PostItemWidget {
           arguments: {
             'documentSnapshot': _documentSnapshot,
             'index': index,
+            'isMyPost': isMyPost,
+            'isMyVoted': isMyVoted,
           },
         );
       },

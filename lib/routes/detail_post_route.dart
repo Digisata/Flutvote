@@ -20,9 +20,11 @@ class DetailPostRoute extends StatelessWidget {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final DetailPostProviders _detailPostProviders =
         Provider.of<DetailPostProviders>(context);
-    final Map<String, dynamic> _object =
+    final Map<String, dynamic> _passedData =
         ModalRoute.of(context).settings.arguments;
-    final DocumentSnapshot _documentSnapshot = _object['documentSnapshot'];
+    final DocumentSnapshot _documentSnapshot = _passedData['documentSnapshot'];
+    final bool _isMyPost = _passedData['isMyPost'],
+        _isMyVoted = _passedData['isMyVoted'];
     final PostModel _postModel = PostModel.fromMap(_documentSnapshot.data);
 
     _onBackButtonPressed() {
@@ -52,7 +54,7 @@ class DetailPostRoute extends StatelessWidget {
     );
 
     final Hero _postImage = Hero(
-      tag: '${ContentTexts.postImageTag}${_object['index']}',
+      tag: '${ContentTexts.postImageTag}${_passedData['index']}',
       child: CachedNetworkImage(
         fit: BoxFit.cover,
         imageUrl: _postModel.imageUrl,
@@ -136,6 +138,87 @@ class DetailPostRoute extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+
+    final Expanded _resultList = Expanded(
+      child: ListView.builder(
+        padding: EdgeInsets.only(
+          left: ContentSizes.width(context) * 0.05,
+          right: ContentSizes.width(context) * 0.05,
+        ),
+        itemCount: _postModel.options.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: Text(
+              _postModel.options[index].toMap().values.elementAt(0),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+              textDirection: TextDirection.ltr,
+              style: Theme.of(context).textTheme.headline1.copyWith(
+                    color: ContentColors.grey,
+                    fontSize: ContentSizes.dp20(context),
+                  ),
+            ),
+            trailing: Text(
+              _postModel.options[index].toMap().values.elementAt(1).toString(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+              textDirection: TextDirection.ltr,
+              style: Theme.of(context).textTheme.headline1.copyWith(
+                    fontSize: ContentSizes.dp20(context),
+                  ),
+            ),
+          );
+        },
+      ),
+    );
+
+    final Padding _sumOfVotes = Padding(
+      padding: EdgeInsets.only(
+        left: ContentSizes.width(context) * 0.05,
+        right: ContentSizes.width(context) * 0.05,
+      ),
+      child: ListTile(
+        leading: Text(
+          ContentTexts.totalVotes,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.start,
+          textDirection: TextDirection.ltr,
+          style: Theme.of(context).textTheme.headline1.copyWith(
+                fontSize: ContentSizes.dp20(context),
+              ),
+        ),
+        trailing: Text(
+          _postModel.totalVotes.toString(),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.start,
+          textDirection: TextDirection.ltr,
+          style: Theme.of(context).textTheme.headline1.copyWith(
+                fontSize: ContentSizes.dp20(context),
+              ),
+        ),
+      ),
+    );
+
+    final Padding _thankYou = Padding(
+      padding: EdgeInsets.only(
+        left: ContentSizes.width(context) * 0.05,
+        right: ContentSizes.width(context) * 0.05,
+      ),
+      child: Text(
+        ContentTexts.thankYou,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.start,
+        textDirection: TextDirection.ltr,
+        style: Theme.of(context).textTheme.headline1.copyWith(
+              fontSize: ContentSizes.dp20(context),
+            ),
       ),
     );
 
@@ -306,11 +389,15 @@ class DetailPostRoute extends StatelessWidget {
                   SizedBox(
                     height: ContentSizes.height(context) * 0.01,
                   ),
-                  _optionsList,
+                  _isMyPost
+                      ? _resultList
+                      : _isMyVoted ? Container() : _optionsList,
                   SizedBox(
                     height: ContentSizes.height(context) * 0.01,
                   ),
-                  _voteButtonWidget,
+                  _isMyPost
+                      ? _sumOfVotes
+                      : _isMyVoted ? _thankYou : _voteButtonWidget,
                 ],
               ),
             ),

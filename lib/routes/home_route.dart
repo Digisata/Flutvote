@@ -101,6 +101,22 @@ class HomeRoute extends StatelessWidget {
             ContentTexts.errorRetrieveData,
             ContentTexts.ok,
           );
+        } else if (snapshots.data.documents.length == 0) {
+          return Expanded(
+            child: Center(
+              child: Text(
+                ContentTexts.thereIsNoPostYet,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
+                textDirection: TextDirection.ltr,
+                style: Theme.of(context).textTheme.headline1.copyWith(
+                      color: ContentColors.grey,
+                      fontSize: ContentSizes.dp18(context),
+                    ),
+              ),
+            ),
+          );
         } else {
           return Expanded(
             child: ListView.builder(

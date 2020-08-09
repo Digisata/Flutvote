@@ -134,19 +134,9 @@ class FirestoreService {
       await _votedCollectionReference
           .document(documentSnapshot.documentID)
           .setData(
-        {
-          'category': AppProviders.postModel.category,
-          'description': AppProviders.postModel.description,
-          'deviceId': AppProviders.postModel.deviceId,
-          'displayName': AppProviders.postModel.displayName,
-          'imageUrl': AppProviders.postModel.imageUrl,
-          'photoUrl': AppProviders.postModel.photoUrl,
-          'title': AppProviders.postModel.title,
-          'uid': AppProviders.postModel.uid,
-          'username': AppProviders.postModel.username,
-        },
-        merge: true,
-      );
+            AppProviders.postModel.toMap(),
+            merge: true,
+          );
     } catch (error) {
       throw 'set voted data error: $error';
     }
@@ -309,7 +299,7 @@ class FirestoreService {
     }
   }
 
-  Future<void> updateVoteData(
+  Future<void> updatePostsVote(
     DocumentSnapshot documentSnapshot,
     String key,
     int index,
@@ -355,7 +345,81 @@ class FirestoreService {
         },
       );
     } catch (error) {
-      throw 'update vote data error: $error';
+      throw 'update post\'s vote error: $error';
     }
   }
+
+  // TODO FIX SYNC VOTE DATA
+  /* Future<void> updateVotedsVote(
+    DocumentSnapshot documentSnapshot,
+    String key,
+    int index,
+  ) async {
+    try {
+      await Firestore.instance.runTransaction(
+        (transaction) async {
+          final QuerySnapshot _querySnapshot =
+              await _usersCollectionReference.getDocuments();
+          assert(_querySnapshot != null);
+          final List<DocumentSnapshot> _documents = _querySnapshot.documents;
+          if (_documents.isNotEmpty) {
+            _documents.forEach(
+              (document) async {
+                await Firestore.instance.runTransaction(
+                  (transaction) async {
+                    final DocumentSnapshot _freshSnapshot =
+                        await transaction.get(
+                      document.reference
+                          .collection('voted')
+                          .document(documentSnapshot.documentID),
+                    );
+                    assert(_freshSnapshot != null);
+                    final PostModel _postModel =
+                        PostModel.fromMap(_freshSnapshot.data);
+                    assert(_postModel != null);
+                    await transaction.update(
+                      _freshSnapshot.reference,
+                      {
+                        'options': FieldValue.arrayRemove(
+                          [
+                            {
+                              'option': key,
+                              'votes': _postModel.options[index]
+                                  .toMap()
+                                  .values
+                                  .elementAt(1),
+                            },
+                          ],
+                        ),
+                      },
+                    );
+                    await transaction.update(
+                      _freshSnapshot.reference,
+                      {
+                        'options': FieldValue.arrayUnion(
+                          [
+                            {
+                              'option': key,
+                              'votes': _postModel.options[index]
+                                      .toMap()
+                                      .values
+                                      .elementAt(1) +
+                                  1,
+                            },
+                          ],
+                        ),
+                        'totalVotes': _postModel.totalVotes + 1,
+                      },
+                    );
+                  },
+                );
+              },
+            );
+          }
+        },
+      );
+    } catch (error) {
+      throw 'update voted\'s vote error: $error';
+    }
+  } */
 }

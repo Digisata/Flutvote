@@ -1,15 +1,18 @@
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutvote/model/models.dart';
 import 'package:flutvote/providers/providers.dart';
+import 'package:flutvote/services/services.dart';
 import 'package:hive/hive.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HiveProviders with ChangeNotifier {
   static final Box _userData = Hive.box('userData');
+  static final FirebaseService _firebaseService = FirebaseService();
   static String _deviceId = '', _appVersion = '';
 
   static openBox() async {
@@ -29,6 +32,8 @@ class HiveProviders with ChangeNotifier {
 
   static Future<void> syncUserData() async {
     final UserModel _userModel = AppProviders.userModel;
+    final FirebaseUser _user = await _firebaseService.getCurrentUser();
+
     if (_userData.get('deviceId') != _userModel.deviceId) {
       await _userData.put('deviceId', _userModel.deviceId);
     }
@@ -47,6 +52,10 @@ class HiveProviders with ChangeNotifier {
 
     if (_userData.get('photoUrl') != _userModel.photoUrl) {
       await _userData.put('photoUrl', _userModel.photoUrl);
+    }
+
+    if (_userData.get('uid') != _user.uid) {
+      await _userData.put('uid', _user.uid);
     }
 
     if (_userData.get('username') != _userModel.username) {
@@ -75,6 +84,8 @@ class HiveProviders with ChangeNotifier {
   String get password => _userData.get('password');
 
   String get photoUrl => _userData.get('photoUrl');
+
+  String get uid => _userData.get('uid');
 
   String get username => _userData.get('username');
 

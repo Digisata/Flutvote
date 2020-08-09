@@ -127,6 +127,7 @@ class ContentTexts {
   static const String search = 'Search';
   static const String clearSearch = 'Clear search';
   static const String categories = 'Categories';
+  static const String thereIsNoPostYet = 'There\'s no post yet at the moment';
   static const String errorRetrieveData =
       'Failed to retrieve data, please try again later!';
   static const String voted = 'Voted';
@@ -135,6 +136,8 @@ class ContentTexts {
   static const String chooseFirst = 'Choose first';
   static const String chooseDescription =
       'Please choose one of the options that available, and then confirm your option!';
+  static const String totalVotes = 'Total votes';
+  static const String thankYou = 'Thank you for your vote';
   static const String confirm = 'Confirm';
   static const String confirmVote = 'Confirm vote';
   static const String confirmVoteDescription =
@@ -194,4 +197,11 @@ class ContentTexts {
       'Invalid credential, please check it again!';
   static const String errorRequiresRecentLogin =
       'Last sign-in time does not meet the security threshold, please reauthenticate first!';
+
+  static const String history = 'History';
+  static const String myPosts = 'My posts';
+  static const String myVoted = 'My voted';
+  static const String haventVotedyet = 'You haven\'t voted to any post yet';
+  static const String haventCreatedPostyet =
+      'You haven\'t created any posts yet';
 }
