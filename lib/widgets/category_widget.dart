@@ -6,23 +6,14 @@ import 'package:provider/provider.dart';
 class CategoryWidget {
   ListView createCategoryWidget(BuildContext _context) {
     final HomeProviders _homeProvider = Provider.of<HomeProviders>(_context);
-    final List<String> _categoriesList = [
-      'All',
-      'Fashion',
-      'Food',
-      'Travel',
-      'All',
-      'Fashion',
-      'Food',
-      'Travel',
-    ];
 
     return ListView.builder(
-      itemCount: _categoriesList.length,
+      itemCount: ContentTexts.categoryList.length,
       scrollDirection: Axis.horizontal,
       padding: EdgeInsets.only(left: ContentSizes.width(_context) * 0.05),
       itemBuilder: (context, index) {
-        bool _isSelectedCategory = _homeProvider.selectedCategoryIndex == index;
+        bool _isSelectedCategory =
+            _homeProvider.selectedCategoryIndexList.contains(index);
         return Padding(
           padding: EdgeInsets.all(ContentSizes.height(context) * 0.003),
           child: GestureDetector(
@@ -44,7 +35,7 @@ class CategoryWidget {
                     : ContentColors.orange,
               ),
               child: Text(
-                _categoriesList[index],
+                ContentTexts.categoryList[index],
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -58,7 +49,17 @@ class CategoryWidget {
               ),
             ),
             onTap: () {
-              _homeProvider.selectedCategoryIndex = index;
+              if (!_isSelectedCategory) {
+                _homeProvider.addSelectedCategoryList =
+                    ContentTexts.categoryList[index];
+                _homeProvider.addSelectedCategoryIndexList = index;
+                _homeProvider.setPostSnapshots();
+              } else {
+                _homeProvider.deleteSelectedCategoryList =
+                    ContentTexts.categoryList[index];
+                _homeProvider.deleteSelectedCategoryIndexList = index;
+                _homeProvider.setPostSnapshots();
+              }
             },
           ),
         );

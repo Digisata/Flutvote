@@ -13,11 +13,13 @@ class HistoryRoute extends StatelessWidget {
   final Stream<QuerySnapshot> _myPostSnapshots = Firestore.instance
           .collection('posts')
           .where('uid', isEqualTo: _userData.get('uid'))
+          .orderBy('timeCreated', descending: true)
           .snapshots(),
       _myVotedSnapshots = Firestore.instance
           .collection('users')
           .document(_userData.get('uid'))
           .collection('voted')
+          .orderBy('timeCreated', descending: true)
           .snapshots();
 
   @override
@@ -53,6 +55,46 @@ class HistoryRoute extends StatelessWidget {
       style: Theme.of(context).textTheme.headline1.copyWith(
             fontSize: ContentSizes.dp20(context),
           ),
+    );
+
+    final Padding _filterPostsIconButton = Padding(
+      padding: EdgeInsets.only(
+        left: ContentSizes.width(context) * 0.05,
+        right: ContentSizes.width(context) * 0.05,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          IconButton(
+            color: ContentColors.darkGrey,
+            iconSize: ContentSizes.height(context) * 0.03,
+            icon: Icon(Icons.filter_list),
+            onPressed: () {},
+            tooltip: ContentTexts.filterPostList,
+          )
+        ],
+      ),
+    );
+
+    final Padding _filterVotedIconButton = Padding(
+      padding: EdgeInsets.only(
+        left: ContentSizes.width(context) * 0.05,
+        right: ContentSizes.width(context) * 0.05,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          IconButton(
+            color: ContentColors.darkGrey,
+            iconSize: ContentSizes.height(context) * 0.03,
+            icon: Icon(Icons.filter_list),
+            onPressed: () {},
+            tooltip: ContentTexts.filterVotedList,
+          )
+        ],
+      ),
     );
 
     final StreamBuilder _myPostList = StreamBuilder<QuerySnapshot>(
@@ -92,11 +134,9 @@ class HistoryRoute extends StatelessWidget {
         } else {
           return Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.fromLTRB(
-                ContentSizes.width(context) * 0.05,
-                ContentSizes.height(context) * 0.05,
-                ContentSizes.width(context) * 0.05,
-                0,
+              padding: EdgeInsets.only(
+                left: ContentSizes.width(context) * 0.05,
+                right: ContentSizes.width(context) * 0.05,
               ),
               itemCount: snapshots.data.documents.length,
               itemBuilder: (context, index) {
@@ -150,11 +190,9 @@ class HistoryRoute extends StatelessWidget {
         } else {
           return Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.fromLTRB(
-                ContentSizes.width(context) * 0.05,
-                ContentSizes.height(context) * 0.05,
-                ContentSizes.width(context) * 0.05,
-                0,
+              padding: EdgeInsets.only(
+                left: ContentSizes.width(context) * 0.05,
+                right: ContentSizes.width(context) * 0.05,
               ),
               itemCount: snapshots.data.documents.length,
               itemBuilder: (context, index) {
@@ -203,6 +241,7 @@ class HistoryRoute extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    _filterPostsIconButton,
                     _myPostList,
                   ],
                 ),
@@ -212,6 +251,7 @@ class HistoryRoute extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    _filterVotedIconButton,
                     _myVotedList,
                   ],
                 ),

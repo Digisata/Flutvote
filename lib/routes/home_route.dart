@@ -16,13 +16,12 @@ class HomeRoute extends StatelessWidget {
   final PostItemWidget _postItemWidget = PostItemWidget();
   final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget();
   final SearchBarWidget _searchBarWidget = SearchBarWidget();
-  final Stream<QuerySnapshot> _postSnapshots =
-      Firestore.instance.collection('posts').snapshots();
 
   @override
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
+    final HomeProviders _homeProviders = Provider.of<HomeProviders>(context);
 
     _exitApp() {
       _alertDialogWidget.createAlertDialogWidget(
@@ -84,7 +83,7 @@ class HomeRoute extends StatelessWidget {
     );
 
     final StreamBuilder _postList = StreamBuilder<QuerySnapshot>(
-      stream: _postSnapshots,
+      stream: _homeProviders.postSnapshots,
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(
@@ -120,11 +119,9 @@ class HomeRoute extends StatelessWidget {
         } else {
           return Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.fromLTRB(
-                ContentSizes.width(context) * 0.05,
-                ContentSizes.height(context) * 0.05,
-                ContentSizes.width(context) * 0.05,
-                0,
+              padding: EdgeInsets.only(
+                left: ContentSizes.width(context) * 0.05,
+                right: ContentSizes.width(context) * 0.05,
               ),
               itemCount: snapshots.data.documents.length,
               itemBuilder: (context, index) {

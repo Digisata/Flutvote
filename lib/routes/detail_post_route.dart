@@ -26,6 +26,7 @@ class DetailPostRoute extends StatelessWidget {
     final bool _isMyPost = _passedData['isMyPost'],
         _isMyVoted = _passedData['isMyVoted'];
     final PostModel _postModel = PostModel.fromMap(_documentSnapshot.data);
+    final String _categories = _postModel.categories.toString();
 
     _onBackButtonPressed() {
       if (_detailPostProviders.selectedOption == '') {
@@ -289,7 +290,7 @@ class DetailPostRoute extends StatelessWidget {
     );
 
     final Text _category = Text(
-      _postModel.category,
+      _categories.substring(1, _categories.length - 1),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,

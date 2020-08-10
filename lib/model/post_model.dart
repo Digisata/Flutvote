@@ -1,58 +1,63 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class PostModel {
   PostModel({
-    @required this.category,
+    @required this.categories,
     @required this.description,
-    @required this.options,
     @required this.deviceId,
     @required this.displayName,
     @required this.email,
     @required this.imageUrl,
+    @required this.options,
     @required this.photoUrl,
+    @required this.timeCreated,
     @required this.title,
     @required this.totalVotes,
     @required this.uid,
     @required this.username,
   });
 
-  final String category;
+  final List<String> categories;
   final String description;
-  final List<Option> options;
   final String deviceId;
   final String displayName;
   final String email;
   final String imageUrl;
+  final List<Option> options;
   final String photoUrl;
+  final Timestamp timeCreated;
   final String title;
   final int totalVotes;
   final String uid;
   final String username;
 
   PostModel copyWith({
-    String category,
+    List<String> categories,
     String description,
-    List<Option> options,
     String deviceId,
     String displayName,
     String email,
     String imageUrl,
+    List<Option> options,
     String photoUrl,
+    Timestamp timeCreated,
     String title,
     int totalVotes,
     String uid,
     String username,
   }) =>
       PostModel(
-        category: category ?? this.category,
+        categories: categories ?? this.categories,
         description: description ?? this.description,
-        options: options ?? this.options,
         deviceId: deviceId ?? this.deviceId,
         displayName: displayName ?? this.displayName,
         email: email ?? this.email,
         imageUrl: imageUrl ?? this.imageUrl,
+        options: options ?? this.options,
         photoUrl: photoUrl ?? this.photoUrl,
+        timeCreated: timeCreated ?? this.timeCreated,
         title: title ?? this.title,
         totalVotes: totalVotes ?? this.totalVotes,
         uid: uid ?? this.uid,
@@ -64,15 +69,16 @@ class PostModel {
   String toJson() => json.encode(toMap());
 
   factory PostModel.fromMap(Map<String, dynamic> json) => PostModel(
-        category: json["category"],
+        categories: List<String>.from(json["categories"].map((x) => x)),
         description: json["description"],
-        options:
-            List<Option>.from(json["options"].map((x) => Option.fromMap(x))),
         deviceId: json["deviceId"],
         displayName: json["displayName"],
         email: json["email"],
         imageUrl: json["imageUrl"],
+        options:
+            List<Option>.from(json["options"].map((x) => Option.fromMap(x))),
         photoUrl: json["photoUrl"],
+        timeCreated: json["timeCreated"],
         title: json["title"],
         totalVotes: json["totalVotes"],
         uid: json["uid"],
@@ -80,14 +86,15 @@ class PostModel {
       );
 
   Map<String, dynamic> toMap() => {
-        "category": category,
+        "categories": List<dynamic>.from(categories.map((x) => x)),
         "description": description,
-        "options": List<dynamic>.from(options.map((x) => x.toMap())),
         "deviceId": deviceId,
         "displayName": displayName,
         "email": email,
         "imageUrl": imageUrl,
+        "options": List<dynamic>.from(options.map((x) => x.toMap())),
         "photoUrl": photoUrl,
+        "timeCreated": timeCreated,
         "title": title,
         "totalVotes": totalVotes,
         "uid": uid,

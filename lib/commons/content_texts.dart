@@ -12,6 +12,25 @@ class ContentTexts {
   static const String changePasswordRoute = '/changePasswordRoute';
   static const String detailPostRoute = '/detailPostRoute';
 
+  static const List<String> categoryList = [
+    'Business',
+    'Culture',
+    'Entertainment',
+    'Fashion',
+    'Feature',
+    'Food',
+    'Health',
+    'Lifestyle',
+    'Politic',
+    'Sport',
+    'Style',
+    'Technology',
+    'Tips',
+    'Travel',
+    'Trick',
+    'Weather',
+  ];
+
   static const String defaultPhotoUrl =
       'https://sairajfilmsproduction.com/application/assets/images/nopic.jpg';
   static const String defaultPrivacyAndPolicyUrl =
@@ -199,6 +218,8 @@ class ContentTexts {
       'Last sign-in time does not meet the security threshold, please reauthenticate first!';
 
   static const String history = 'History';
+  static const String filterPostList = 'Filter post list';
+  static const String filterVotedList = 'Filter voted list';
   static const String myPosts = 'My posts';
   static const String myVoted = 'My voted';
   static const String haventVotedyet = 'You haven\'t voted to any post yet';

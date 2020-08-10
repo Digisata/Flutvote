@@ -13,6 +13,7 @@ class PostItemWidget {
     isMyVoted = false,
   }) {
     final PostModel _postModel = PostModel.fromMap(_documentSnapshot.data);
+    final String _categories = _postModel.categories.toString();
 
     return GestureDetector(
       onTap: () {
@@ -127,7 +128,7 @@ class PostItemWidget {
                       ],
                     ),
                     Text(
-                      _postModel.category,
+                      _categories.substring(1, _categories.length - 1),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
