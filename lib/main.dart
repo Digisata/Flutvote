@@ -46,6 +46,9 @@ void main() async {
         ChangeNotifierProvider<EditProfileProviders>(
           create: (context) => EditProfileProviders(),
         ),
+        ChangeNotifierProvider<HistoryProviders>(
+          create: (context) => HistoryProviders(),
+        ),
       ],
       child: Flutvote(),
     ),

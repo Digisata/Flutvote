@@ -16,6 +16,7 @@ class HomeRoute extends StatelessWidget {
   final PostItemWidget _postItemWidget = PostItemWidget();
   final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget();
   final SearchBarWidget _searchBarWidget = SearchBarWidget();
+  final CategoryWidget _categoryWidget = CategoryWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +60,10 @@ class HomeRoute extends StatelessWidget {
       _textEditingControllerSearch,
     );
 
-    final Row _categoriesText = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    final Row _categoriesSection = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
       children: <Widget>[
         Text(
           ContentTexts.categories,
@@ -73,13 +75,35 @@ class HomeRoute extends StatelessWidget {
                 fontSize: ContentSizes.dp24(context),
               ),
         ),
+        _homeProviders.selectedCategoryList.length == 0
+            ? Container()
+            : GestureDetector(
+                onTap: () {
+                  _homeProviders.resetCategoryFilter();
+                  _homeProviders.setPostSnapshots();
+                },
+                child: Text(
+                  '${ContentTexts.reset} (${_homeProviders.selectedCategoryList.length})',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  textDirection: TextDirection.ltr,
+                  style: Theme.of(context).textTheme.headline2.copyWith(
+                        color: ContentColors.orange,
+                        fontSize: ContentSizes.dp18(context),
+                      ),
+                ),
+              )
       ],
     );
 
     final Container _categories = Container(
       height: ContentSizes.height(context) * 0.05,
       width: ContentSizes.width(context),
-      child: CategoryWidget().createCategoryWidget(context),
+      child: _categoryWidget.createCategoryWidget(
+        context,
+        _homeProviders,
+      ),
     );
 
     final StreamBuilder _postList = StreamBuilder<QuerySnapshot>(
@@ -202,7 +226,7 @@ class HomeRoute extends StatelessWidget {
                                 left: ContentSizes.width(context) * 0.05,
                                 right: ContentSizes.width(context) * 0.05,
                               ),
-                              child: _categoriesText,
+                              child: _categoriesSection,
                             ),
                             SizedBox(
                               height: ContentSizes.height(context) * 0.01,

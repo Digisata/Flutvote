@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
-import 'package:provider/provider.dart';
+import 'package:flutvote/widgets/widgets.dart';
 
 class CategoryWidget {
-  ListView createCategoryWidget(BuildContext _context) {
-    final HomeProviders _homeProvider = Provider.of<HomeProviders>(_context);
+  final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
 
+  ListView createCategoryWidget(
+    BuildContext _context,
+    HomeProviders _homeProviders,
+  ) {
     return ListView.builder(
       itemCount: ContentTexts.categoryList.length,
       scrollDirection: Axis.horizontal,
       padding: EdgeInsets.only(left: ContentSizes.width(_context) * 0.05),
       itemBuilder: (context, index) {
         bool _isSelectedCategory =
-            _homeProvider.selectedCategoryIndexList.contains(index);
+            _homeProviders.selectedCategoryIndexList.contains(index);
         return Padding(
           padding: EdgeInsets.all(ContentSizes.height(context) * 0.003),
           child: GestureDetector(
@@ -30,9 +33,13 @@ class CategoryWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 shape: BoxShape.rectangle,
-                color: !_isSelectedCategory
-                    ? Colors.transparent
-                    : ContentColors.orange,
+                color: !_isSelectedCategory &&
+                        ContentTexts.categoryList[index] != 'All'
+                    ? Colors.white
+                    : ContentTexts.categoryList[index] == 'All' &&
+                            _homeProviders.selectedCategoryList.length > 0
+                        ? Colors.white
+                        : ContentColors.orange,
               ),
               child: Text(
                 ContentTexts.categoryList[index],
@@ -41,24 +48,39 @@ class CategoryWidget {
                 textAlign: TextAlign.center,
                 textDirection: TextDirection.ltr,
                 style: Theme.of(context).textTheme.headline2.copyWith(
-                      color: !_isSelectedCategory
+                      color: !_isSelectedCategory &&
+                              ContentTexts.categoryList[index] != 'All'
                           ? ContentColors.grey
-                          : Colors.white,
+                          : ContentTexts.categoryList[index] == 'All' &&
+                                  _homeProviders.selectedCategoryList.length > 0
+                              ? ContentColors.grey
+                              : Colors.white,
                       fontSize: ContentSizes.dp16(context),
                     ),
               ),
             ),
             onTap: () {
-              if (!_isSelectedCategory) {
-                _homeProvider.addSelectedCategoryList =
-                    ContentTexts.categoryList[index];
-                _homeProvider.addSelectedCategoryIndexList = index;
-                _homeProvider.setPostSnapshots();
-              } else {
-                _homeProvider.deleteSelectedCategoryList =
-                    ContentTexts.categoryList[index];
-                _homeProvider.deleteSelectedCategoryIndexList = index;
-                _homeProvider.setPostSnapshots();
+              if (ContentTexts.categoryList[index] != 'All') {
+                if (!_isSelectedCategory) {
+                  if (_homeProviders.selectedCategoryList.length < 10) {
+                    _homeProviders.addSelectedCategoryList =
+                        ContentTexts.categoryList[index];
+                    _homeProviders.addSelectedCategoryIndexList = index;
+                    _homeProviders.setPostSnapshots();
+                  } else {
+                    _alertDialogWidget.createAlertDialogWidget(
+                      context,
+                      ContentTexts.oops,
+                      ContentTexts.errorOnlyCanSelect10,
+                      ContentTexts.ok,
+                    );
+                  }
+                } else {
+                  _homeProviders.deleteSelectedCategoryList =
+                      ContentTexts.categoryList[index];
+                  _homeProviders.deleteSelectedCategoryIndexList = index;
+                  _homeProviders.setPostSnapshots();
+                }
               }
             },
           ),

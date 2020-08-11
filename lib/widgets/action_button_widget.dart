@@ -9,6 +9,7 @@ class ActionButtonWidget {
     String _text,
     Function _function, {
     bool isFacebook = false,
+    isFilter = false,
   }) {
     return Material(
       borderRadius: BorderRadius.circular(30.0),
@@ -49,7 +50,9 @@ class ActionButtonWidget {
               textDirection: TextDirection.ltr,
               style: Theme.of(_context).textTheme.headline2.copyWith(
                     color: _textColor,
-                    fontSize: ContentSizes.dp18(_context),
+                    fontSize: isFilter
+                        ? ContentSizes.dp16(_context)
+                        : ContentSizes.dp18(_context),
                   ),
             ),
           ],

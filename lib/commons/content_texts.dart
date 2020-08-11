@@ -13,6 +13,7 @@ class ContentTexts {
   static const String detailPostRoute = '/detailPostRoute';
 
   static const List<String> categoryList = [
+    'All',
     'Business',
     'Culture',
     'Entertainment',
@@ -29,6 +30,11 @@ class ContentTexts {
     'Travel',
     'Trick',
     'Weather',
+  ];
+
+  static const List<String> timeCreatedList = [
+    'Newest',
+    'Oldest',
   ];
 
   static const String defaultPhotoUrl =
@@ -134,10 +140,6 @@ class ContentTexts {
   static const String pickPhotoFirst = 'Pick photo first';
   static const String pickPhotoDescription =
       'Please pick your photo profile first, you can choose either from gallery or camera!';
-  static const String errorGetImageFromGallery =
-      'Something went wrong, get image from gallery failed!';
-  static const String errorGetImageFromCamera =
-      'Something went wrong, get image from camera failed!';
   static const String errorSetupUserProfile =
       'Something went wrong, setup profile failed!';
 
@@ -146,10 +148,13 @@ class ContentTexts {
   static const String search = 'Search';
   static const String clearSearch = 'Clear search';
   static const String categories = 'Categories';
+  static const String reset = 'Reset';
   static const String thereIsNoPostYet = 'There\'s no post yet at the moment';
+  static const String voted = 'Voted';
   static const String errorRetrieveData =
       'Failed to retrieve data, please try again later!';
-  static const String voted = 'Voted';
+  static const String errorOnlyCanSelect10 =
+      'You can only select up to 10 categories, please select wisely!';
 
   static const String vote = 'Vote';
   static const String chooseFirst = 'Choose first';
@@ -222,6 +227,10 @@ class ContentTexts {
   static const String filterVotedList = 'Filter voted list';
   static const String myPosts = 'My posts';
   static const String myVoted = 'My voted';
+  static const String filter = 'Filter';
+  static const String timeCreated = 'Time created';
+  static const String category = 'Category';
+  static const String seeAll = 'See all';
   static const String haventVotedyet = 'You haven\'t voted to any post yet';
   static const String haventCreatedPostyet =
       'You haven\'t created any posts yet';

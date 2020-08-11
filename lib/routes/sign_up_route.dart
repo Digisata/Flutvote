@@ -127,6 +127,10 @@ class SignUpRoute extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         RichText(
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
           text: TextSpan(
             style: Theme.of(context).textTheme.headline2.copyWith(
                   fontSize: ContentSizes.dp14(context),
@@ -239,6 +243,10 @@ class SignUpRoute extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         RichText(
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          textDirection: TextDirection.ltr,
           text: TextSpan(
             style: Theme.of(context).textTheme.headline2.copyWith(
                   fontSize: ContentSizes.dp14(context),

@@ -28,7 +28,6 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
   final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget();
   final TextFieldWidget _textFieldWidget = TextFieldWidget();
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
-  final BottomSheetWidget _bottomSheetWidget = BottomSheetWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +75,21 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
       tag: ContentTexts.photoProfileTag,
       child: GestureDetector(
         onTap: () {
-          _bottomSheetWidget.createBottomSheetWidget(
-            context,
-            _editProfileProviders,
+          showModalBottomSheet(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
+              ),
+            ),
+            context: context,
+            builder: (context) {
+              return BottomSheetWidget(
+                editProfileProviders: _editProfileProviders,
+                isProfile: true,
+              );
+            },
           );
         },
         child: Stack(

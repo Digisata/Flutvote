@@ -21,7 +21,6 @@ class EditProfileRoute extends StatelessWidget {
   final PhotoProfileWidget _photoProfileWidget = PhotoProfileWidget();
   final TextFieldWidget _textFieldWidget = TextFieldWidget();
   final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
-  final BottomSheetWidget _bottomSheetWidget = BottomSheetWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -155,9 +154,21 @@ class EditProfileRoute extends StatelessWidget {
       tag: ContentTexts.photoProfileTag,
       child: GestureDetector(
         onTap: () {
-          _bottomSheetWidget.createBottomSheetWidget(
-            context,
-            _editProfileProviders,
+          showModalBottomSheet(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
+              ),
+            ),
+            context: context,
+            builder: (context) {
+              return BottomSheetWidget(
+                editProfileProviders: _editProfileProviders,
+                isProfile: true,
+              );
+            },
           );
         },
         child: Stack(
@@ -189,7 +200,7 @@ class EditProfileRoute extends StatelessWidget {
       context,
       _textEditingControllerDisplayName,
       _hiveProviders.displayName,
-      Icons.account_circle,
+      Icons.person,
       (input) {
         if (input.trim() != '') {
           _userProfileProviders.displayName = input.trim();

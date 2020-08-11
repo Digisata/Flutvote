@@ -1,29 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
+import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/widgets/widgets.dart';
-import 'package:hive/hive.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
+import 'package:provider/provider.dart';
 
 class HistoryRoute extends StatelessWidget {
-  static final Box _userData = Hive.box('userData');
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
   final PostItemWidget _postItemWidget = PostItemWidget();
-  final Stream<QuerySnapshot> _myPostSnapshots = Firestore.instance
-          .collection('posts')
-          .where('uid', isEqualTo: _userData.get('uid'))
-          .orderBy('timeCreated', descending: true)
-          .snapshots(),
-      _myVotedSnapshots = Firestore.instance
-          .collection('users')
-          .document(_userData.get('uid'))
-          .collection('voted')
-          .orderBy('timeCreated', descending: true)
-          .snapshots();
 
   @override
   Widget build(BuildContext context) {
+    final HistoryProviders _historyProviders =
+        Provider.of<HistoryProviders>(context);
+
     final Text _history = Text(
       ContentTexts.history,
       maxLines: 1,
@@ -70,7 +62,23 @@ class HistoryRoute extends StatelessWidget {
             color: ContentColors.darkGrey,
             iconSize: ContentSizes.height(context) * 0.03,
             icon: Icon(Icons.filter_list),
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0),
+                  ),
+                ),
+                context: context,
+                builder: (context) {
+                  return BottomSheetWidget(
+                    historyProviders: _historyProviders,
+                  );
+                },
+              );
+            },
             tooltip: ContentTexts.filterPostList,
           )
         ],
@@ -90,7 +98,23 @@ class HistoryRoute extends StatelessWidget {
             color: ContentColors.darkGrey,
             iconSize: ContentSizes.height(context) * 0.03,
             icon: Icon(Icons.filter_list),
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0),
+                  ),
+                ),
+                context: context,
+                builder: (context) {
+                  return BottomSheetWidget(
+                    historyProviders: _historyProviders,
+                  );
+                },
+              );
+            },
             tooltip: ContentTexts.filterVotedList,
           )
         ],
@@ -98,7 +122,7 @@ class HistoryRoute extends StatelessWidget {
     );
 
     final StreamBuilder _myPostList = StreamBuilder<QuerySnapshot>(
-      stream: _myPostSnapshots,
+      stream: _historyProviders.myPostSnapshots,
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(
@@ -154,7 +178,7 @@ class HistoryRoute extends StatelessWidget {
     );
 
     final StreamBuilder _myVotedList = StreamBuilder<QuerySnapshot>(
-      stream: _myVotedSnapshots,
+      stream: _historyProviders.myVotedSnapshots,
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(

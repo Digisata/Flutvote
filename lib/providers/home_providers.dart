@@ -43,6 +43,12 @@ class HomeProviders with ChangeNotifier {
     notifyListeners();
   }
 
+  void resetCategoryFilter() {
+    _selectedCategoryList = [];
+    _selectedCategoryIndexList = [];
+    notifyListeners();
+  }
+
   void setPostSnapshots() {
     if (_selectedCategoryList.length == 0) {
       _postSnapshots = Firestore.instance
