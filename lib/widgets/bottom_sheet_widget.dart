@@ -8,32 +8,32 @@ import 'package:image_picker/image_picker.dart';
 
 class BottomSheetWidget extends StatefulWidget {
   final EditProfileProviders editProfileProviders;
-  final HistoryProviders historyProviders;
+  final MyPostsProviders myPostsProviders;
   final bool isProfile;
 
   BottomSheetWidget({
     this.editProfileProviders,
-    this.historyProviders,
+    this.myPostsProviders,
     this.isProfile = false,
   });
 
   @override
   _BottomSheetWidgetState createState() => _BottomSheetWidgetState(
         editProfileProviders: this.editProfileProviders,
-        historyProviders: this.historyProviders,
+        myPostsProviders: this.myPostsProviders,
         isProfile: this.isProfile,
       );
 }
 
 class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   final EditProfileProviders editProfileProviders;
-  final HistoryProviders historyProviders;
+  final MyPostsProviders myPostsProviders;
   final bool isProfile;
   final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
 
   _BottomSheetWidgetState({
     this.editProfileProviders,
-    this.historyProviders,
+    this.myPostsProviders,
     this.isProfile = false,
   });
 
@@ -144,11 +144,11 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                       fontSize: ContentSizes.dp20(context),
                                     ),
                           ),
-                          !historyProviders.isFiltered
+                          myPostsProviders.isDefaultFilter
                               ? Container()
                               : GestureDetector(
                                   onTap: () {
-                                    historyProviders.resetMyPostsFilter();
+                                    myPostsProviders.resetMyPostsFilter();
                                     setState(() {});
                                   },
                                   child: Text(
@@ -215,10 +215,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                 height: ContentSizes.height(context) * 0.05,
                                 width: ContentSizes.width(context),
                                 child: TimeCreatedWidget(
-                                  historyProviders,
                                   () {
                                     setState(() {});
                                   },
+                                  myPostsProviders,
                                 ),
                               ),
                             ),
@@ -276,44 +276,48 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                     ),
                   ],
                 ),
-                !historyProviders.isFiltered
+                myPostsProviders.selectedTimeCreated ==
+                        myPostsProviders.savedTimeCreated
                     ? Container()
                     : Align(
                         alignment: Alignment.bottomCenter,
-                        child: Container(
-                          color: Colors.white,
-                          height: ContentSizes.height(context) * 0.085,
-                          width: ContentSizes.width(context),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          textDirection: TextDirection.ltr,
+                          children: [
+                            Container(
+                              color: Colors.white,
+                              height: ContentSizes.height(context) * 0.085,
+                              width: ContentSizes.width(context),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                ContentSizes.width(context) * 0.05,
+                                0,
+                                ContentSizes.width(context) * 0.05,
+                                ContentSizes.width(context) * 0.02,
+                              ),
+                              child: Container(
+                                height: ContentSizes.height(context) * 0.06,
+                                width: ContentSizes.width(context),
+                                child: _actionButtonWidget
+                                    .createActionButtonWidget(
+                                  context,
+                                  ContentColors.orange,
+                                  Colors.white,
+                                  'Show ${myPostsProviders.totalPosts} posts',
+                                  () {
+                                    myPostsProviders.saveFilterChanges();
+                                    myPostsProviders.setMyPostSnapshots();
+                                    Navigator.pop(context);
+                                  },
+                                  isFilter: true,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                !historyProviders.isFiltered
-                    ? Container()
-                    : Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(
-                            ContentSizes.width(context) * 0.05,
-                            0,
-                            ContentSizes.width(context) * 0.05,
-                            ContentSizes.width(context) * 0.02,
-                          ),
-                          child: Container(
-                            height: ContentSizes.height(context) * 0.06,
-                            width: ContentSizes.width(context),
-                            child: _actionButtonWidget.createActionButtonWidget(
-                              context,
-                              ContentColors.orange,
-                              Colors.white,
-                              'Show ${historyProviders.myPostSnapshots.length} posts',
-                              () {
-                                historyProviders.setMyPostSnapshots();
-                                Navigator.pop(context);
-                              },
-                              isFilter: true,
-                            ),
-                          ),
-                        ),
-                      )
               ],
             ),
     );

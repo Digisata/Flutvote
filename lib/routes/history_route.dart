@@ -13,8 +13,10 @@ class HistoryRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HistoryProviders _historyProviders =
-        Provider.of<HistoryProviders>(context);
+    final MyPostsProviders _myPostsProviders =
+        Provider.of<MyPostsProviders>(context);
+    final MyVotedProviders _myVotedProviders =
+        Provider.of<MyVotedProviders>(context);
 
     final Text _history = Text(
       ContentTexts.history,
@@ -74,9 +76,11 @@ class HistoryRoute extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return BottomSheetWidget(
-                    historyProviders: _historyProviders,
+                    myPostsProviders: _myPostsProviders,
                   );
                 },
+              ).then(
+                (value) => _myPostsProviders.setSavedFilter(),
               );
             },
             tooltip: ContentTexts.filterPostList,
@@ -110,7 +114,7 @@ class HistoryRoute extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return BottomSheetWidget(
-                    historyProviders: _historyProviders,
+                    myPostsProviders: _myPostsProviders,
                   );
                 },
               );
@@ -122,7 +126,7 @@ class HistoryRoute extends StatelessWidget {
     );
 
     final StreamBuilder _myPostList = StreamBuilder<QuerySnapshot>(
-      stream: _historyProviders.myPostSnapshots,
+      stream: _myPostsProviders.myPostSnapshots,
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(
@@ -178,7 +182,7 @@ class HistoryRoute extends StatelessWidget {
     );
 
     final StreamBuilder _myVotedList = StreamBuilder<QuerySnapshot>(
-      stream: _historyProviders.myVotedSnapshots,
+      stream: _myVotedProviders.myVotedSnapshots,
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(
