@@ -5,10 +5,6 @@ class HomeProviders with ChangeNotifier {
   String _searchKeyword = '';
   List<String> _selectedCategoryList = [];
   List<int> _selectedCategoryIndexList = [];
-  Stream<QuerySnapshot> _postSnapshots = Firestore.instance
-      .collection('posts')
-      .orderBy('timeCreated', descending: true)
-      .snapshots();
 
   String get searchKeyword => _searchKeyword;
 
@@ -16,7 +12,20 @@ class HomeProviders with ChangeNotifier {
 
   List<int> get selectedCategoryIndexList => _selectedCategoryIndexList;
 
-  Stream<QuerySnapshot> get postSnapshots => _postSnapshots;
+  Stream<QuerySnapshot> getPostSnapshots() {
+    if (_selectedCategoryList.length == 0) {
+      return Firestore.instance
+          .collection('posts')
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    } else {
+      return Firestore.instance
+          .collection('posts')
+          .where('categories', arrayContainsAny: _selectedCategoryList)
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    }
+  }
 
   set searchKeyword(String value) {
     _searchKeyword = value;
@@ -46,22 +55,6 @@ class HomeProviders with ChangeNotifier {
   void resetCategoryFilter() {
     _selectedCategoryList = [];
     _selectedCategoryIndexList = [];
-    notifyListeners();
-  }
-
-  void setPostSnapshots() {
-    if (_selectedCategoryList.length == 0) {
-      _postSnapshots = Firestore.instance
-          .collection('posts')
-          .orderBy('timeCreated', descending: true)
-          .snapshots();
-    } else {
-      _postSnapshots = Firestore.instance
-          .collection('posts')
-          .where('categories', arrayContainsAny: _selectedCategoryList)
-          .orderBy('timeCreated', descending: true)
-          .snapshots();
-    }
     notifyListeners();
   }
 }

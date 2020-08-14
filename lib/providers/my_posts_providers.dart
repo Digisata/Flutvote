@@ -3,38 +3,42 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 class MyPostsProviders with ChangeNotifier {
-  String _selectedTimeCreated = 'Newest', _savedTimeCreated = 'Newest';
+  String _selectedCreatedAt = 'Newest', _savedCreatedAt = 'Newest';
   bool _isDefaultFilter = true, _savedIsDefaultFilter = true;
   int _totalPosts = 0;
   static final Box _userData = Hive.box('userData');
-  Stream<QuerySnapshot> _myPostSnapshots = Firestore.instance
-      .collection('posts')
-      .where('uid', isEqualTo: _userData.get('uid'))
-      .orderBy('timeCreated', descending: true)
-      .snapshots();
 
-  String get selectedTimeCreated => _selectedTimeCreated;
+  String get selectedCreatedAt => _selectedCreatedAt;
 
-  String get savedTimeCreated => _savedTimeCreated;
+  String get savedCreatedAt => _savedCreatedAt;
 
   bool get isDefaultFilter => _isDefaultFilter;
 
   int get totalPosts => _totalPosts;
 
-  Stream<QuerySnapshot> get myPostSnapshots => _myPostSnapshots;
-
-  set setSelectedTimeCreated(String value) {
-    _selectedTimeCreated = value;
-    notifyListeners();
+  Stream<QuerySnapshot> getMyPostSnapshots() {
+    if (_savedCreatedAt == 'Newest') {
+      return Firestore.instance
+          .collection('posts')
+          .where('uid', isEqualTo: _userData.get('uid'))
+          .orderBy('createdAt', descending: true)
+          .snapshots();
+    } else {
+      return Firestore.instance
+          .collection('posts')
+          .where('uid', isEqualTo: _userData.get('uid'))
+          .orderBy('createdAt')
+          .snapshots();
+    }
   }
 
-  set isDefaultFilter(bool value) {
-    _isDefaultFilter = value;
+  set setSelectedCreatedAt(String value) {
+    _selectedCreatedAt = value;
     notifyListeners();
   }
 
   void checkMyPostsIsDefaultFilter() {
-    if (_selectedTimeCreated != 'Newest') {
+    if (_selectedCreatedAt != 'Newest') {
       _isDefaultFilter = false;
     } else {
       _isDefaultFilter = true;
@@ -43,28 +47,28 @@ class MyPostsProviders with ChangeNotifier {
   }
 
   void saveFilterChanges() {
-    _savedTimeCreated = _selectedTimeCreated;
+    _savedCreatedAt = _selectedCreatedAt;
     _savedIsDefaultFilter = _isDefaultFilter;
     notifyListeners();
   }
 
   void resetMyPostsFilter() {
-    _selectedTimeCreated = 'Newest';
+    _selectedCreatedAt = 'Newest';
     _isDefaultFilter = true;
     notifyListeners();
   }
 
   void setSavedFilter() {
-    _selectedTimeCreated = _savedTimeCreated;
+    _selectedCreatedAt = _savedCreatedAt;
     _isDefaultFilter = _savedIsDefaultFilter;
   }
 
   void setTotalPosts() {
-    if (_selectedTimeCreated == 'Newest') {
+    if (_selectedCreatedAt == 'Newest') {
       Firestore.instance
           .collection('posts')
           .where('uid', isEqualTo: _userData.get('uid'))
-          .orderBy('timeCreated', descending: true)
+          .orderBy('createdAt', descending: true)
           .getDocuments()
           .then(
             (value) => _totalPosts = value.documents.length,
@@ -73,28 +77,11 @@ class MyPostsProviders with ChangeNotifier {
       Firestore.instance
           .collection('posts')
           .where('uid', isEqualTo: _userData.get('uid'))
-          .orderBy('timeCreated')
+          .orderBy('createdAt')
           .getDocuments()
           .then(
             (value) => _totalPosts = value.documents.length,
           );
-    }
-    notifyListeners();
-  }
-
-  void setMyPostSnapshots() {
-    if (_selectedTimeCreated == 'Newest') {
-      _myPostSnapshots = Firestore.instance
-          .collection('posts')
-          .where('uid', isEqualTo: _userData.get('uid'))
-          .orderBy('timeCreated', descending: true)
-          .snapshots();
-    } else {
-      _myPostSnapshots = Firestore.instance
-          .collection('posts')
-          .where('uid', isEqualTo: _userData.get('uid'))
-          .orderBy('timeCreated')
-          .snapshots();
     }
     notifyListeners();
   }

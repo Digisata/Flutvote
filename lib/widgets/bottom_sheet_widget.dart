@@ -9,32 +9,40 @@ import 'package:image_picker/image_picker.dart';
 class BottomSheetWidget extends StatefulWidget {
   final EditProfileProviders editProfileProviders;
   final MyPostsProviders myPostsProviders;
-  final bool isProfile;
+  final MyVotedProviders myVotedProviders;
+  final bool isProfile, isMyPosts;
 
   BottomSheetWidget({
     this.editProfileProviders,
     this.myPostsProviders,
+    this.myVotedProviders,
     this.isProfile = false,
+    this.isMyPosts = false,
   });
 
   @override
   _BottomSheetWidgetState createState() => _BottomSheetWidgetState(
         editProfileProviders: this.editProfileProviders,
         myPostsProviders: this.myPostsProviders,
+        myVotedProviders: this.myVotedProviders,
         isProfile: this.isProfile,
+        isMyPosts: this.isMyPosts,
       );
 }
 
 class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   final EditProfileProviders editProfileProviders;
   final MyPostsProviders myPostsProviders;
-  final bool isProfile;
+  final MyVotedProviders myVotedProviders;
+  final bool isProfile, isMyPosts;
   final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
 
   _BottomSheetWidgetState({
     this.editProfileProviders,
     this.myPostsProviders,
+    this.myVotedProviders,
     this.isProfile = false,
+    this.isMyPosts = false,
   });
 
   @override
@@ -144,28 +152,53 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                       fontSize: ContentSizes.dp20(context),
                                     ),
                           ),
-                          myPostsProviders.isDefaultFilter
-                              ? Container()
-                              : GestureDetector(
-                                  onTap: () {
-                                    myPostsProviders.resetMyPostsFilter();
-                                    setState(() {});
-                                  },
-                                  child: Text(
-                                    ContentTexts.reset,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.start,
-                                    textDirection: TextDirection.ltr,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline2
-                                        .copyWith(
-                                          color: ContentColors.orange,
-                                          fontSize: ContentSizes.dp18(context),
-                                        ),
-                                  ),
-                                ),
+                          isMyPosts
+                              ? myPostsProviders.isDefaultFilter
+                                  ? Container()
+                                  : GestureDetector(
+                                      onTap: () {
+                                        myPostsProviders.resetMyPostsFilter();
+                                        setState(() {});
+                                      },
+                                      child: Text(
+                                        ContentTexts.reset,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.start,
+                                        textDirection: TextDirection.ltr,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline2
+                                            .copyWith(
+                                              color: ContentColors.orange,
+                                              fontSize:
+                                                  ContentSizes.dp18(context),
+                                            ),
+                                      ),
+                                    )
+                              : myVotedProviders.isDefaultFilter
+                                  ? Container()
+                                  : GestureDetector(
+                                      onTap: () {
+                                        myVotedProviders.resetMyVotedFilter();
+                                        setState(() {});
+                                      },
+                                      child: Text(
+                                        ContentTexts.reset,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.start,
+                                        textDirection: TextDirection.ltr,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline2
+                                            .copyWith(
+                                              color: ContentColors.orange,
+                                              fontSize:
+                                                  ContentSizes.dp18(context),
+                                            ),
+                                      ),
+                                    ),
                         ],
                       ),
                     ),
@@ -191,7 +224,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    ContentTexts.timeCreated,
+                                    ContentTexts.createdAt,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.start,
@@ -214,11 +247,13 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                               child: Container(
                                 height: ContentSizes.height(context) * 0.05,
                                 width: ContentSizes.width(context),
-                                child: TimeCreatedWidget(
+                                child: CreatedAtWidget(
                                   () {
                                     setState(() {});
                                   },
                                   myPostsProviders,
+                                  myVotedProviders,
+                                  isMyPosts,
                                 ),
                               ),
                             ),
@@ -276,48 +311,89 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                     ),
                   ],
                 ),
-                myPostsProviders.selectedTimeCreated ==
-                        myPostsProviders.savedTimeCreated
-                    ? Container()
-                    : Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          textDirection: TextDirection.ltr,
-                          children: [
-                            Container(
-                              color: Colors.white,
-                              height: ContentSizes.height(context) * 0.085,
-                              width: ContentSizes.width(context),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                ContentSizes.width(context) * 0.05,
-                                0,
-                                ContentSizes.width(context) * 0.05,
-                                ContentSizes.width(context) * 0.02,
-                              ),
-                              child: Container(
-                                height: ContentSizes.height(context) * 0.06,
-                                width: ContentSizes.width(context),
-                                child: _actionButtonWidget
-                                    .createActionButtonWidget(
-                                  context,
-                                  ContentColors.orange,
-                                  Colors.white,
-                                  'Show ${myPostsProviders.totalPosts} posts',
-                                  () {
-                                    myPostsProviders.saveFilterChanges();
-                                    myPostsProviders.setMyPostSnapshots();
-                                    Navigator.pop(context);
-                                  },
-                                  isFilter: true,
+                isMyPosts
+                    ? myPostsProviders.selectedCreatedAt ==
+                            myPostsProviders.savedCreatedAt
+                        ? Container()
+                        : Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              textDirection: TextDirection.ltr,
+                              children: [
+                                Container(
+                                  color: Colors.white,
+                                  height: ContentSizes.height(context) * 0.085,
+                                  width: ContentSizes.width(context),
                                 ),
-                              ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                    ContentSizes.width(context) * 0.05,
+                                    0,
+                                    ContentSizes.width(context) * 0.05,
+                                    ContentSizes.width(context) * 0.02,
+                                  ),
+                                  child: Container(
+                                    height: ContentSizes.height(context) * 0.06,
+                                    width: ContentSizes.width(context),
+                                    child: _actionButtonWidget
+                                        .createActionButtonWidget(
+                                      context,
+                                      ContentColors.orange,
+                                      Colors.white,
+                                      'Show ${myPostsProviders.totalPosts} posts',
+                                      () {
+                                        myPostsProviders.saveFilterChanges();
+                                        Navigator.pop(context);
+                                      },
+                                      isFilter: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
+                          )
+                    : myVotedProviders.selectedCreatedAt ==
+                            myVotedProviders.savedCreatedAt
+                        ? Container()
+                        : Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              textDirection: TextDirection.ltr,
+                              children: [
+                                Container(
+                                  color: Colors.white,
+                                  height: ContentSizes.height(context) * 0.085,
+                                  width: ContentSizes.width(context),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                    ContentSizes.width(context) * 0.05,
+                                    0,
+                                    ContentSizes.width(context) * 0.05,
+                                    ContentSizes.width(context) * 0.02,
+                                  ),
+                                  child: Container(
+                                    height: ContentSizes.height(context) * 0.06,
+                                    width: ContentSizes.width(context),
+                                    child: _actionButtonWidget
+                                        .createActionButtonWidget(
+                                      context,
+                                      ContentColors.orange,
+                                      Colors.white,
+                                      'Show ${myVotedProviders.totalPosts} posts',
+                                      () {
+                                        myVotedProviders.saveFilterChanges();
+                                        Navigator.pop(context);
+                                      },
+                                      isFilter: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
               ],
             ),
     );

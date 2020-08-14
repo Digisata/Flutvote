@@ -32,7 +32,7 @@ class ContentTexts {
     'Weather',
   ];
 
-  static const List<String> timeCreatedList = [
+  static const List<String> createdAtList = [
     'Newest',
     'Oldest',
   ];
@@ -228,7 +228,7 @@ class ContentTexts {
   static const String myPosts = 'My posts';
   static const String myVoted = 'My voted';
   static const String filter = 'Filter';
-  static const String timeCreated = 'Time created';
+  static const String createdAt = 'Created at';
   static const String category = 'Category';
   static const String seeAll = 'See all';
   static const String haventVotedyet = 'You haven\'t voted to any post yet';

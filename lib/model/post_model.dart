@@ -5,6 +5,7 @@ import 'dart:convert';
 class PostModel {
   PostModel({
     @required this.categories,
+    @required this.createdAt,
     @required this.description,
     @required this.deviceId,
     @required this.displayName,
@@ -12,7 +13,6 @@ class PostModel {
     @required this.imageUrl,
     @required this.options,
     @required this.photoUrl,
-    @required this.timeCreated,
     @required this.title,
     @required this.totalVotes,
     @required this.uid,
@@ -20,6 +20,7 @@ class PostModel {
   });
 
   final List<String> categories;
+  final Timestamp createdAt;
   final String description;
   final String deviceId;
   final String displayName;
@@ -27,7 +28,6 @@ class PostModel {
   final String imageUrl;
   final List<Option> options;
   final String photoUrl;
-  final Timestamp timeCreated;
   final String title;
   final int totalVotes;
   final String uid;
@@ -35,6 +35,7 @@ class PostModel {
 
   PostModel copyWith({
     List<String> categories,
+    Timestamp createdAt,
     String description,
     String deviceId,
     String displayName,
@@ -42,7 +43,6 @@ class PostModel {
     String imageUrl,
     List<Option> options,
     String photoUrl,
-    Timestamp timeCreated,
     String title,
     int totalVotes,
     String uid,
@@ -50,6 +50,7 @@ class PostModel {
   }) =>
       PostModel(
         categories: categories ?? this.categories,
+        createdAt: createdAt ?? this.createdAt,
         description: description ?? this.description,
         deviceId: deviceId ?? this.deviceId,
         displayName: displayName ?? this.displayName,
@@ -57,7 +58,6 @@ class PostModel {
         imageUrl: imageUrl ?? this.imageUrl,
         options: options ?? this.options,
         photoUrl: photoUrl ?? this.photoUrl,
-        timeCreated: timeCreated ?? this.timeCreated,
         title: title ?? this.title,
         totalVotes: totalVotes ?? this.totalVotes,
         uid: uid ?? this.uid,
@@ -70,6 +70,7 @@ class PostModel {
 
   factory PostModel.fromMap(Map<String, dynamic> json) => PostModel(
         categories: List<String>.from(json["categories"].map((x) => x)),
+        createdAt: json["createdAt"],
         description: json["description"],
         deviceId: json["deviceId"],
         displayName: json["displayName"],
@@ -78,7 +79,6 @@ class PostModel {
         options:
             List<Option>.from(json["options"].map((x) => Option.fromMap(x))),
         photoUrl: json["photoUrl"],
-        timeCreated: json["timeCreated"],
         title: json["title"],
         totalVotes: json["totalVotes"],
         uid: json["uid"],
@@ -87,6 +87,7 @@ class PostModel {
 
   Map<String, dynamic> toMap() => {
         "categories": List<dynamic>.from(categories.map((x) => x)),
+        "createdAt": createdAt,
         "description": description,
         "deviceId": deviceId,
         "displayName": displayName,
@@ -94,7 +95,6 @@ class PostModel {
         "imageUrl": imageUrl,
         "options": List<dynamic>.from(options.map((x) => x.toMap())),
         "photoUrl": photoUrl,
-        "timeCreated": timeCreated,
         "title": title,
         "totalVotes": totalVotes,
         "uid": uid,

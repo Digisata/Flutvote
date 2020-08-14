@@ -2,20 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 
-class TimeCreatedWidget extends StatelessWidget {
+class CreatedAtWidget extends StatelessWidget {
   final VoidCallback onItemSelected;
   final MyPostsProviders _myPostsProviders;
+  final MyVotedProviders _myVotedProviders;
+  final _isMyPosts;
 
-  TimeCreatedWidget(this.onItemSelected, this._myPostsProviders);
+  CreatedAtWidget(
+    this.onItemSelected,
+    this._myPostsProviders,
+    this._myVotedProviders,
+    this._isMyPosts,
+  );
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: ContentTexts.timeCreatedList.length,
+      itemCount: ContentTexts.createdAtList.length,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
-        bool _isSelectedTimeCreated = ContentTexts.timeCreatedList[index] ==
-            _myPostsProviders.selectedTimeCreated;
+        bool _isSelectedCreatedAt = _isMyPosts
+            ? ContentTexts.createdAtList[index] ==
+                _myPostsProviders.selectedCreatedAt
+            : ContentTexts.createdAtList[index] ==
+                _myVotedProviders.selectedCreatedAt;
         return Padding(
           padding: EdgeInsets.all(ContentSizes.height(context) * 0.003),
           child: GestureDetector(
@@ -32,18 +42,18 @@ class TimeCreatedWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 shape: BoxShape.rectangle,
-                color: !_isSelectedTimeCreated
+                color: !_isSelectedCreatedAt
                     ? Colors.transparent
                     : ContentColors.orange,
               ),
               child: Text(
-                ContentTexts.timeCreatedList[index],
+                ContentTexts.createdAtList[index],
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 textDirection: TextDirection.ltr,
                 style: Theme.of(context).textTheme.headline2.copyWith(
-                      color: !_isSelectedTimeCreated
+                      color: !_isSelectedCreatedAt
                           ? ContentColors.grey
                           : Colors.white,
                       fontSize: ContentSizes.dp16(context),
@@ -51,10 +61,17 @@ class TimeCreatedWidget extends StatelessWidget {
               ),
             ),
             onTap: () async {
-              _myPostsProviders.setSelectedTimeCreated =
-                  ContentTexts.timeCreatedList[index];
-              _myPostsProviders.setTotalPosts();
-              _myPostsProviders.checkMyPostsIsDefaultFilter();
+              if (_isMyPosts) {
+                _myPostsProviders.setSelectedCreatedAt =
+                    ContentTexts.createdAtList[index];
+                _myPostsProviders.setTotalPosts();
+                _myPostsProviders.checkMyPostsIsDefaultFilter();
+              } else {
+                _myVotedProviders.setSelectedCreatedAt =
+                    ContentTexts.createdAtList[index];
+                _myVotedProviders.setTotalVoted();
+                _myVotedProviders.checkMyVotedIsDefaultFilter();
+              }
               onItemSelected();
             },
           ),

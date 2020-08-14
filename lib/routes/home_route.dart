@@ -80,7 +80,6 @@ class HomeRoute extends StatelessWidget {
             : GestureDetector(
                 onTap: () {
                   _homeProviders.resetCategoryFilter();
-                  _homeProviders.setPostSnapshots();
                 },
                 child: Text(
                   '${ContentTexts.reset} (${_homeProviders.selectedCategoryList.length})',
@@ -107,7 +106,7 @@ class HomeRoute extends StatelessWidget {
     );
 
     final StreamBuilder _postList = StreamBuilder<QuerySnapshot>(
-      stream: _homeProviders.postSnapshots,
+      stream: _homeProviders.getPostSnapshots(),
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(

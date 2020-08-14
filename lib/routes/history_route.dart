@@ -65,6 +65,7 @@ class HistoryRoute extends StatelessWidget {
             iconSize: ContentSizes.height(context) * 0.03,
             icon: Icon(Icons.filter_list),
             onPressed: () {
+              _myPostsProviders.setTotalPosts();
               showModalBottomSheet(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -77,6 +78,7 @@ class HistoryRoute extends StatelessWidget {
                 builder: (context) {
                   return BottomSheetWidget(
                     myPostsProviders: _myPostsProviders,
+                    isMyPosts: true,
                   );
                 },
               ).then(
@@ -103,6 +105,7 @@ class HistoryRoute extends StatelessWidget {
             iconSize: ContentSizes.height(context) * 0.03,
             icon: Icon(Icons.filter_list),
             onPressed: () {
+              _myVotedProviders.setTotalVoted();
               showModalBottomSheet(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -114,9 +117,11 @@ class HistoryRoute extends StatelessWidget {
                 context: context,
                 builder: (context) {
                   return BottomSheetWidget(
-                    myPostsProviders: _myPostsProviders,
+                    myVotedProviders: _myVotedProviders,
                   );
                 },
+              ).then(
+                (value) => _myVotedProviders.setSavedFilter(),
               );
             },
             tooltip: ContentTexts.filterVotedList,
@@ -126,7 +131,7 @@ class HistoryRoute extends StatelessWidget {
     );
 
     final StreamBuilder _myPostList = StreamBuilder<QuerySnapshot>(
-      stream: _myPostsProviders.myPostSnapshots,
+      stream: _myPostsProviders.getMyPostSnapshots(),
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(
@@ -182,7 +187,7 @@ class HistoryRoute extends StatelessWidget {
     );
 
     final StreamBuilder _myVotedList = StreamBuilder<QuerySnapshot>(
-      stream: _myVotedProviders.myVotedSnapshots,
+      stream: _myVotedProviders.getMyVotedSnapshots(),
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(

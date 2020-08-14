@@ -66,7 +66,6 @@ class CategoryWidget {
                     _homeProviders.addSelectedCategoryList =
                         ContentTexts.categoryList[index];
                     _homeProviders.addSelectedCategoryIndexList = index;
-                    _homeProviders.setPostSnapshots();
                   } else {
                     _alertDialogWidget.createAlertDialogWidget(
                       context,
@@ -79,8 +78,9 @@ class CategoryWidget {
                   _homeProviders.deleteSelectedCategoryList =
                       ContentTexts.categoryList[index];
                   _homeProviders.deleteSelectedCategoryIndexList = index;
-                  _homeProviders.setPostSnapshots();
                 }
+              } else {
+                _homeProviders.resetCategoryFilter();
               }
             },
           ),
