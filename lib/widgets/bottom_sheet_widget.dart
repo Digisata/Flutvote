@@ -60,8 +60,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
       width: ContentSizes.width(context),
       child: isProfile
           ? Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 ListTile(
                   leading: Icon(Icons.photo_library),
@@ -104,8 +102,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
               textDirection: TextDirection.ltr,
               children: [
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(
@@ -116,7 +112,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
                             decoration: BoxDecoration(
@@ -139,7 +134,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             ContentTexts.filter,
@@ -208,8 +202,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SizedBox(
                               height: ContentSizes.height(context) * 0.015,
@@ -220,8 +212,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                 right: ContentSizes.width(context) * 0.05,
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
                                     ContentTexts.createdAt,
@@ -244,17 +234,13 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                 left: ContentSizes.width(context) * 0.05,
                                 right: ContentSizes.width(context) * 0.05,
                               ),
-                              child: Container(
-                                height: ContentSizes.height(context) * 0.05,
-                                width: ContentSizes.width(context),
-                                child: CreatedAtWidget(
-                                  () {
-                                    setState(() {});
-                                  },
-                                  myPostsProviders,
-                                  myVotedProviders,
-                                  isMyPosts,
-                                ),
+                              child: CreatedAtFilterWidget(
+                                () {
+                                  setState(() {});
+                                },
+                                myPostsProviders,
+                                myVotedProviders,
+                                isMyPosts,
                               ),
                             ),
                             SizedBox(
@@ -305,6 +291,20 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                 ],
                               ),
                             ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: ContentSizes.width(context) * 0.05,
+                                right: ContentSizes.width(context) * 0.05,
+                              ),
+                              child: CategoryFilterWidget(
+                                () {
+                                  setState(() {});
+                                },
+                                myPostsProviders,
+                                myVotedProviders,
+                                isMyPosts,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -317,16 +317,12 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                         ? Container()
                         : Align(
                             alignment: Alignment.bottomCenter,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              textDirection: TextDirection.ltr,
-                              children: [
-                                Container(
-                                  color: Colors.white,
-                                  height: ContentSizes.height(context) * 0.085,
-                                  width: ContentSizes.width(context),
-                                ),
-                                Padding(
+                            child: Container(
+                              color: Colors.white,
+                              height: ContentSizes.height(context) * 0.085,
+                              width: ContentSizes.width(context),
+                              child: Center(
+                                child: Padding(
                                   padding: EdgeInsets.fromLTRB(
                                     ContentSizes.width(context) * 0.05,
                                     0,
@@ -336,21 +332,42 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                   child: Container(
                                     height: ContentSizes.height(context) * 0.06,
                                     width: ContentSizes.width(context),
-                                    child: _actionButtonWidget
-                                        .createActionButtonWidget(
-                                      context,
-                                      ContentColors.orange,
-                                      Colors.white,
-                                      'Show ${myPostsProviders.totalPosts} posts',
-                                      () {
-                                        myPostsProviders.saveFilterChanges();
-                                        Navigator.pop(context);
-                                      },
-                                      isFilter: true,
-                                    ),
+                                    child: myPostsProviders.totalPosts == 0
+                                        ? Text(
+                                            ContentTexts.noResult,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                            textDirection: TextDirection.ltr,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline2
+                                                .copyWith(
+                                                  color: ContentColors.orange,
+                                                  fontSize: ContentSizes.dp16(
+                                                      context),
+                                                ),
+                                          )
+                                        : _actionButtonWidget
+                                            .createActionButtonWidget(
+                                            context,
+                                            ContentColors.orange,
+                                            Colors.white,
+                                            myPostsProviders.totalPosts == 1
+                                                ? 'Show ${myPostsProviders.totalPosts} result'
+                                                : 'Show all ${myPostsProviders.totalPosts} result',
+                                            () {
+                                              myPostsProviders
+                                                  .saveFilterChanges();
+                                              myPostsProviders
+                                                  .setMyPostSnapshot();
+                                              Navigator.pop(context);
+                                            },
+                                            isFilter: true,
+                                          ),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
                           )
                     : myVotedProviders.selectedCreatedAt ==
@@ -377,18 +394,39 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                   child: Container(
                                     height: ContentSizes.height(context) * 0.06,
                                     width: ContentSizes.width(context),
-                                    child: _actionButtonWidget
-                                        .createActionButtonWidget(
-                                      context,
-                                      ContentColors.orange,
-                                      Colors.white,
-                                      'Show ${myVotedProviders.totalPosts} posts',
-                                      () {
-                                        myVotedProviders.saveFilterChanges();
-                                        Navigator.pop(context);
-                                      },
-                                      isFilter: true,
-                                    ),
+                                    child: myVotedProviders.totalPosts == 0
+                                        ? Text(
+                                            ContentTexts.noResult,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            textAlign: TextAlign.center,
+                                            textDirection: TextDirection.ltr,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline2
+                                                .copyWith(
+                                                  color: ContentColors.orange,
+                                                  fontSize: ContentSizes.dp16(
+                                                      context),
+                                                ),
+                                          )
+                                        : _actionButtonWidget
+                                            .createActionButtonWidget(
+                                            context,
+                                            ContentColors.orange,
+                                            Colors.white,
+                                            myVotedProviders.totalPosts == 1
+                                                ? 'Show ${myVotedProviders.totalPosts} result'
+                                                : 'Show all ${myVotedProviders.totalPosts} result',
+                                            () {
+                                              myVotedProviders
+                                                  .saveFilterChanges();
+                                              myVotedProviders
+                                                  .setMyVotedSnapshot();
+                                              Navigator.pop(context);
+                                            },
+                                            isFilter: true,
+                                          ),
                                   ),
                                 ),
                               ],

@@ -116,7 +116,6 @@ class ChangePasswordRoute extends StatelessWidget {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _textFieldOldPassword,
           SizedBox(
@@ -222,7 +221,6 @@ class ChangePasswordRoute extends StatelessWidget {
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       _changePasswordText,
                       SizedBox(

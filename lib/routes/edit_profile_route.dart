@@ -232,7 +232,6 @@ class EditProfileRoute extends StatelessWidget {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _textFieldDisplayName,
           SizedBox(
@@ -333,8 +332,6 @@ class EditProfileRoute extends StatelessWidget {
                     ContentSizes.width(context) * 0.01,
                   ),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       _editProfileText,
                       SizedBox(

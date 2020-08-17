@@ -29,7 +29,6 @@ class ActionButtonWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             !isFacebook
                 ? Container()

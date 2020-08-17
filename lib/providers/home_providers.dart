@@ -4,16 +4,13 @@ import 'package:flutter/foundation.dart';
 class HomeProviders with ChangeNotifier {
   String _searchKeyword = '';
   List<String> _selectedCategoryList = [];
-  List<int> _selectedCategoryIndexList = [];
 
   String get searchKeyword => _searchKeyword;
 
   List<String> get selectedCategoryList => _selectedCategoryList;
 
-  List<int> get selectedCategoryIndexList => _selectedCategoryIndexList;
-
   Stream<QuerySnapshot> getPostSnapshots() {
-    if (_selectedCategoryList.length == 0) {
+    if (_selectedCategoryList.isEmpty) {
       return Firestore.instance
           .collection('posts')
           .orderBy('createdAt', descending: true)
@@ -37,24 +34,13 @@ class HomeProviders with ChangeNotifier {
     notifyListeners();
   }
 
-  set addSelectedCategoryIndexList(int value) {
-    _selectedCategoryIndexList.add(value);
-    notifyListeners();
-  }
-
-  set deleteSelectedCategoryList(String value) {
+  set removeSelectedCategoryList(String value) {
     _selectedCategoryList.removeWhere((element) => element == value);
-    notifyListeners();
-  }
-
-  set deleteSelectedCategoryIndexList(int value) {
-    _selectedCategoryIndexList.removeWhere((element) => element == value);
     notifyListeners();
   }
 
   void resetCategoryFilter() {
     _selectedCategoryList = [];
-    _selectedCategoryIndexList = [];
     notifyListeners();
   }
 }

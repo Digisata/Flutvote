@@ -58,7 +58,6 @@ class HistoryRoute extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           IconButton(
             color: ContentColors.darkGrey,
@@ -98,7 +97,6 @@ class HistoryRoute extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           IconButton(
             color: ContentColors.darkGrey,
@@ -131,7 +129,7 @@ class HistoryRoute extends StatelessWidget {
     );
 
     final StreamBuilder _myPostList = StreamBuilder<QuerySnapshot>(
-      stream: _myPostsProviders.getMyPostSnapshots(),
+      stream: _myPostsProviders.myPostSnapshot,
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(
@@ -148,7 +146,7 @@ class HistoryRoute extends StatelessWidget {
             ContentTexts.errorRetrieveData,
             ContentTexts.ok,
           );
-        } else if (snapshots.data.documents.length == 0) {
+        } else if (snapshots.data.documents.isEmpty) {
           return Expanded(
             child: Center(
               child: Text(
@@ -187,7 +185,7 @@ class HistoryRoute extends StatelessWidget {
     );
 
     final StreamBuilder _myVotedList = StreamBuilder<QuerySnapshot>(
-      stream: _myVotedProviders.getMyVotedSnapshots(),
+      stream: _myVotedProviders.myVotedSnapshot,
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(
@@ -204,7 +202,7 @@ class HistoryRoute extends StatelessWidget {
             ContentTexts.errorRetrieveData,
             ContentTexts.ok,
           );
-        } else if (snapshots.data.documents.length == 0) {
+        } else if (snapshots.data.documents.isEmpty) {
           return Expanded(
             child: Center(
               child: Text(
@@ -271,8 +269,6 @@ class HistoryRoute extends StatelessWidget {
             children: [
               SafeArea(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     _filterPostsIconButton,
                     _myPostList,
@@ -281,8 +277,6 @@ class HistoryRoute extends StatelessWidget {
               ),
               SafeArea(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     _filterVotedIconButton,
                     _myVotedList,

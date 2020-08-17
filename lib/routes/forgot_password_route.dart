@@ -73,7 +73,6 @@ class ForgotPasswordRoute extends StatelessWidget {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _textFieldEmail,
         ],
@@ -147,7 +146,6 @@ class ForgotPasswordRoute extends StatelessWidget {
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       _resetText,
                       SizedBox(

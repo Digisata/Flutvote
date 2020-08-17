@@ -120,7 +120,6 @@ class SignInRoute extends StatelessWidget {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _textFieldEmail,
           SizedBox(
@@ -133,7 +132,6 @@ class SignInRoute extends StatelessWidget {
 
     final Row _forgotText = Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         GestureDetector(
           onTap: () {
@@ -184,7 +182,6 @@ class SignInRoute extends StatelessWidget {
 
     final Row _signUpText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         RichText(
           maxLines: 1,
@@ -221,7 +218,6 @@ class SignInRoute extends StatelessWidget {
 
     final Row _orText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Expanded(
           child: Divider(
@@ -300,7 +296,6 @@ class SignInRoute extends StatelessWidget {
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           _signInText,
                           SizedBox(

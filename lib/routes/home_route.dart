@@ -75,7 +75,7 @@ class HomeRoute extends StatelessWidget {
                 fontSize: ContentSizes.dp24(context),
               ),
         ),
-        _homeProviders.selectedCategoryList.length == 0
+        _homeProviders.selectedCategoryList.isEmpty
             ? Container()
             : GestureDetector(
                 onTap: () {
@@ -123,7 +123,7 @@ class HomeRoute extends StatelessWidget {
             ContentTexts.errorRetrieveData,
             ContentTexts.ok,
           );
-        } else if (snapshots.data.documents.length == 0) {
+        } else if (snapshots.data.documents.isEmpty) {
           return Expanded(
             child: Center(
               child: Text(
@@ -181,8 +181,6 @@ class HomeRoute extends StatelessWidget {
                     children: [
                       SafeArea(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             Padding(
                               padding: EdgeInsets.fromLTRB(
@@ -194,7 +192,6 @@ class HomeRoute extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   _speakYourVote,
                                   GestureDetector(

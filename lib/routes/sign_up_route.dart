@@ -99,7 +99,6 @@ class SignUpRoute extends StatelessWidget {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _textFieldEmail,
           SizedBox(
@@ -124,7 +123,6 @@ class SignUpRoute extends StatelessWidget {
 
     final Row _termsAndConditionsText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         RichText(
           maxLines: 1,
@@ -175,8 +173,6 @@ class SignUpRoute extends StatelessWidget {
     );
 
     final Row _termsAndConditions = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         _termsAndConditionsCheckbox,
         SizedBox(
@@ -240,7 +236,6 @@ class SignUpRoute extends StatelessWidget {
 
     final Row _signInText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         RichText(
           maxLines: 1,
@@ -306,7 +301,6 @@ class SignUpRoute extends StatelessWidget {
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       _signUpText,
                       SizedBox(

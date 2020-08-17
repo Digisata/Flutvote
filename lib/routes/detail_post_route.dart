@@ -318,8 +318,6 @@ class DetailPostRoute extends StatelessWidget {
     );
 
     final Row _postOwner = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         _photoProfile,
         SizedBox(
@@ -337,8 +335,6 @@ class DetailPostRoute extends StatelessWidget {
     );
 
     final Row _categoryInfo = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         _categoryIcon,
         SizedBox(
@@ -349,8 +345,6 @@ class DetailPostRoute extends StatelessWidget {
     );
 
     final Row _voteInfo = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         _voteIcon,
         SizedBox(
@@ -366,7 +360,6 @@ class DetailPostRoute extends StatelessWidget {
       color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Flexible(
             flex: 1,
@@ -383,8 +376,6 @@ class DetailPostRoute extends StatelessWidget {
               ),
               color: Colors.white,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   _postDescription,
                   SizedBox(
@@ -434,12 +425,10 @@ class DetailPostRoute extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _postTitle,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               _postOwner,
               _categoryInfo,

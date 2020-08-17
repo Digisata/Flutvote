@@ -145,7 +145,6 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _textFieldDisplayName,
           SizedBox(

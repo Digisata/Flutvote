@@ -12,31 +12,6 @@ class ContentTexts {
   static const String changePasswordRoute = '/changePasswordRoute';
   static const String detailPostRoute = '/detailPostRoute';
 
-  static const List<String> categoryList = [
-    'All',
-    'Business',
-    'Culture',
-    'Entertainment',
-    'Fashion',
-    'Feature',
-    'Food',
-    'Health',
-    'Lifestyle',
-    'Politic',
-    'Sport',
-    'Style',
-    'Technology',
-    'Tips',
-    'Travel',
-    'Trick',
-    'Weather',
-  ];
-
-  static const List<String> createdAtList = [
-    'Newest',
-    'Oldest',
-  ];
-
   static const String defaultPhotoUrl =
       'https://sairajfilmsproduction.com/application/assets/images/nopic.jpg';
   static const String defaultPrivacyAndPolicyUrl =
@@ -149,6 +124,25 @@ class ContentTexts {
   static const String clearSearch = 'Clear search';
   static const String categories = 'Categories';
   static const String reset = 'Reset';
+  static const List<String> categoryList = [
+    'All',
+    'Business',
+    'Culture',
+    'Entertainment',
+    'Fashion',
+    'Feature',
+    'Food',
+    'Health',
+    'Lifestyle',
+    'Politic',
+    'Sport',
+    'Style',
+    'Technology',
+    'Tips',
+    'Travel',
+    'Trick',
+    'Weather',
+  ];
   static const String thereIsNoPostYet = 'There\'s no post yet at the moment';
   static const String voted = 'Voted';
   static const String errorRetrieveData =
@@ -229,8 +223,20 @@ class ContentTexts {
   static const String myVoted = 'My voted';
   static const String filter = 'Filter';
   static const String createdAt = 'Created at';
+  static const List<String> createdAtList = [
+    'Newest',
+    'Oldest',
+  ];
   static const String category = 'Category';
   static const String seeAll = 'See all';
+  static const List<String> categoryFilterList = [
+    'Fashion',
+    'Food',
+    'Health',
+    'Sport',
+    'Travel',
+  ];
+  static const String noResult = 'There\'s no result found';
   static const String haventVotedyet = 'You haven\'t voted to any post yet';
   static const String haventCreatedPostyet =
       'You haven\'t created any posts yet';

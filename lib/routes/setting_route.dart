@@ -79,8 +79,6 @@ class SettingRoute extends StatelessWidget {
 
     final Expanded _settingList = Expanded(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _settingItemEditProfile,
           SizedBox(
@@ -112,7 +110,6 @@ class SettingRoute extends StatelessWidget {
 
     final Row _appVersionText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Text(
           'Version ${_hiveProviders.appVersion}',
@@ -143,7 +140,6 @@ class SettingRoute extends StatelessWidget {
             ContentSizes.width(context) * 0.05,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               _photoProfile,
