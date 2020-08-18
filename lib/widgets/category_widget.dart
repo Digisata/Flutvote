@@ -46,12 +46,15 @@ class CategoryWidget {
                     fontSize: ContentSizes.dp16(context),
                   ),
             ),
-            onTap: () {
+            onTap: () async {
               if (ContentTexts.categoryList[index] != 'All') {
                 if (!_isSelectedCategory) {
                   if (_homeProviders.selectedCategoryList.length < 10) {
                     _homeProviders.addSelectedCategoryList =
                         ContentTexts.categoryList[index];
+                    await _homeProviders.setTotalPosts();
+                    _homeProviders.checkIsDefaultFilter();
+                    _homeProviders.setPostSnapshots();
                   } else {
                     _alertDialogWidget.createAlertDialogWidget(
                       context,
@@ -63,9 +66,15 @@ class CategoryWidget {
                 } else {
                   _homeProviders.removeSelectedCategoryList =
                       ContentTexts.categoryList[index];
+                  await _homeProviders.setTotalPosts();
+                  _homeProviders.checkIsDefaultFilter();
+                  _homeProviders.setPostSnapshots();
                 }
               } else {
                 _homeProviders.resetCategoryFilter();
+                await _homeProviders.setTotalPosts();
+                _homeProviders.checkIsDefaultFilter();
+                _homeProviders.setPostSnapshots();
               }
             },
           ),

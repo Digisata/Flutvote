@@ -46,17 +46,17 @@ class CreatedAtFilterWidget extends StatelessWidget {
                       fontSize: ContentSizes.dp16(context),
                     ),
               ),
-              onTap: () {
+              onTap: () async {
                 if (_isMyPosts) {
                   if (!_isSelectedCreatedAt) {
                     _myPostsProviders.setSelectedCreatedAt = element;
-                    _myPostsProviders.setTotalPosts();
+                    await _myPostsProviders.setTotalPosts();
                     _myPostsProviders.checkMyPostsIsDefaultFilter();
                   }
                 } else {
                   if (!_isSelectedCreatedAt) {
                     _myVotedProviders.setSelectedCreatedAt = element;
-                    _myVotedProviders.setTotalVoted();
+                    await _myVotedProviders.setTotalVoted();
                     _myVotedProviders.checkMyVotedIsDefaultFilter();
                   }
                 }

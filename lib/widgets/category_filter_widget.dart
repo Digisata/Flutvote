@@ -50,14 +50,14 @@ class CategoryFilterWidget extends StatelessWidget {
                         fontSize: ContentSizes.dp16(context),
                       ),
                 ),
-                onTap: () {
+                onTap: () async {
                   if (_isMyPosts) {
                     if (!_isSelectedCategoryFilter) {
                       if (_myPostsProviders.selectedCategoryFilterList.length <
                           10) {
                         _myPostsProviders.addSelectedCategoryFilterList =
                             element;
-                        _myPostsProviders.setTotalPosts();
+                        await _myPostsProviders.setTotalPosts();
                         _myPostsProviders.checkMyPostsIsDefaultFilter();
                       } else {
                         _alertDialogWidget.createAlertDialogWidget(
@@ -70,7 +70,7 @@ class CategoryFilterWidget extends StatelessWidget {
                     } else {
                       _myPostsProviders.removeSelectedCategoryFilterList =
                           element;
-                      _myPostsProviders.setTotalPosts();
+                      await _myPostsProviders.setTotalPosts();
                       _myPostsProviders.checkMyPostsIsDefaultFilter();
                     }
                   } else {
@@ -79,7 +79,7 @@ class CategoryFilterWidget extends StatelessWidget {
                           10) {
                         _myVotedProviders.addSelectedCategoryFilterList =
                             element;
-                        _myVotedProviders.setTotalVoted();
+                        await _myVotedProviders.setTotalVoted();
                         _myVotedProviders.checkMyVotedIsDefaultFilter();
                       } else {
                         _alertDialogWidget.createAlertDialogWidget(
@@ -92,7 +92,7 @@ class CategoryFilterWidget extends StatelessWidget {
                     } else {
                       _myVotedProviders.removeSelectedCategoryFilterList =
                           element;
-                      _myVotedProviders.setTotalVoted();
+                      await _myVotedProviders.setTotalVoted();
                       _myVotedProviders.checkMyVotedIsDefaultFilter();
                     }
                   }

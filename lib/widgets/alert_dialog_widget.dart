@@ -199,6 +199,18 @@ class AlertDialogWidget {
                 );
               }
             } else if (isSignOut) {
+              if (isChangePassword) {
+                if (changePasswordProviders.isOldPasswordChangeVisible) {
+                  changePasswordProviders.isOldPasswordChangeVisible = false;
+                }
+                if (changePasswordProviders.isNewPasswordChangeVisible) {
+                  changePasswordProviders.isNewPasswordChangeVisible = false;
+                }
+                if (changePasswordProviders.isNewRepeatPasswordChangeVisible) {
+                  changePasswordProviders.isNewRepeatPasswordChangeVisible =
+                      false;
+                }
+              }
               try {
                 appProviders.isLoading = true;
                 await _firebaseService.signOut();

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,12 @@ class SignInRoute extends StatelessWidget {
           deviceId: _hiveProviders.deviceId,
           displayName: ContentTexts.displayName,
           email: _user.email,
+          is2FaConfigured: false,
+          isFingerprintConfigured: false,
+          isPinConfigured: false,
           isSetupCompleted: false,
+          lastPasswordModified: Timestamp.now(),
+          lastProfileModified: Timestamp.now(),
           photoUrl: ContentTexts.defaultPhotoUrl,
           username: ContentTexts.username,
         );

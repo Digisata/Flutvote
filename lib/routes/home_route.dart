@@ -78,8 +78,11 @@ class HomeRoute extends StatelessWidget {
         _homeProviders.selectedCategoryList.isEmpty
             ? Container()
             : GestureDetector(
-                onTap: () {
+                onTap: () async {
                   _homeProviders.resetCategoryFilter();
+                  await _homeProviders.setTotalPosts();
+                  _homeProviders.checkIsDefaultFilter();
+                  _homeProviders.setPostSnapshots();
                 },
                 child: Text(
                   '${ContentTexts.reset} (${_homeProviders.selectedCategoryList.length})',
@@ -105,8 +108,27 @@ class HomeRoute extends StatelessWidget {
       ),
     );
 
+    final Row _foundText = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          _homeProviders.totalPosts == 1
+              ? '${ContentTexts.found} ${_homeProviders.totalPosts} post'
+              : '${ContentTexts.found} ${_homeProviders.totalPosts} posts',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.start,
+          textDirection: TextDirection.ltr,
+          style: Theme.of(context).textTheme.headline2.copyWith(
+                color: ContentColors.orange,
+                fontSize: ContentSizes.dp18(context),
+              ),
+        )
+      ],
+    );
+
     final StreamBuilder _postList = StreamBuilder<QuerySnapshot>(
-      stream: _homeProviders.getPostSnapshots(),
+      stream: _homeProviders.postSnapshots,
       builder: (context, snapshots) {
         if (!snapshots.hasData) {
           return Expanded(
@@ -229,7 +251,14 @@ class HomeRoute extends StatelessWidget {
                             ),
                             _categories,
                             SizedBox(
-                              height: ContentSizes.height(context) * 0.01,
+                              height: ContentSizes.height(context) * 0.005,
+                            ),
+                            _homeProviders.isDefaultFilter ||
+                                    _homeProviders.totalPosts == 0
+                                ? Container()
+                                : _foundText,
+                            SizedBox(
+                              height: ContentSizes.height(context) * 0.005,
                             ),
                             _postList,
                           ],

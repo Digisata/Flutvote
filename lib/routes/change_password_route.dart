@@ -14,6 +14,7 @@ class ChangePasswordRoute extends StatelessWidget {
       _textEditingControllerNewRepeatPassword = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FirebaseService _firebaseService = FirebaseService();
+  final FirestoreService _firestoreService = FirestoreService();
   final AlertDialogWidget _alertDialogWidget = AlertDialogWidget();
   final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
   final BackButtonWidget _backButtonWidget = BackButtonWidget();
@@ -150,6 +151,17 @@ class ChangePasswordRoute extends StatelessWidget {
             if (_isPasswordValid) {
               await _firebaseService
                   .updatePassword(_changePasswordProviders.newPasswordChange);
+              try {
+                await _firestoreService.updateLastPasswordModified();
+              } catch (error) {
+                _appProviders.isLoading = false;
+                _alertDialogWidget.createAlertDialogWidget(
+                  context,
+                  ContentTexts.oops,
+                  ContentTexts.errorUpdateLastPasswordModified,
+                  ContentTexts.ok,
+                );
+              }
             }
             _hiveProviders
                 .setPassword(_changePasswordProviders.newPasswordChange);

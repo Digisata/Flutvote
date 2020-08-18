@@ -198,6 +198,34 @@ class FirestoreService {
     }
   }
 
+  Future<void> updateLastPasswordModified() async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _usersCollectionReference.document(_user.uid).updateData(
+        {
+          'lastPasswordModified': Timestamp.now(),
+        },
+      );
+    } catch (error) {
+      throw 'update last password modified error: $error';
+    }
+  }
+
+  Future<void> updateLastProfileModified() async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _usersCollectionReference.document(_user.uid).updateData(
+        {
+          'lastProfileModified': Timestamp.now(),
+        },
+      );
+    } catch (error) {
+      throw 'update last profile modified error: $error';
+    }
+  }
+
   Future<void> updateUsersPost() async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();

@@ -143,6 +143,7 @@ class ContentTexts {
     'Trick',
     'Weather',
   ];
+  static const String found = 'Found';
   static const String thereIsNoPostYet = 'There\'s no post yet at the moment';
   static const String voted = 'Voted';
   static const String errorRetrieveData =
@@ -201,6 +202,8 @@ class ContentTexts {
       'Something went wrong, update photo profile url failed!';
   static const String errorUpdateDisplayName =
       'Something went wrong, update display name failed!';
+  static const String errorUpdateLastProfileModified =
+      'Something went wrong, update last profile modified failed!';
   static const String errorUpdateUsername =
       'Something went wrong, update username failed!';
   static const String errorUpdateUserProfile =
@@ -213,6 +216,8 @@ class ContentTexts {
   static const String newPassword = 'New password';
   static const String errorInvalidCredentials =
       'Invalid credential, please check it again!';
+  static const String errorUpdateLastPasswordModified =
+      'Something went wrong, update last password modified failed!';
   static const String errorRequiresRecentLogin =
       'Last sign-in time does not meet the security threshold, please reauthenticate first!';
 

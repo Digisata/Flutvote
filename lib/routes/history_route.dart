@@ -64,7 +64,6 @@ class HistoryRoute extends StatelessWidget {
             iconSize: ContentSizes.height(context) * 0.03,
             icon: Icon(Icons.filter_list),
             onPressed: () {
-              _myPostsProviders.setTotalPosts();
               showModalBottomSheet(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -103,7 +102,6 @@ class HistoryRoute extends StatelessWidget {
             iconSize: ContentSizes.height(context) * 0.03,
             icon: Icon(Icons.filter_list),
             onPressed: () {
-              _myVotedProviders.setTotalVoted();
               showModalBottomSheet(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(

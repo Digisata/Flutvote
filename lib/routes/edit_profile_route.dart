@@ -98,6 +98,17 @@ class EditProfileRoute extends StatelessWidget {
           );
         }
       }
+      try {
+        await _firestoreService.updateLastProfileModified();
+      } catch (error) {
+        _appProviders.isLoading = false;
+        _alertDialogWidget.createAlertDialogWidget(
+          context,
+          ContentTexts.oops,
+          ContentTexts.errorUpdateLastProfileModified,
+          ContentTexts.ok,
+        );
+      }
       if (_userProfileProviders.username != _hiveProviders.username) {
         try {
           await _firestoreService

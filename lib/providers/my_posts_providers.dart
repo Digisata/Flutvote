@@ -75,10 +75,10 @@ class MyPostsProviders with ChangeNotifier {
     _isDefaultFilter = _savedIsDefaultFilter;
   }
 
-  void setTotalPosts() {
+  Future<void> setTotalPosts() async {
     if (_selectedCreatedAt == 'Newest') {
       if (_selectedCategoryFilterList.isNotEmpty) {
-        Firestore.instance
+        await Firestore.instance
             .collection('posts')
             .where('uid', isEqualTo: _userData.get('uid'))
             .where('categories', arrayContainsAny: _selectedCategoryFilterList)
@@ -88,7 +88,7 @@ class MyPostsProviders with ChangeNotifier {
               (value) => _totalPosts = value.documents.length,
             );
       } else {
-        Firestore.instance
+        await Firestore.instance
             .collection('posts')
             .where('uid', isEqualTo: _userData.get('uid'))
             .orderBy('createdAt', descending: true)
@@ -99,7 +99,7 @@ class MyPostsProviders with ChangeNotifier {
       }
     } else {
       if (_selectedCategoryFilterList.isNotEmpty) {
-        Firestore.instance
+        await Firestore.instance
             .collection('posts')
             .where('uid', isEqualTo: _userData.get('uid'))
             .where('categories', arrayContainsAny: _selectedCategoryFilterList)
@@ -109,7 +109,7 @@ class MyPostsProviders with ChangeNotifier {
               (value) => _totalPosts = value.documents.length,
             );
       } else {
-        Firestore.instance
+        await Firestore.instance
             .collection('posts')
             .where('uid', isEqualTo: _userData.get('uid'))
             .orderBy('createdAt')

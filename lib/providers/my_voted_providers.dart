@@ -74,10 +74,10 @@ class MyVotedProviders with ChangeNotifier {
     _isDefaultFilter = _savedIsDefaultFilter;
   }
 
-  void setTotalVoted() {
+  Future<void> setTotalVoted() async {
     if (_selectedCreatedAt == 'Newest') {
       if (_selectedCategoryFilterList.isNotEmpty) {
-        Firestore.instance
+        await Firestore.instance
             .collection('users')
             .document(_userData.get('uid'))
             .collection('voted')
@@ -88,7 +88,7 @@ class MyVotedProviders with ChangeNotifier {
               (value) => _totalPosts = value.documents.length,
             );
       } else {
-        Firestore.instance
+        await Firestore.instance
             .collection('users')
             .document(_userData.get('uid'))
             .collection('voted')
@@ -100,7 +100,7 @@ class MyVotedProviders with ChangeNotifier {
       }
     } else {
       if (_selectedCategoryFilterList.isNotEmpty) {
-        Firestore.instance
+        await Firestore.instance
             .collection('users')
             .document(_userData.get('uid'))
             .collection('voted')
@@ -111,7 +111,7 @@ class MyVotedProviders with ChangeNotifier {
               (value) => _totalPosts = value.documents.length,
             );
       } else {
-        Firestore.instance
+        await Firestore.instance
             .collection('users')
             .document(_userData.get('uid'))
             .collection('voted')
