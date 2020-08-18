@@ -78,10 +78,8 @@ class HomeRoute extends StatelessWidget {
         _homeProviders.selectedCategoryList.isEmpty
             ? Container()
             : GestureDetector(
-                onTap: () async {
-                  _homeProviders.resetCategoryFilter();
-                  await _homeProviders.setTotalPosts();
-                  _homeProviders.checkIsDefaultFilter();
+                onTap: () {
+                  _homeProviders.resetPostsFilter();
                   _homeProviders.setPostSnapshots();
                 },
                 child: Text(

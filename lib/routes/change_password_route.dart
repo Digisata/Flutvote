@@ -26,6 +26,11 @@ class ChangePasswordRoute extends StatelessWidget {
     final ChangePasswordProviders _changePasswordProviders =
         Provider.of<ChangePasswordProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
+    final HomeProviders _homeProviders = Provider.of<HomeProviders>(context);
+    final MyPostsProviders _myPostsProviders =
+        Provider.of<MyPostsProviders>(context);
+    final MyVotedProviders _myVotedProviders =
+        Provider.of<MyVotedProviders>(context);
 
     _onBackButtonPressed({bool isDiscard = false}) {
       if (_textEditingControllerOldPassword.text.isEmpty &&
@@ -49,7 +54,7 @@ class ChangePasswordRoute extends StatelessWidget {
               ? ContentTexts.discardConfirmation
               : ContentTexts.leaveConfirmation,
           isDiscard ? ContentTexts.discard : ContentTexts.leave,
-          routeName: ContentTexts.settingRoute,
+          okRouteName: ContentTexts.settingRoute,
           isOnlyCancelButton: false,
           isChangePassword: true,
           changePasswordProviders: _changePasswordProviders,
@@ -172,11 +177,13 @@ class ChangePasswordRoute extends StatelessWidget {
               ContentTexts.changePasswordSuccessfully,
               ContentTexts.signIn,
               isOnlyCancelButton: false,
-              isOnlyOkButton: true,
               isSignOut: true,
               isChangePassword: true,
               appProviders: _appProviders,
               changePasswordProviders: _changePasswordProviders,
+              homeProviders: _homeProviders,
+              myPostsProviders: _myPostsProviders,
+              myVotedProviders: _myVotedProviders,
             );
           } catch (error) {
             _appProviders.isLoading = false;

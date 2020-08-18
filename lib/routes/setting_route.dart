@@ -15,6 +15,11 @@ class SettingRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppProviders _appProviders = Provider.of<AppProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
+    final HomeProviders _homeProviders = Provider.of<HomeProviders>(context);
+    final MyPostsProviders _myPostsProviders =
+        Provider.of<MyPostsProviders>(context);
+    final MyVotedProviders _myVotedProviders =
+        Provider.of<MyVotedProviders>(context);
 
     _onBackButtonPressed() {
       Navigator.pop(context, true);
@@ -104,6 +109,9 @@ class SettingRoute extends StatelessWidget {
           isOnlyCancelButton: false,
           isSignOut: true,
           appProviders: _appProviders,
+          homeProviders: _homeProviders,
+          myPostsProviders: _myPostsProviders,
+          myVotedProviders: _myVotedProviders,
         );
       },
     );

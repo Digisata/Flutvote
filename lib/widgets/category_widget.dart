@@ -71,9 +71,7 @@ class CategoryWidget {
                   _homeProviders.setPostSnapshots();
                 }
               } else {
-                _homeProviders.resetCategoryFilter();
-                await _homeProviders.setTotalPosts();
-                _homeProviders.checkIsDefaultFilter();
+                _homeProviders.resetPostsFilter();
                 _homeProviders.setPostSnapshots();
               }
             },

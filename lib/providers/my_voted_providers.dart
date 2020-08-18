@@ -126,7 +126,7 @@ class MyVotedProviders with ChangeNotifier {
   }
 
   void setMyVotedSnapshot() {
-    if (_selectedCreatedAt == 'Newest') {
+    if (_savedCreatedAt == 'Newest') {
       if (_selectedCategoryFilterList.isNotEmpty) {
         _myVotedSnapshot = Firestore.instance
             .collection('users')

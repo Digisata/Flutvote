@@ -51,7 +51,7 @@ class HistoryRoute extends StatelessWidget {
           ),
     );
 
-    final Padding _filterPostsIconButton = Padding(
+    final Padding _myPostsFilterButton = Padding(
       padding: EdgeInsets.only(
         left: ContentSizes.width(context) * 0.05,
         right: ContentSizes.width(context) * 0.05,
@@ -89,7 +89,7 @@ class HistoryRoute extends StatelessWidget {
       ),
     );
 
-    final Padding _filterVotedIconButton = Padding(
+    final Padding _myVotedFilterButton = Padding(
       padding: EdgeInsets.only(
         left: ContentSizes.width(context) * 0.05,
         right: ContentSizes.width(context) * 0.05,
@@ -268,7 +268,7 @@ class HistoryRoute extends StatelessWidget {
               SafeArea(
                 child: Column(
                   children: [
-                    _filterPostsIconButton,
+                    _myPostsFilterButton,
                     _myPostList,
                   ],
                 ),
@@ -276,7 +276,7 @@ class HistoryRoute extends StatelessWidget {
               SafeArea(
                 child: Column(
                   children: [
-                    _filterVotedIconButton,
+                    _myVotedFilterButton,
                     _myVotedList,
                   ],
                 ),

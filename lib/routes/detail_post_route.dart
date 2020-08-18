@@ -37,7 +37,7 @@ class DetailPostRoute extends StatelessWidget {
           ContentTexts.leavePage,
           ContentTexts.leaveConfirmation,
           ContentTexts.leave,
-          routeName: ContentTexts.homeRoute,
+          okRouteName: ContentTexts.homeRoute,
           isOnlyCancelButton: false,
           isVote: true,
           detailPostProviders: _detailPostProviders,

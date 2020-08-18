@@ -29,6 +29,11 @@ class SignInRoute extends StatelessWidget {
     final SignInProviders _signInProviders =
         Provider.of<SignInProviders>(context);
     final HiveProviders _hiveProviders = Provider.of<HiveProviders>(context);
+    final HomeProviders _homeProviders = Provider.of<HomeProviders>(context);
+    final MyPostsProviders _myPostsProviders =
+        Provider.of<MyPostsProviders>(context);
+    final MyVotedProviders _myVotedProviders =
+        Provider.of<MyVotedProviders>(context);
 
     _exitApp() {
       _alertDialogWidget.createAlertDialogWidget(
@@ -64,6 +69,9 @@ class SignInRoute extends StatelessWidget {
       }
       await _firestoreService.fetchUserData();
       await HiveProviders.syncUserData();
+      _homeProviders.setPostSnapshots();
+      _myPostsProviders.setMyPostSnapshot();
+      _myVotedProviders.setMyVotedSnapshot();
       if (!HiveProviders.getFirstSignedIn()) {
         if (!HiveProviders.getIsSetupCompleted()) {
           Navigator.pushReplacementNamed(

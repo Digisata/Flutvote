@@ -45,8 +45,9 @@ class HomeProviders with ChangeNotifier {
     notifyListeners();
   }
 
-  void resetCategoryFilter() {
+  void resetPostsFilter() {
     _selectedCategoryList = [];
+    _isDefaultFilter = true;
     notifyListeners();
   }
 

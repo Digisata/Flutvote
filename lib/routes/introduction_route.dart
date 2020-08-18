@@ -298,7 +298,7 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                               ContentTexts.yeay,
                               ContentTexts.setupProfileSuccessfully,
                               ContentTexts.homePage,
-                              routeName: ContentTexts.homeRoute,
+                              okRouteName: ContentTexts.homeRoute,
                               isOnlyCancelButton: false,
                               isOnlyOkButton: true,
                             );

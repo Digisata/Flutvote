@@ -17,7 +17,8 @@ class AlertDialogWidget {
     String _description,
     String _textOkButton, {
     String textCancelButton,
-    String routeName = ContentTexts.signInRoute,
+    String okRouteName = ContentTexts.signInRoute,
+    String cancelRouteName = ContentTexts.settingRoute,
     bool isOnlyCancelButton = true,
     isOnlyOkButton = false,
     isExit = false,
@@ -35,6 +36,9 @@ class AlertDialogWidget {
     DetailPostProviders detailPostProviders,
     ChangePasswordProviders changePasswordProviders,
     EditProfileProviders editProfileProviders,
+    HomeProviders homeProviders,
+    MyPostsProviders myPostsProviders,
+    MyVotedProviders myVotedProviders,
   }) {
     final bool _isStay = isEditProfile || isChangePassword || isExit;
     final bool _isBack = isSignUp ||
@@ -131,7 +135,12 @@ class AlertDialogWidget {
                 ),
           ),
           onCancelButtonPressed: () {
-            Navigator.pop(_context);
+            if (isChangePassword) {
+              Navigator.popUntil(
+                  _context, ModalRoute.withName(cancelRouteName));
+            } else {
+              Navigator.pop(_context);
+            }
           },
           onOkButtonPressed: () async {
             if (isConfirmVote) {
@@ -155,7 +164,7 @@ class AlertDialogWidget {
                       ContentTexts.yeay,
                       ContentTexts.voteSuccessfully,
                       ContentTexts.ok,
-                      routeName: ContentTexts.homeRoute,
+                      okRouteName: ContentTexts.homeRoute,
                       isOnlyCancelButton: false,
                       isOnlyOkButton: true,
                       isVote: true,
@@ -168,7 +177,7 @@ class AlertDialogWidget {
                       ContentTexts.oops,
                       ContentTexts.alreadyVoted,
                       ContentTexts.ok,
-                      routeName: ContentTexts.homeRoute,
+                      okRouteName: ContentTexts.homeRoute,
                       isOnlyCancelButton: false,
                       isOnlyOkButton: true,
                       isVote: true,
@@ -182,7 +191,7 @@ class AlertDialogWidget {
                     ContentTexts.oops,
                     ContentTexts.cantVote,
                     ContentTexts.ok,
-                    routeName: ContentTexts.homeRoute,
+                    okRouteName: ContentTexts.homeRoute,
                     isOnlyCancelButton: false,
                     isOnlyOkButton: true,
                     isVote: true,
@@ -214,9 +223,14 @@ class AlertDialogWidget {
               try {
                 appProviders.isLoading = true;
                 await _firebaseService.signOut();
+                homeProviders.resetPostsFilter();
+                myPostsProviders.resetMyPostsFilter();
+                myPostsProviders.saveFilterChanges();
+                myVotedProviders.resetMyVotedFilter();
+                myVotedProviders.saveFilterChanges();
                 appProviders.isLoading = false;
                 Navigator.pop(_context);
-                Navigator.pushReplacementNamed(_context, routeName);
+                Navigator.pushReplacementNamed(_context, okRouteName);
               } catch (error) {
                 appProviders.isLoading = false;
                 createAlertDialogWidget(
@@ -257,12 +271,12 @@ class AlertDialogWidget {
                       false;
                 }
               }
-              Navigator.popUntil(_context, ModalRoute.withName(routeName));
+              Navigator.popUntil(_context, ModalRoute.withName(okRouteName));
             } else if (isExit) {
               SystemNavigator.pop();
             } else {
               Navigator.pop(_context);
-              Navigator.pushReplacementNamed(_context, routeName);
+              Navigator.pushReplacementNamed(_context, okRouteName);
             }
           },
         ),

@@ -44,7 +44,7 @@ class EditProfileRoute extends StatelessWidget {
               ? ContentTexts.discardConfirmation
               : ContentTexts.leaveConfirmation,
           isDiscard ? ContentTexts.discard : ContentTexts.leave,
-          routeName: ContentTexts.settingRoute,
+          okRouteName: ContentTexts.settingRoute,
           isOnlyCancelButton: false,
           isEditProfile: true,
           editProfileProviders: _editProfileProviders,
@@ -135,7 +135,7 @@ class EditProfileRoute extends StatelessWidget {
         ContentTexts.yeay,
         ContentTexts.editProfileSuccessfully,
         ContentTexts.ok,
-        routeName: ContentTexts.settingRoute,
+        okRouteName: ContentTexts.settingRoute,
         isOnlyCancelButton: false,
         isOnlyOkButton: true,
         isEditProfileSuccess: true,
