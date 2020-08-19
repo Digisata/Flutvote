@@ -30,7 +30,7 @@ class CreatedAtFilterWidget extends StatelessWidget {
             return GestureDetector(
               child: Chip(
                 backgroundColor: !_isSelectedCreatedAt
-                    ? Colors.transparent
+                    ? Colors.white
                     : ContentColors.orange,
                 label: Text(
                   element,

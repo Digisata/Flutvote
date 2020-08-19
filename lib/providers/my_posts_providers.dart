@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:collection/collection.dart';
 
 class MyPostsProviders with ChangeNotifier {
   String _selectedCreatedAt = 'Newest', _savedCreatedAt = 'Newest';
@@ -12,8 +13,8 @@ class MyPostsProviders with ChangeNotifier {
       .where('uid', isEqualTo: _userData.get('uid'))
       .orderBy('createdAt', descending: true)
       .snapshots();
-
   static final Box _userData = Hive.box('userData');
+  final Function unOrderedDeepEq = DeepCollectionEquality.unordered().equals;
 
   String get selectedCreatedAt => _selectedCreatedAt;
 
@@ -35,14 +36,11 @@ class MyPostsProviders with ChangeNotifier {
   }
 
   set addSelectedCategoryFilterList(String value) {
-    // TODO FIX THIS ASSIGN LIST VALUE
     _selectedCategoryFilterList.add(value);
-    notifyListeners();
   }
 
   set removeSelectedCategoryFilterList(String value) {
     _selectedCategoryFilterList.removeWhere((element) => element == value);
-    notifyListeners();
   }
 
   void checkMyPostsIsDefaultFilter() {
@@ -56,10 +54,17 @@ class MyPostsProviders with ChangeNotifier {
   }
 
   void saveFilterChanges() {
-    _savedCreatedAt = _selectedCreatedAt;
-    _savedCategoryFilterList = _selectedCategoryFilterList;
-    _savedIsDefaultFilter = _isDefaultFilter;
-    notifyListeners();
+    if (_savedCreatedAt != _selectedCreatedAt) {
+      _savedCreatedAt = _selectedCreatedAt;
+    }
+    if (!unOrderedDeepEq(
+        _savedCategoryFilterList, _selectedCategoryFilterList)) {
+      _savedCategoryFilterList.clear();
+      _savedCategoryFilterList.addAll(_selectedCategoryFilterList);
+    }
+    if (_savedIsDefaultFilter != _isDefaultFilter) {
+      _savedIsDefaultFilter = _isDefaultFilter;
+    }
   }
 
   void resetMyPostsFilter() {
@@ -70,9 +75,17 @@ class MyPostsProviders with ChangeNotifier {
   }
 
   void setSavedFilter() {
-    _selectedCreatedAt = _savedCreatedAt;
-    _selectedCategoryFilterList = _savedCategoryFilterList;
-    _isDefaultFilter = _savedIsDefaultFilter;
+    if (_selectedCreatedAt != _savedCreatedAt) {
+      _selectedCreatedAt = _savedCreatedAt;
+    }
+    if (!unOrderedDeepEq(
+        _selectedCategoryFilterList, _savedCategoryFilterList)) {
+      _selectedCategoryFilterList.clear();
+      _selectedCategoryFilterList.addAll(_savedCategoryFilterList);
+    }
+    if (_isDefaultFilter != _savedIsDefaultFilter) {
+      _isDefaultFilter = _savedIsDefaultFilter;
+    }
   }
 
   Future<void> setTotalPosts() async {
@@ -124,11 +137,11 @@ class MyPostsProviders with ChangeNotifier {
 
   void setMyPostSnapshot() {
     if (_savedCreatedAt == 'Newest') {
-      if (_selectedCategoryFilterList.isNotEmpty) {
+      if (_savedCategoryFilterList.isNotEmpty) {
         _myPostSnapshot = Firestore.instance
             .collection('posts')
             .where('uid', isEqualTo: _userData.get('uid'))
-            .where('categories', arrayContainsAny: _selectedCategoryFilterList)
+            .where('categories', arrayContainsAny: _savedCategoryFilterList)
             .orderBy('createdAt', descending: true)
             .snapshots();
       } else {
@@ -139,11 +152,11 @@ class MyPostsProviders with ChangeNotifier {
             .snapshots();
       }
     } else {
-      if (_selectedCategoryFilterList.isNotEmpty) {
+      if (_savedCategoryFilterList.isNotEmpty) {
         _myPostSnapshot = Firestore.instance
             .collection('posts')
             .where('uid', isEqualTo: _userData.get('uid'))
-            .where('categories', arrayContainsAny: _selectedCategoryFilterList)
+            .where('categories', arrayContainsAny: _savedCategoryFilterList)
             .orderBy('createdAt')
             .snapshots();
       } else {
@@ -154,5 +167,6 @@ class MyPostsProviders with ChangeNotifier {
             .snapshots();
       }
     }
+    notifyListeners();
   }
 }

@@ -34,7 +34,7 @@ class CategoryFilterWidget extends StatelessWidget {
               return GestureDetector(
                 child: Chip(
                   backgroundColor: !_isSelectedCategoryFilter
-                      ? Colors.transparent
+                      ? Colors.white
                       : ContentColors.orange,
                   label: Text(
                     element,

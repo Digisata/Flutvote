@@ -136,6 +136,16 @@ class AlertDialogWidget {
           ),
           onCancelButtonPressed: () {
             if (isChangePassword) {
+              if (changePasswordProviders.isOldPasswordChangeVisible) {
+                changePasswordProviders.isOldPasswordChangeVisible = false;
+              }
+              if (changePasswordProviders.isNewPasswordChangeVisible) {
+                changePasswordProviders.isNewPasswordChangeVisible = false;
+              }
+              if (changePasswordProviders.isNewRepeatPasswordChangeVisible) {
+                changePasswordProviders.isNewRepeatPasswordChangeVisible =
+                    false;
+              }
               Navigator.popUntil(
                   _context, ModalRoute.withName(cancelRouteName));
             } else {

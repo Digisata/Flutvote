@@ -57,13 +57,73 @@ class HistoryRoute extends StatelessWidget {
         right: ContentSizes.width(context) * 0.05,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          IconButton(
-            color: ContentColors.darkGrey,
-            iconSize: ContentSizes.height(context) * 0.03,
-            icon: Icon(Icons.filter_list),
-            onPressed: () {
+          GestureDetector(
+            child: Chip(
+              backgroundColor: Colors.white,
+              label: Row(
+                children: [
+                  _myPostsProviders.savedCreatedAt != 'Newest' &&
+                          _myPostsProviders.savedCategoryFilterList.isNotEmpty
+                      ? CircleAvatar(
+                          backgroundColor: ContentColors.orange,
+                          radius: ContentSizes.width(context) * 0.03,
+                          child: Text(
+                            '2',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            textDirection: TextDirection.ltr,
+                            style:
+                                Theme.of(context).textTheme.headline2.copyWith(
+                                      color: Colors.white,
+                                      fontSize: ContentSizes.dp16(context),
+                                    ),
+                          ),
+                        )
+                      : _myPostsProviders.savedCreatedAt != 'Newest' ||
+                              _myPostsProviders
+                                  .savedCategoryFilterList.isNotEmpty
+                          ? CircleAvatar(
+                              backgroundColor: ContentColors.orange,
+                              radius: ContentSizes.width(context) * 0.03,
+                              child: Text(
+                                '1',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                textDirection: TextDirection.ltr,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline2
+                                    .copyWith(
+                                      color: Colors.white,
+                                      fontSize: ContentSizes.dp16(context),
+                                    ),
+                              ),
+                            )
+                          : Icon(
+                              Icons.filter_list,
+                              color: ContentColors.darkGrey,
+                            ),
+                  SizedBox(
+                    width: ContentSizes.width(context) * 0.01,
+                  ),
+                  Text(
+                    ContentTexts.filter,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.ltr,
+                    style: Theme.of(context).textTheme.headline2.copyWith(
+                          color: ContentColors.darkGrey,
+                          fontSize: ContentSizes.dp18(context),
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            onTap: () {
               showModalBottomSheet(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -83,8 +143,7 @@ class HistoryRoute extends StatelessWidget {
                 (value) => _myPostsProviders.setSavedFilter(),
               );
             },
-            tooltip: ContentTexts.filterPostList,
-          )
+          ),
         ],
       ),
     );
@@ -95,13 +154,73 @@ class HistoryRoute extends StatelessWidget {
         right: ContentSizes.width(context) * 0.05,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          IconButton(
-            color: ContentColors.darkGrey,
-            iconSize: ContentSizes.height(context) * 0.03,
-            icon: Icon(Icons.filter_list),
-            onPressed: () {
+          GestureDetector(
+            child: Chip(
+              backgroundColor: Colors.white,
+              label: Row(
+                children: [
+                  _myVotedProviders.savedCreatedAt != 'Newest' &&
+                          _myVotedProviders.savedCategoryFilterList.isNotEmpty
+                      ? CircleAvatar(
+                          backgroundColor: ContentColors.orange,
+                          radius: ContentSizes.width(context) * 0.03,
+                          child: Text(
+                            '2',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            textDirection: TextDirection.ltr,
+                            style:
+                                Theme.of(context).textTheme.headline2.copyWith(
+                                      color: Colors.white,
+                                      fontSize: ContentSizes.dp16(context),
+                                    ),
+                          ),
+                        )
+                      : _myVotedProviders.savedCreatedAt != 'Newest' ||
+                              _myVotedProviders
+                                  .savedCategoryFilterList.isNotEmpty
+                          ? CircleAvatar(
+                              backgroundColor: ContentColors.orange,
+                              radius: ContentSizes.width(context) * 0.03,
+                              child: Text(
+                                '1',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                textDirection: TextDirection.ltr,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline2
+                                    .copyWith(
+                                      color: Colors.white,
+                                      fontSize: ContentSizes.dp16(context),
+                                    ),
+                              ),
+                            )
+                          : Icon(
+                              Icons.filter_list,
+                              color: ContentColors.darkGrey,
+                            ),
+                  SizedBox(
+                    width: ContentSizes.width(context) * 0.01,
+                  ),
+                  Text(
+                    ContentTexts.filter,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    textDirection: TextDirection.ltr,
+                    style: Theme.of(context).textTheme.headline2.copyWith(
+                          color: ContentColors.darkGrey,
+                          fontSize: ContentSizes.dp18(context),
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            onTap: () {
               showModalBottomSheet(
                 backgroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -120,8 +239,7 @@ class HistoryRoute extends StatelessWidget {
                 (value) => _myVotedProviders.setSavedFilter(),
               );
             },
-            tooltip: ContentTexts.filterVotedList,
-          )
+          ),
         ],
       ),
     );

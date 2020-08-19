@@ -5,6 +5,7 @@ import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/widgets/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:collection/collection.dart';
 
 class BottomSheetWidget extends StatefulWidget {
   final EditProfileProviders editProfileProviders;
@@ -36,6 +37,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   final MyVotedProviders myVotedProviders;
   final bool isProfile, isMyPosts;
   final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
+  final Function unOrderedDeepEq = DeepCollectionEquality.unordered().equals;
 
   _BottomSheetWidgetState({
     this.editProfileProviders,
@@ -152,6 +154,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                   : GestureDetector(
                                       onTap: () {
                                         myPostsProviders.resetMyPostsFilter();
+                                        myPostsProviders.setTotalPosts();
                                         setState(() {});
                                       },
                                       child: Text(
@@ -175,6 +178,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                   : GestureDetector(
                                       onTap: () {
                                         myVotedProviders.resetMyVotedFilter();
+                                        myVotedProviders.setTotalVoted();
                                         setState(() {});
                                       },
                                       child: Text(
@@ -313,7 +317,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                 ),
                 isMyPosts
                     ? myPostsProviders.selectedCreatedAt ==
-                            myPostsProviders.savedCreatedAt
+                                myPostsProviders.savedCreatedAt &&
+                            unOrderedDeepEq(
+                                myPostsProviders.selectedCategoryFilterList,
+                                myPostsProviders.savedCategoryFilterList)
                         ? Container()
                         : Align(
                             alignment: Alignment.bottomCenter,
@@ -371,7 +378,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                             ),
                           )
                     : myVotedProviders.selectedCreatedAt ==
-                            myVotedProviders.savedCreatedAt
+                                myVotedProviders.savedCreatedAt &&
+                            unOrderedDeepEq(
+                                myVotedProviders.selectedCategoryFilterList,
+                                myVotedProviders.savedCategoryFilterList)
                         ? Container()
                         : Align(
                             alignment: Alignment.bottomCenter,

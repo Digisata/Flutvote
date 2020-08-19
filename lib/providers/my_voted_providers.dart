@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:collection/collection.dart';
 
 class MyVotedProviders with ChangeNotifier {
   String _selectedCreatedAt = 'Newest', _savedCreatedAt = 'Newest';
@@ -14,6 +15,7 @@ class MyVotedProviders with ChangeNotifier {
       .orderBy('createdAt', descending: true)
       .snapshots();
   static final Box _userData = Hive.box('userData');
+  final Function unOrderedDeepEq = DeepCollectionEquality.unordered().equals;
 
   String get selectedCreatedAt => _selectedCreatedAt;
 
@@ -36,12 +38,10 @@ class MyVotedProviders with ChangeNotifier {
 
   set addSelectedCategoryFilterList(String value) {
     _selectedCategoryFilterList.add(value);
-    notifyListeners();
   }
 
   set removeSelectedCategoryFilterList(String value) {
     _selectedCategoryFilterList.removeWhere((element) => element == value);
-    notifyListeners();
   }
 
   void checkMyVotedIsDefaultFilter() {
@@ -55,10 +55,17 @@ class MyVotedProviders with ChangeNotifier {
   }
 
   void saveFilterChanges() {
-    _savedCreatedAt = _selectedCreatedAt;
-    _savedCategoryFilterList = _selectedCategoryFilterList;
-    _savedIsDefaultFilter = _isDefaultFilter;
-    notifyListeners();
+    if (_savedCreatedAt != _selectedCreatedAt) {
+      _savedCreatedAt = _selectedCreatedAt;
+    }
+    if (!unOrderedDeepEq(
+        _savedCategoryFilterList, _selectedCategoryFilterList)) {
+      _savedCategoryFilterList.clear();
+      _savedCategoryFilterList.addAll(_selectedCategoryFilterList);
+    }
+    if (_savedIsDefaultFilter != _isDefaultFilter) {
+      _savedIsDefaultFilter = _isDefaultFilter;
+    }
   }
 
   void resetMyVotedFilter() {
@@ -69,9 +76,17 @@ class MyVotedProviders with ChangeNotifier {
   }
 
   void setSavedFilter() {
-    _selectedCreatedAt = _savedCreatedAt;
-    _selectedCategoryFilterList = _savedCategoryFilterList;
-    _isDefaultFilter = _savedIsDefaultFilter;
+    if (_selectedCreatedAt != _savedCreatedAt) {
+      _selectedCreatedAt = _savedCreatedAt;
+    }
+    if (!unOrderedDeepEq(
+        _selectedCategoryFilterList, _savedCategoryFilterList)) {
+      _selectedCategoryFilterList.clear();
+      _selectedCategoryFilterList.addAll(_savedCategoryFilterList);
+    }
+    if (_isDefaultFilter != _savedIsDefaultFilter) {
+      _isDefaultFilter = _savedIsDefaultFilter;
+    }
   }
 
   Future<void> setTotalVoted() async {
@@ -127,12 +142,12 @@ class MyVotedProviders with ChangeNotifier {
 
   void setMyVotedSnapshot() {
     if (_savedCreatedAt == 'Newest') {
-      if (_selectedCategoryFilterList.isNotEmpty) {
+      if (_savedCategoryFilterList.isNotEmpty) {
         _myVotedSnapshot = Firestore.instance
             .collection('users')
             .document(_userData.get('uid'))
             .collection('voted')
-            .where('categories', arrayContainsAny: _selectedCategoryFilterList)
+            .where('categories', arrayContainsAny: _savedCategoryFilterList)
             .orderBy('createdAt', descending: true)
             .snapshots();
       } else {
@@ -144,12 +159,12 @@ class MyVotedProviders with ChangeNotifier {
             .snapshots();
       }
     } else {
-      if (_selectedCategoryFilterList.isNotEmpty) {
+      if (_savedCategoryFilterList.isNotEmpty) {
         _myVotedSnapshot = Firestore.instance
             .collection('users')
             .document(_userData.get('uid'))
             .collection('voted')
-            .where('categories', arrayContainsAny: _selectedCategoryFilterList)
+            .where('categories', arrayContainsAny: _savedCategoryFilterList)
             .orderBy('createdAt')
             .snapshots();
       } else {
@@ -161,5 +176,6 @@ class MyVotedProviders with ChangeNotifier {
             .snapshots();
       }
     }
+    notifyListeners();
   }
 }
