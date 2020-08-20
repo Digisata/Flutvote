@@ -83,7 +83,7 @@ class ForgotPasswordRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
-      Colors.white,
+      ContentColors.white,
       ContentTexts.resetPassword,
       () async {
         if (_formKey.currentState.validate()) {
@@ -134,7 +134,7 @@ class ForgotPasswordRoute extends StatelessWidget {
               appBar: AppBar(
                 elevation: 0.0,
                 leading: _backButton,
-                backgroundColor: Colors.white,
+                backgroundColor: ContentColors.white,
               ),
               body: SingleChildScrollView(
                 child: Padding(

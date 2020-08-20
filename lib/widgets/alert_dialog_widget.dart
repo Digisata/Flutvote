@@ -67,7 +67,7 @@ class AlertDialogWidget {
                 height: ContentSizes.height(context) * 0.1,
                 width: ContentSizes.height(context) * 0.1,
                 child: CircularProgressIndicator(
-                  backgroundColor: Colors.transparent,
+                  backgroundColor: ContentColors.transparent,
                   value: download.progress,
                 ),
               ),
@@ -99,7 +99,7 @@ class AlertDialogWidget {
             textAlign: TextAlign.center,
             textDirection: TextDirection.ltr,
             style: Theme.of(_context).textTheme.headline1.copyWith(
-                  color: isOnlyCancelButton ? Colors.white : ContentColors.grey,
+                  color: isOnlyCancelButton ? ContentColors.white : ContentColors.grey,
                   fontSize: ContentSizes.dp16(_context),
                 ),
           ),
@@ -110,7 +110,7 @@ class AlertDialogWidget {
             textAlign: TextAlign.center,
             textDirection: TextDirection.ltr,
             style: Theme.of(_context).textTheme.headline1.copyWith(
-                  color: Colors.white,
+                  color: ContentColors.white,
                   fontSize: ContentSizes.dp16(_context),
                 ),
           ),

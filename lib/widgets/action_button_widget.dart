@@ -38,9 +38,11 @@ class ActionButtonWidget {
                     width: ContentSizes.height(_context) * 0.04,
                     alignment: Alignment.center,
                   ),
-            SizedBox(
-              width: ContentSizes.height(_context) * 0.01,
-            ),
+            !isFacebook
+                ? Container()
+                : SizedBox(
+                    width: ContentSizes.height(_context) * 0.01,
+                  ),
             Text(
               _text,
               maxLines: 1,

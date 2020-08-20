@@ -58,7 +58,7 @@ class WelcomeRoute extends StatelessWidget {
           textAlign: TextAlign.center,
           textDirection: TextDirection.ltr,
           style: Theme.of(context).textTheme.headline1.copyWith(
-                color: Colors.white,
+                color: ContentColors.white,
                 fontSize: ContentSizes.dp22(context),
               ),
         ),

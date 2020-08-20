@@ -186,7 +186,7 @@ class SignUpRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
-      Colors.white,
+      ContentColors.white,
       ContentTexts.signUp,
       () async {
         _signUpProviders.passwordSignUp =
@@ -289,7 +289,7 @@ class SignUpRoute extends StatelessWidget {
               appBar: AppBar(
                 elevation: 0.0,
                 leading: _backButton,
-                backgroundColor: Colors.white,
+                backgroundColor: ContentColors.white,
               ),
               body: SingleChildScrollView(
                 child: Padding(

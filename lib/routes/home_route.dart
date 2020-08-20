@@ -89,7 +89,7 @@ class HomeRoute extends StatelessWidget {
                   textAlign: TextAlign.start,
                   textDirection: TextDirection.ltr,
                   style: Theme.of(context).textTheme.headline2.copyWith(
-                        color: ContentColors.orange,
+                        color: ContentColors.darkOrange,
                         fontSize: ContentSizes.dp18(context),
                       ),
                 ),
@@ -118,7 +118,7 @@ class HomeRoute extends StatelessWidget {
           textAlign: TextAlign.start,
           textDirection: TextDirection.ltr,
           style: Theme.of(context).textTheme.headline2.copyWith(
-                color: ContentColors.orange,
+                color: ContentColors.darkOrange,
                 fontSize: ContentSizes.dp18(context),
               ),
         )
@@ -252,13 +252,22 @@ class HomeRoute extends StatelessWidget {
                               height: ContentSizes.height(context) * 0.005,
                             ),
                             _homeProviders.isDefaultFilter ||
-                                    _homeProviders.totalPosts == 0
+                                    _homeProviders.totalPosts == 0 ||
+                                    _homeProviders.isWaitingForGetTotalPosts
                                 ? Container()
                                 : _foundText,
                             SizedBox(
                               height: ContentSizes.height(context) * 0.005,
                             ),
-                            _postList,
+                            _homeProviders.isWaitingForGetTotalPosts
+                                ? Expanded(
+                                    child: Loading(
+                                      color: ContentColors.orange,
+                                      indicator: BallPulseIndicator(),
+                                      size: ContentSizes.height(context) * 0.1,
+                                    ),
+                                  )
+                                : _postList,
                           ],
                         ),
                       ),
@@ -287,7 +296,7 @@ class HomeRoute extends StatelessWidget {
                   backgroundColor: ContentColors.orange,
                   child: Icon(
                     Icons.add,
-                    color: Colors.white,
+                    color: ContentColors.white,
                   ),
                   elevation: 3.0,
                   tooltip: ContentTexts.createPost,

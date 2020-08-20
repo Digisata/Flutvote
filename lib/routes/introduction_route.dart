@@ -76,7 +76,7 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
       child: GestureDetector(
         onTap: () {
           showModalBottomSheet(
-            backgroundColor: Colors.white,
+            backgroundColor: ContentColors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20.0),
@@ -103,12 +103,12 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
               editProfileProviders: _editProfileProviders,
             ),
             CircleAvatar(
-              backgroundColor: Colors.black.withOpacity(0.5),
+              backgroundColor: ContentColors.black.withOpacity(0.5),
               radius: ContentSizes.height(context) * 0.06,
             ),
             Icon(
               Icons.image,
-              color: Colors.white,
+              color: ContentColors.white,
               size: 35.0,
             ),
           ],
@@ -248,8 +248,6 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                               _editProfileProviders.image,
                               _imageName,
                             );
-                            _userProfileProviders.photoUrl = _photoUrl;
-                            _editProfileProviders.image = null;
                             try {
                               _userProfileProviders.photoUrl = _photoUrl;
                               _editProfileProviders.image = null;

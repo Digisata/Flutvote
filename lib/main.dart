@@ -85,7 +85,7 @@ class Flutvote extends StatelessWidget {
         ContentTexts.detailPostRoute: (context) => DetailPostRoute(),
       },
       theme: ThemeData(
-        primaryColor: Colors.white,
+        primaryColor: ContentColors.white,
         fontFamily: 'Poppins',
         textTheme: TextTheme(
           headline1: TextStyle(
@@ -100,13 +100,13 @@ class Flutvote extends StatelessWidget {
             fontStyle: FontStyle.normal,
           ),
           headline3: TextStyle(
-            color: Colors.white,
+            color: ContentColors.white,
             fontSize: 20.0,
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.bold,
           ),
           headline4: TextStyle(
-            color: Colors.black,
+            color: ContentColors.black,
             fontSize: 25.0,
             fontStyle: FontStyle.normal,
             fontWeight: FontWeight.bold,

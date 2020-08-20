@@ -49,7 +49,7 @@ class SearchBarWidget {
                 )
               : Icon(
                   Icons.clear,
-                  color: Colors.transparent,
+                  color: ContentColors.transparent,
                 ),
           fillColor: ContentColors.backgroundGrey,
           filled: true,

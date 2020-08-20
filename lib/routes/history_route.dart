@@ -60,35 +60,35 @@ class HistoryRoute extends StatelessWidget {
         children: [
           GestureDetector(
             child: Chip(
-              backgroundColor: Colors.white,
+              backgroundColor: ContentColors.white,
               label: Row(
                 children: [
-                  _myPostsProviders.savedCreatedAt != 'Newest' &&
+                  _myPostsProviders.savedCreatedAt == 'Newest' &&
                           _myPostsProviders.savedCategoryFilterList.isNotEmpty
                       ? CircleAvatar(
                           backgroundColor: ContentColors.orange,
-                          radius: ContentSizes.width(context) * 0.03,
+                          radius: ContentSizes.width(context) * 0.025,
                           child: Text(
-                            '2',
+                            '${_myPostsProviders.savedCategoryFilterList.length}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             textDirection: TextDirection.ltr,
                             style:
                                 Theme.of(context).textTheme.headline2.copyWith(
-                                      color: Colors.white,
-                                      fontSize: ContentSizes.dp16(context),
+                                      color: ContentColors.white,
+                                      fontSize: ContentSizes.dp13(context),
                                     ),
                           ),
                         )
-                      : _myPostsProviders.savedCreatedAt != 'Newest' ||
+                      : _myPostsProviders.savedCreatedAt != 'Newest' &&
                               _myPostsProviders
                                   .savedCategoryFilterList.isNotEmpty
                           ? CircleAvatar(
                               backgroundColor: ContentColors.orange,
-                              radius: ContentSizes.width(context) * 0.03,
+                              radius: ContentSizes.width(context) * 0.025,
                               child: Text(
-                                '1',
+                                '${_myPostsProviders.savedCategoryFilterList.length + 1}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
@@ -97,15 +97,35 @@ class HistoryRoute extends StatelessWidget {
                                     .textTheme
                                     .headline2
                                     .copyWith(
-                                      color: Colors.white,
-                                      fontSize: ContentSizes.dp16(context),
+                                      color: ContentColors.white,
+                                      fontSize: ContentSizes.dp13(context),
                                     ),
                               ),
                             )
-                          : Icon(
-                              Icons.filter_list,
-                              color: ContentColors.darkGrey,
-                            ),
+                          : _myPostsProviders.savedCreatedAt != 'Newest'
+                              ? CircleAvatar(
+                                  backgroundColor: ContentColors.orange,
+                                  radius: ContentSizes.width(context) * 0.025,
+                                  child: Text(
+                                    '1',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    textDirection: TextDirection.ltr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline2
+                                        .copyWith(
+                                          color: ContentColors.white,
+                                          fontSize: ContentSizes.dp13(context),
+                                        ),
+                                  ),
+                                )
+                              : Image.asset(
+                                  'assets/icons/filter_icon.png',
+                                  height: ContentSizes.height(context) * 0.025,
+                                  width: ContentSizes.height(context) * 0.025,
+                                ),
                   SizedBox(
                     width: ContentSizes.width(context) * 0.01,
                   ),
@@ -122,10 +142,16 @@ class HistoryRoute extends StatelessWidget {
                   ),
                 ],
               ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+                side: BorderSide(
+                  color: ContentColors.softGrey,
+                ),
+              ),
             ),
             onTap: () {
               showModalBottomSheet(
-                backgroundColor: Colors.white,
+                backgroundColor: ContentColors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20.0),
@@ -157,35 +183,35 @@ class HistoryRoute extends StatelessWidget {
         children: [
           GestureDetector(
             child: Chip(
-              backgroundColor: Colors.white,
+              backgroundColor: ContentColors.white,
               label: Row(
                 children: [
-                  _myVotedProviders.savedCreatedAt != 'Newest' &&
+                  _myVotedProviders.savedCreatedAt == 'Newest' &&
                           _myVotedProviders.savedCategoryFilterList.isNotEmpty
                       ? CircleAvatar(
                           backgroundColor: ContentColors.orange,
-                          radius: ContentSizes.width(context) * 0.03,
+                          radius: ContentSizes.width(context) * 0.025,
                           child: Text(
-                            '2',
+                            '${_myVotedProviders.savedCategoryFilterList.length}',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             textDirection: TextDirection.ltr,
                             style:
                                 Theme.of(context).textTheme.headline2.copyWith(
-                                      color: Colors.white,
-                                      fontSize: ContentSizes.dp16(context),
+                                      color: ContentColors.white,
+                                      fontSize: ContentSizes.dp13(context),
                                     ),
                           ),
                         )
-                      : _myVotedProviders.savedCreatedAt != 'Newest' ||
+                      : _myVotedProviders.savedCreatedAt != 'Newest' &&
                               _myVotedProviders
                                   .savedCategoryFilterList.isNotEmpty
                           ? CircleAvatar(
                               backgroundColor: ContentColors.orange,
-                              radius: ContentSizes.width(context) * 0.03,
+                              radius: ContentSizes.width(context) * 0.025,
                               child: Text(
-                                '1',
+                                '${_myVotedProviders.savedCategoryFilterList.length + 1}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 textAlign: TextAlign.center,
@@ -194,15 +220,35 @@ class HistoryRoute extends StatelessWidget {
                                     .textTheme
                                     .headline2
                                     .copyWith(
-                                      color: Colors.white,
-                                      fontSize: ContentSizes.dp16(context),
+                                      color: ContentColors.white,
+                                      fontSize: ContentSizes.dp13(context),
                                     ),
                               ),
                             )
-                          : Icon(
-                              Icons.filter_list,
-                              color: ContentColors.darkGrey,
-                            ),
+                          : _myVotedProviders.savedCreatedAt != 'Newest'
+                              ? CircleAvatar(
+                                  backgroundColor: ContentColors.orange,
+                                  radius: ContentSizes.width(context) * 0.025,
+                                  child: Text(
+                                    '1',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    textDirection: TextDirection.ltr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline2
+                                        .copyWith(
+                                          color: ContentColors.white,
+                                          fontSize: ContentSizes.dp13(context),
+                                        ),
+                                  ),
+                                )
+                              : Image.asset(
+                                  'assets/icons/filter_icon.png',
+                                  height: ContentSizes.height(context) * 0.025,
+                                  width: ContentSizes.height(context) * 0.025,
+                                ),
                   SizedBox(
                     width: ContentSizes.width(context) * 0.01,
                   ),
@@ -219,10 +265,16 @@ class HistoryRoute extends StatelessWidget {
                   ),
                 ],
               ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+                side: BorderSide(
+                  color: ContentColors.softGrey,
+                ),
+              ),
             ),
             onTap: () {
               showModalBottomSheet(
-                backgroundColor: Colors.white,
+                backgroundColor: ContentColors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20.0),

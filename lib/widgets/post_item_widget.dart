@@ -62,7 +62,7 @@ class PostItemWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15.0),
                           shape: BoxShape.rectangle,
-                          color: Colors.transparent,
+                          color: ContentColors.transparent,
                         ),
                         child: CircularProgressIndicator(
                           value: download.progress,
@@ -77,7 +77,7 @@ class PostItemWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15.0),
                         shape: BoxShape.rectangle,
-                        color: Colors.transparent,
+                        color: ContentColors.transparent,
                         image: DecorationImage(
                           image: imageProvider,
                           fit: BoxFit.cover,

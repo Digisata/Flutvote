@@ -30,8 +30,8 @@ class CreatedAtFilterWidget extends StatelessWidget {
             return GestureDetector(
               child: Chip(
                 backgroundColor: !_isSelectedCreatedAt
-                    ? Colors.white
-                    : ContentColors.orange,
+                    ? ContentColors.white
+                    : ContentColors.softOrangeWithOpacity,
                 label: Text(
                   element,
                   maxLines: 1,
@@ -41,22 +41,38 @@ class CreatedAtFilterWidget extends StatelessWidget {
                 ),
                 labelStyle: Theme.of(context).textTheme.headline2.copyWith(
                       color: !_isSelectedCreatedAt
-                          ? ContentColors.grey
-                          : Colors.white,
+                          ? ContentColors.darkGrey
+                          : ContentColors.orange,
                       fontSize: ContentSizes.dp16(context),
                     ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  side: BorderSide(
+                    color: !_isSelectedCreatedAt
+                        ? ContentColors.softGrey
+                        : ContentColors.orange,
+                  ),
+                ),
               ),
-              onTap: () async {
+              onTap: () {
                 if (_isMyPosts) {
                   if (!_isSelectedCreatedAt) {
                     _myPostsProviders.setSelectedCreatedAt = element;
-                    await _myPostsProviders.setTotalPosts();
+                    _myPostsProviders.setTotalPosts();
+                    _myPostsProviders.isWaitingForGetTotalPosts = true;
+                    _myPostsProviders.setOnGetTotalPostsCompleted = () {
+                      onItemSelected();
+                    };
                     _myPostsProviders.checkMyPostsIsDefaultFilter();
                   }
                 } else {
                   if (!_isSelectedCreatedAt) {
                     _myVotedProviders.setSelectedCreatedAt = element;
-                    await _myVotedProviders.setTotalVoted();
+                    _myVotedProviders.setTotalVoted();
+                    _myVotedProviders.isWaitingForGetTotalPosts = true;
+                    _myVotedProviders.setOnGetTotalPostsCompleted = () {
+                      onItemSelected();
+                    };
                     _myVotedProviders.checkMyVotedIsDefaultFilter();
                   }
                 }

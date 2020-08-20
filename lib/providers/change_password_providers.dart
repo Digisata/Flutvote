@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 class ChangePasswordProviders with ChangeNotifier {
   bool _isOldPasswordChangeVisible = false,
       _isNewPasswordChangeVisible = false,
-      _isNewRepeatPasswordChangeVisible = false;
+      _isNewRepeatPasswordChangeVisible = false,
+      _isHasError = false;
   String _oldPasswordChange = '',
       _newPasswordChange = '',
       _newRepeatPasswordChange = '';
@@ -14,6 +15,8 @@ class ChangePasswordProviders with ChangeNotifier {
 
   bool get isNewRepeatPasswordChangeVisible =>
       _isNewRepeatPasswordChangeVisible;
+
+  bool get isHasError => _isHasError;
 
   String get oldPasswordChange => _oldPasswordChange;
 
@@ -33,6 +36,11 @@ class ChangePasswordProviders with ChangeNotifier {
 
   set isNewRepeatPasswordChangeVisible(bool value) {
     _isNewRepeatPasswordChangeVisible = value;
+    notifyListeners();
+  }
+
+  set isHasError(bool value) {
+    _isHasError = value;
     notifyListeners();
   }
 

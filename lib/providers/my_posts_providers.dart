@@ -5,7 +5,9 @@ import 'package:collection/collection.dart';
 
 class MyPostsProviders with ChangeNotifier {
   String _selectedCreatedAt = 'Newest', _savedCreatedAt = 'Newest';
-  bool _isDefaultFilter = true, _savedIsDefaultFilter = true;
+  bool _isDefaultFilter = true,
+      _savedIsDefaultFilter = true,
+      _isWaitingForGetTotalPosts = false;
   int _totalPosts = 0;
   List<String> _selectedCategoryFilterList = [], _savedCategoryFilterList = [];
   Stream<QuerySnapshot> _myPostSnapshot = Firestore.instance
@@ -15,12 +17,15 @@ class MyPostsProviders with ChangeNotifier {
       .snapshots();
   static final Box _userData = Hive.box('userData');
   final Function unOrderedDeepEq = DeepCollectionEquality.unordered().equals;
+  VoidCallback _onGetTotalPostsCompleted = () {};
 
   String get selectedCreatedAt => _selectedCreatedAt;
 
   String get savedCreatedAt => _savedCreatedAt;
 
   bool get isDefaultFilter => _isDefaultFilter;
+
+  bool get isWaitingForGetTotalPosts => _isWaitingForGetTotalPosts;
 
   int get totalPosts => _totalPosts;
 
@@ -31,7 +36,14 @@ class MyPostsProviders with ChangeNotifier {
   Stream<QuerySnapshot> get myPostSnapshot => _myPostSnapshot;
 
   set setSelectedCreatedAt(String value) {
-    _selectedCreatedAt = value;
+    if (_selectedCreatedAt != value) {
+      _selectedCreatedAt = value;
+    }
+    notifyListeners();
+  }
+
+  set isWaitingForGetTotalPosts(bool value) {
+    _isWaitingForGetTotalPosts = value;
     notifyListeners();
   }
 
@@ -41,6 +53,11 @@ class MyPostsProviders with ChangeNotifier {
 
   set removeSelectedCategoryFilterList(String value) {
     _selectedCategoryFilterList.removeWhere((element) => element == value);
+  }
+
+  set setOnGetTotalPostsCompleted(VoidCallback value) {
+    _onGetTotalPostsCompleted = value;
+    notifyListeners();
   }
 
   void checkMyPostsIsDefaultFilter() {
@@ -88,48 +105,68 @@ class MyPostsProviders with ChangeNotifier {
     }
   }
 
-  Future<void> setTotalPosts() async {
+  void setTotalPosts() async {
     if (_selectedCreatedAt == 'Newest') {
       if (_selectedCategoryFilterList.isNotEmpty) {
-        await Firestore.instance
+        Firestore.instance
             .collection('posts')
             .where('uid', isEqualTo: _userData.get('uid'))
             .where('categories', arrayContainsAny: _selectedCategoryFilterList)
             .orderBy('createdAt', descending: true)
             .getDocuments()
             .then(
-              (value) => _totalPosts = value.documents.length,
-            );
+          (value) {
+            _totalPosts = value.documents.length;
+            _isWaitingForGetTotalPosts = false;
+            _onGetTotalPostsCompleted();
+            notifyListeners();
+          },
+        );
       } else {
-        await Firestore.instance
+        Firestore.instance
             .collection('posts')
             .where('uid', isEqualTo: _userData.get('uid'))
             .orderBy('createdAt', descending: true)
             .getDocuments()
             .then(
-              (value) => _totalPosts = value.documents.length,
-            );
+          (value) {
+            _totalPosts = value.documents.length;
+            _isWaitingForGetTotalPosts = false;
+            _onGetTotalPostsCompleted();
+            notifyListeners();
+          },
+        );
       }
     } else {
       if (_selectedCategoryFilterList.isNotEmpty) {
-        await Firestore.instance
+        Firestore.instance
             .collection('posts')
             .where('uid', isEqualTo: _userData.get('uid'))
             .where('categories', arrayContainsAny: _selectedCategoryFilterList)
             .orderBy('createdAt')
             .getDocuments()
             .then(
-              (value) => _totalPosts = value.documents.length,
-            );
+          (value) {
+            _totalPosts = value.documents.length;
+            _isWaitingForGetTotalPosts = false;
+            _onGetTotalPostsCompleted();
+            notifyListeners();
+          },
+        );
       } else {
-        await Firestore.instance
+        Firestore.instance
             .collection('posts')
             .where('uid', isEqualTo: _userData.get('uid'))
             .orderBy('createdAt')
             .getDocuments()
             .then(
-              (value) => _totalPosts = value.documents.length,
-            );
+          (value) {
+            _totalPosts = value.documents.length;
+            _isWaitingForGetTotalPosts = false;
+            _onGetTotalPostsCompleted();
+            notifyListeners();
+          },
+        );
       }
     }
     notifyListeners();

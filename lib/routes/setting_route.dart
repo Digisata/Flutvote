@@ -138,7 +138,7 @@ class SettingRoute extends StatelessWidget {
         appBar: AppBar(
           elevation: 0.0,
           leading: _backButton,
-          backgroundColor: Colors.white,
+          backgroundColor: ContentColors.white,
         ),
         body: Padding(
           padding: EdgeInsets.fromLTRB(

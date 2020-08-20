@@ -34,8 +34,8 @@ class CategoryFilterWidget extends StatelessWidget {
               return GestureDetector(
                 child: Chip(
                   backgroundColor: !_isSelectedCategoryFilter
-                      ? Colors.white
-                      : ContentColors.orange,
+                      ? ContentColors.white
+                      : ContentColors.softOrangeWithOpacity,
                   label: Text(
                     element,
                     maxLines: 1,
@@ -45,19 +45,31 @@ class CategoryFilterWidget extends StatelessWidget {
                   ),
                   labelStyle: Theme.of(context).textTheme.headline2.copyWith(
                         color: !_isSelectedCategoryFilter
-                            ? ContentColors.grey
-                            : Colors.white,
+                            ? ContentColors.darkGrey
+                            : ContentColors.orange,
                         fontSize: ContentSizes.dp16(context),
                       ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    side: BorderSide(
+                      color: !_isSelectedCategoryFilter
+                          ? ContentColors.softGrey
+                          : ContentColors.orange,
+                    ),
+                  ),
                 ),
-                onTap: () async {
+                onTap: () {
                   if (_isMyPosts) {
                     if (!_isSelectedCategoryFilter) {
                       if (_myPostsProviders.selectedCategoryFilterList.length <
                           10) {
                         _myPostsProviders.addSelectedCategoryFilterList =
                             element;
-                        await _myPostsProviders.setTotalPosts();
+                        _myPostsProviders.setTotalPosts();
+                        _myPostsProviders.isWaitingForGetTotalPosts = true;
+                        _myPostsProviders.setOnGetTotalPostsCompleted = () {
+                          onItemSelected();
+                        };
                         _myPostsProviders.checkMyPostsIsDefaultFilter();
                       } else {
                         _alertDialogWidget.createAlertDialogWidget(
@@ -70,7 +82,11 @@ class CategoryFilterWidget extends StatelessWidget {
                     } else {
                       _myPostsProviders.removeSelectedCategoryFilterList =
                           element;
-                      await _myPostsProviders.setTotalPosts();
+                      _myPostsProviders.setTotalPosts();
+                      _myPostsProviders.isWaitingForGetTotalPosts = true;
+                      _myPostsProviders.setOnGetTotalPostsCompleted = () {
+                        onItemSelected();
+                      };
                       _myPostsProviders.checkMyPostsIsDefaultFilter();
                     }
                   } else {
@@ -79,7 +95,11 @@ class CategoryFilterWidget extends StatelessWidget {
                           10) {
                         _myVotedProviders.addSelectedCategoryFilterList =
                             element;
-                        await _myVotedProviders.setTotalVoted();
+                        _myVotedProviders.setTotalVoted();
+                        _myVotedProviders.isWaitingForGetTotalPosts = true;
+                        _myVotedProviders.setOnGetTotalPostsCompleted = () {
+                          onItemSelected();
+                        };
                         _myVotedProviders.checkMyVotedIsDefaultFilter();
                       } else {
                         _alertDialogWidget.createAlertDialogWidget(
@@ -92,7 +112,11 @@ class CategoryFilterWidget extends StatelessWidget {
                     } else {
                       _myVotedProviders.removeSelectedCategoryFilterList =
                           element;
-                      await _myVotedProviders.setTotalVoted();
+                      _myVotedProviders.setTotalVoted();
+                      _myVotedProviders.isWaitingForGetTotalPosts = true;
+                      _myVotedProviders.setOnGetTotalPostsCompleted = () {
+                        onItemSelected();
+                      };
                       _myVotedProviders.checkMyVotedIsDefaultFilter();
                     }
                   }

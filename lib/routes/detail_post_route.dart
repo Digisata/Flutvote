@@ -70,7 +70,7 @@ class DetailPostRoute extends StatelessWidget {
           width: ContentSizes.width(context),
           decoration: BoxDecoration(
             shape: BoxShape.rectangle,
-            color: Colors.transparent,
+            color: ContentColors.transparent,
             image: DecorationImage(
               image: imageProvider,
               fit: BoxFit.cover,
@@ -227,7 +227,7 @@ class DetailPostRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
-      Colors.white,
+      ContentColors.white,
       ContentTexts.vote,
       () async {
         if (_detailPostProviders.selectedOption == '') {
@@ -357,7 +357,7 @@ class DetailPostRoute extends StatelessWidget {
     final Container _firstLayer = Container(
       height: ContentSizes.height(context),
       width: ContentSizes.width(context),
-      color: Colors.white,
+      color: ContentColors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -374,7 +374,7 @@ class DetailPostRoute extends StatelessWidget {
                 ContentSizes.width(context) * 0.05,
                 ContentSizes.height(context) * 0.01,
               ),
-              color: Colors.white,
+              color: ContentColors.white,
               child: Column(
                 children: <Widget>[
                   _postDescription,
@@ -412,11 +412,11 @@ class DetailPostRoute extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15.0),
-        color: Colors.white,
+        color: ContentColors.white,
         shape: BoxShape.rectangle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black,
+            color: ContentColors.black,
             spreadRadius: 0.01,
             blurRadius: 15,
             offset: Offset(3, 3),
@@ -458,7 +458,7 @@ class DetailPostRoute extends StatelessWidget {
               appBar: AppBar(
                 elevation: 0.0,
                 leading: _backButton,
-                backgroundColor: Colors.transparent,
+                backgroundColor: ContentColors.transparent,
               ),
               extendBodyBehindAppBar: true,
               body: Stack(

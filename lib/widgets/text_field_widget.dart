@@ -42,7 +42,7 @@ class TextFieldWidget {
       width: ContentSizes.width(_context),
       child: TextFormField(
         controller: _textEditingController,
-        cursorColor: Colors.grey,
+        cursorColor: ContentColors.grey,
         keyboardType: isEmail ? TextInputType.emailAddress : TextInputType.text,
         maxLines: 1,
         obscureText: _isPlainText
@@ -122,12 +122,12 @@ class TextFieldWidget {
           errorMaxLines: 2,
           prefixIcon: Icon(
             _icon,
-            color: Colors.grey,
+            color: ContentColors.grey,
           ),
           suffixIcon: _isPlainText
               ? Icon(
                   Icons.visibility,
-                  color: Colors.transparent,
+                  color: ContentColors.transparent,
                 )
               : isPasswordSignIn
                   ? IconButton(
@@ -137,11 +137,11 @@ class TextFieldWidget {
                       icon: _signInProviders.isPasswordSignInVisible
                           ? Icon(
                               Icons.visibility,
-                              color: Colors.grey,
+                              color: ContentColors.grey,
                             )
                           : Icon(
                               Icons.visibility_off,
-                              color: Colors.grey,
+                              color: ContentColors.grey,
                             ),
                       onPressed: () {
                         _signInProviders.isPasswordSignInVisible =
@@ -156,11 +156,11 @@ class TextFieldWidget {
                           icon: _signUpProviders.isPasswordSignUpVisible
                               ? Icon(
                                   Icons.visibility,
-                                  color: Colors.grey,
+                                  color: ContentColors.grey,
                                 )
                               : Icon(
                                   Icons.visibility_off,
-                                  color: Colors.grey,
+                                  color: ContentColors.grey,
                                 ),
                           onPressed: () {
                             _signUpProviders.isPasswordSignUpVisible =
@@ -177,11 +177,11 @@ class TextFieldWidget {
                                       .isOldPasswordChangeVisible
                                   ? Icon(
                                       Icons.visibility,
-                                      color: Colors.grey,
+                                      color: ContentColors.grey,
                                     )
                                   : Icon(
                                       Icons.visibility_off,
-                                      color: Colors.grey,
+                                      color: ContentColors.grey,
                                     ),
                               onPressed: () {
                                 _changePasswordProviders
@@ -200,11 +200,11 @@ class TextFieldWidget {
                                           .isNewPasswordChangeVisible
                                       ? Icon(
                                           Icons.visibility,
-                                          color: Colors.grey,
+                                          color: ContentColors.grey,
                                         )
                                       : Icon(
                                           Icons.visibility_off,
-                                          color: Colors.grey,
+                                          color: ContentColors.grey,
                                         ),
                                   onPressed: () {
                                     _changePasswordProviders
@@ -223,11 +223,11 @@ class TextFieldWidget {
                                               .isRepeatPasswordSignUpVisible
                                           ? Icon(
                                               Icons.visibility,
-                                              color: Colors.grey,
+                                              color: ContentColors.grey,
                                             )
                                           : Icon(
                                               Icons.visibility_off,
-                                              color: Colors.grey,
+                                              color: ContentColors.grey,
                                             ),
                                       onPressed: () {
                                         _signUpProviders
@@ -245,11 +245,11 @@ class TextFieldWidget {
                                               .isNewRepeatPasswordChangeVisible
                                           ? Icon(
                                               Icons.visibility,
-                                              color: Colors.grey,
+                                              color: ContentColors.grey,
                                             )
                                           : Icon(
                                               Icons.visibility_off,
-                                              color: Colors.grey,
+                                              color: ContentColors.grey,
                                             ),
                                       onPressed: () {
                                         _changePasswordProviders

@@ -169,7 +169,7 @@ class SignInRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
-      Colors.white,
+      ContentColors.white,
       ContentTexts.signIn,
       () async {
         if (_formKey.currentState.validate()) {
@@ -262,7 +262,7 @@ class SignInRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.facebook,
-      Colors.white,
+      ContentColors.white,
       ContentTexts.signInWithFacebook,
       () async {
         try {

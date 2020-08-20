@@ -29,6 +29,10 @@ class ContentSizes {
     return MediaQuery.of(context).size.width / 34;
   }
 
+  static double dp13(BuildContext context) {
+    return MediaQuery.of(context).size.width / 31;
+  }
+
   static double dp14(BuildContext context) {
     return MediaQuery.of(context).size.width / 29;
   }

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 
 class PhotoProfileWidget {
@@ -14,7 +15,7 @@ class PhotoProfileWidget {
     EditProfileProviders editProfileProviders,
   }) {
     return CircleAvatar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: ContentColors.transparent,
       radius: _radius,
       child: (isSetupProfile || isEditProfile) &&
               editProfileProviders.image != null
@@ -23,7 +24,7 @@ class PhotoProfileWidget {
               width: _size,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.transparent,
+                color: ContentColors.transparent,
                 image: DecorationImage(
                   alignment: Alignment.center,
                   image: FileImage(
@@ -46,7 +47,7 @@ class PhotoProfileWidget {
                 width: _size,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.transparent,
+                  color: ContentColors.transparent,
                   image: DecorationImage(
                     alignment: Alignment.center,
                     image: imageProvider,

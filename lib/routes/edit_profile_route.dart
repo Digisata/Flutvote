@@ -67,6 +67,7 @@ class EditProfileRoute extends StatelessWidget {
             await _firestoreService.updatePhotoProfileUrl(_photoUrl);
           } catch (error) {
             _appProviders.isLoading = false;
+            _editProfileProviders.isHasError = true;
             _alertDialogWidget.createAlertDialogWidget(
               context,
               ContentTexts.oops,
@@ -76,6 +77,7 @@ class EditProfileRoute extends StatelessWidget {
           }
         } catch (error) {
           _appProviders.isLoading = false;
+          _editProfileProviders.isHasError = true;
           _alertDialogWidget.createAlertDialogWidget(
             context,
             ContentTexts.oops,
@@ -90,6 +92,7 @@ class EditProfileRoute extends StatelessWidget {
               .updateDisplayName(_userProfileProviders.displayName);
         } catch (error) {
           _appProviders.isLoading = false;
+          _editProfileProviders.isHasError = true;
           _alertDialogWidget.createAlertDialogWidget(
             context,
             ContentTexts.oops,
@@ -98,23 +101,13 @@ class EditProfileRoute extends StatelessWidget {
           );
         }
       }
-      try {
-        await _firestoreService.updateLastProfileModified();
-      } catch (error) {
-        _appProviders.isLoading = false;
-        _alertDialogWidget.createAlertDialogWidget(
-          context,
-          ContentTexts.oops,
-          ContentTexts.errorUpdateLastProfileModified,
-          ContentTexts.ok,
-        );
-      }
       if (_userProfileProviders.username != _hiveProviders.username) {
         try {
           await _firestoreService
               .updateUsername(_userProfileProviders.username);
         } catch (error) {
           _appProviders.isLoading = false;
+          _editProfileProviders.isHasError = true;
           _alertDialogWidget.createAlertDialogWidget(
             context,
             ContentTexts.oops,
@@ -123,23 +116,37 @@ class EditProfileRoute extends StatelessWidget {
           );
         }
       }
+      try {
+        await _firestoreService.updateLastProfileModified();
+      } catch (error) {
+        _appProviders.isLoading = false;
+        _editProfileProviders.isHasError = true;
+        _alertDialogWidget.createAlertDialogWidget(
+          context,
+          ContentTexts.oops,
+          ContentTexts.errorUpdateLastProfileModified,
+          ContentTexts.ok,
+        );
+      }
       await _firestoreService.fetchUserData();
       await HiveProviders.syncUserData();
       await _firestoreService.updateUsersPost();
       await _firestoreService.updatePostVoter();
       await _firestoreService.updateUserVoted();
       _hiveProviders.refreshUserData();
-      _appProviders.isLoading = false;
-      _alertDialogWidget.createAlertDialogWidget(
-        context,
-        ContentTexts.yeay,
-        ContentTexts.editProfileSuccessfully,
-        ContentTexts.ok,
-        okRouteName: ContentTexts.settingRoute,
-        isOnlyCancelButton: false,
-        isOnlyOkButton: true,
-        isEditProfileSuccess: true,
-      );
+      if (!_editProfileProviders.isHasError) {
+        _appProviders.isLoading = false;
+        _alertDialogWidget.createAlertDialogWidget(
+          context,
+          ContentTexts.yeay,
+          ContentTexts.editProfileSuccessfully,
+          ContentTexts.ok,
+          okRouteName: ContentTexts.settingRoute,
+          isOnlyCancelButton: false,
+          isOnlyOkButton: true,
+          isEditProfileSuccess: true,
+        );
+      }
     }
 
     final IconButton _backButton = _backButtonWidget.createBackButton(
@@ -166,7 +173,7 @@ class EditProfileRoute extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           showModalBottomSheet(
-            backgroundColor: Colors.white,
+            backgroundColor: ContentColors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20.0),
@@ -193,12 +200,12 @@ class EditProfileRoute extends StatelessWidget {
               editProfileProviders: _editProfileProviders,
             ),
             CircleAvatar(
-              backgroundColor: Colors.black.withOpacity(0.3),
+              backgroundColor: ContentColors.black.withOpacity(0.3),
               radius: ContentSizes.height(context) * 0.06,
             ),
             Icon(
               Icons.image,
-              color: Colors.white,
+              color: ContentColors.white,
               size: 35.0,
             ),
           ],
@@ -257,7 +264,7 @@ class EditProfileRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
-      Colors.white,
+      ContentColors.white,
       ContentTexts.save,
       () async {
         if (_formKey.currentState.validate()) {
@@ -332,7 +339,7 @@ class EditProfileRoute extends StatelessWidget {
               appBar: AppBar(
                 elevation: 0.0,
                 leading: _backButton,
-                backgroundColor: Colors.white,
+                backgroundColor: ContentColors.white,
               ),
               body: SingleChildScrollView(
                 child: Padding(

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class HomeProviders with ChangeNotifier {
   String _searchKeyword = '';
-  bool _isDefaultFilter = true;
+  bool _isDefaultFilter = true, _isWaitingForGetTotalPosts = false;
   int _totalPosts = 0;
   List<String> _selectedCategoryList = [];
   Stream<QuerySnapshot> _postSnapshots = Firestore.instance
@@ -14,6 +14,8 @@ class HomeProviders with ChangeNotifier {
   String get searchKeyword => _searchKeyword;
 
   bool get isDefaultFilter => _isDefaultFilter;
+
+  bool get isWaitingForGetTotalPosts => _isWaitingForGetTotalPosts;
 
   int get totalPosts => _totalPosts;
 
@@ -26,14 +28,17 @@ class HomeProviders with ChangeNotifier {
     notifyListeners();
   }
 
+  set isWaitingForGetTotalPosts(bool value) {
+    _isWaitingForGetTotalPosts = value;
+    notifyListeners();
+  }
+
   set addSelectedCategoryList(String value) {
     _selectedCategoryList.add(value);
-    notifyListeners();
   }
 
   set removeSelectedCategoryList(String value) {
     _selectedCategoryList.removeWhere((element) => element == value);
-    notifyListeners();
   }
 
   void checkIsDefaultFilter() {
@@ -42,33 +47,39 @@ class HomeProviders with ChangeNotifier {
     } else {
       _isDefaultFilter = true;
     }
-    notifyListeners();
   }
 
   void resetPostsFilter() {
     _selectedCategoryList = [];
     _isDefaultFilter = true;
-    notifyListeners();
   }
 
-  Future<void> setTotalPosts() async {
+  void setTotalPosts() {
     if (_selectedCategoryList.isEmpty) {
-      await Firestore.instance
+      Firestore.instance
           .collection('posts')
           .orderBy('createdAt', descending: true)
           .getDocuments()
           .then(
-            (value) => _totalPosts = value.documents.length,
-          );
+        (value) {
+          _totalPosts = value.documents.length;
+          _isWaitingForGetTotalPosts = false;
+          notifyListeners();
+        },
+      );
     } else {
-      await Firestore.instance
+      Firestore.instance
           .collection('posts')
           .where('categories', arrayContainsAny: _selectedCategoryList)
           .orderBy('createdAt', descending: true)
           .getDocuments()
           .then(
-            (value) => _totalPosts = value.documents.length,
-          );
+        (value) {
+          _totalPosts = value.documents.length;
+          _isWaitingForGetTotalPosts = false;
+          notifyListeners();
+        },
+      );
     }
     notifyListeners();
   }
@@ -86,5 +97,6 @@ class HomeProviders with ChangeNotifier {
           .orderBy('createdAt', descending: true)
           .snapshots();
     }
+    notifyListeners();
   }
 }

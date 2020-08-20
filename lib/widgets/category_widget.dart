@@ -18,16 +18,16 @@ class CategoryWidget {
         bool _isSelectedCategory = _homeProviders.selectedCategoryList
             .contains(ContentTexts.categoryList[index]);
         return Container(
-          margin: EdgeInsets.only(right: ContentSizes.width(context) * 0.01),
+          margin: EdgeInsets.only(right: ContentSizes.width(context) * 0.015),
           child: GestureDetector(
             child: Chip(
               backgroundColor: !_isSelectedCategory &&
                       ContentTexts.categoryList[index] != 'All'
-                  ? Colors.white
+                  ? ContentColors.white
                   : ContentTexts.categoryList[index] == 'All' &&
                           _homeProviders.selectedCategoryList.length > 0
-                      ? Colors.white
-                      : ContentColors.orange,
+                      ? ContentColors.white
+                      : ContentColors.softOrangeWithOpacity,
               label: Text(
                 ContentTexts.categoryList[index],
                 maxLines: 1,
@@ -38,21 +38,34 @@ class CategoryWidget {
               labelStyle: Theme.of(context).textTheme.headline2.copyWith(
                     color: !_isSelectedCategory &&
                             ContentTexts.categoryList[index] != 'All'
-                        ? ContentColors.grey
+                        ? ContentColors.darkGrey
                         : ContentTexts.categoryList[index] == 'All' &&
                                 _homeProviders.selectedCategoryList.length > 0
-                            ? ContentColors.grey
-                            : Colors.white,
+                            ? ContentColors.darkGrey
+                            : ContentColors.orange,
                     fontSize: ContentSizes.dp16(context),
                   ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+                side: BorderSide(
+                  color: !_isSelectedCategory &&
+                          ContentTexts.categoryList[index] != 'All'
+                      ? ContentColors.softGrey
+                      : ContentTexts.categoryList[index] == 'All' &&
+                              _homeProviders.selectedCategoryList.length > 0
+                          ? ContentColors.softGrey
+                          : ContentColors.orange,
+                ),
+              ),
             ),
-            onTap: () async {
+            onTap: () {
               if (ContentTexts.categoryList[index] != 'All') {
                 if (!_isSelectedCategory) {
                   if (_homeProviders.selectedCategoryList.length < 10) {
                     _homeProviders.addSelectedCategoryList =
                         ContentTexts.categoryList[index];
-                    await _homeProviders.setTotalPosts();
+                    _homeProviders.setTotalPosts();
+                    _homeProviders.isWaitingForGetTotalPosts = true;
                     _homeProviders.checkIsDefaultFilter();
                     _homeProviders.setPostSnapshots();
                   } else {
@@ -66,7 +79,8 @@ class CategoryWidget {
                 } else {
                   _homeProviders.removeSelectedCategoryList =
                       ContentTexts.categoryList[index];
-                  await _homeProviders.setTotalPosts();
+                  _homeProviders.setTotalPosts();
+                  _homeProviders.isWaitingForGetTotalPosts = true;
                   _homeProviders.checkIsDefaultFilter();
                   _homeProviders.setPostSnapshots();
                 }

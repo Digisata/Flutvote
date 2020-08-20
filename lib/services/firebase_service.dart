@@ -7,7 +7,6 @@ abstract class BaseService {
   Future<void> signUpWithEmailAndPassword(String email, String password);
   Future<FirebaseUser> getCurrentUser();
   Future<void> resetPassword(String email);
-  Future<void> sendEmailVerification();
   Future<void> signOut();
   Future<bool> isEmailVerified();
   Future<bool> validatePassword(String password);
@@ -188,16 +187,6 @@ class FirebaseService implements BaseService {
         default:
           throw ContentTexts.errorUnknown;
       }
-    }
-  }
-
-  Future<void> sendEmailVerification() async {
-    try {
-      final FirebaseUser _user = await _firebaseAuth.currentUser();
-      assert(_user != null);
-      _user.sendEmailVerification();
-    } catch (error) {
-      throw 'send email verfication error: $error';
     }
   }
 

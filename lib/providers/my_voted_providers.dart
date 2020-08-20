@@ -5,7 +5,9 @@ import 'package:collection/collection.dart';
 
 class MyVotedProviders with ChangeNotifier {
   String _selectedCreatedAt = 'Newest', _savedCreatedAt = 'Newest';
-  bool _isDefaultFilter = true, _savedIsDefaultFilter = true;
+  bool _isDefaultFilter = true,
+      _savedIsDefaultFilter = true,
+      _isWaitingForGetTotalPosts = false;
   int _totalPosts = 0;
   List<String> _selectedCategoryFilterList = [], _savedCategoryFilterList = [];
   Stream<QuerySnapshot> _myVotedSnapshot = Firestore.instance
@@ -16,12 +18,15 @@ class MyVotedProviders with ChangeNotifier {
       .snapshots();
   static final Box _userData = Hive.box('userData');
   final Function unOrderedDeepEq = DeepCollectionEquality.unordered().equals;
+  VoidCallback _onGetTotalPostsCompleted = () {};
 
   String get selectedCreatedAt => _selectedCreatedAt;
 
   String get savedCreatedAt => _savedCreatedAt;
 
   bool get isDefaultFilter => _isDefaultFilter;
+
+  bool get isWaitingForGetTotalPosts => _isWaitingForGetTotalPosts;
 
   int get totalPosts => _totalPosts;
 
@@ -31,8 +36,15 @@ class MyVotedProviders with ChangeNotifier {
 
   Stream<QuerySnapshot> get myVotedSnapshot => _myVotedSnapshot;
 
+  set isWaitingForGetTotalPosts(bool value) {
+    _isWaitingForGetTotalPosts = value;
+    notifyListeners();
+  }
+
   set setSelectedCreatedAt(String value) {
-    _selectedCreatedAt = value;
+    if (_selectedCreatedAt != value) {
+      _selectedCreatedAt = value;
+    }
     notifyListeners();
   }
 
@@ -42,6 +54,11 @@ class MyVotedProviders with ChangeNotifier {
 
   set removeSelectedCategoryFilterList(String value) {
     _selectedCategoryFilterList.removeWhere((element) => element == value);
+  }
+
+  set setOnGetTotalPostsCompleted(VoidCallback value) {
+    _onGetTotalPostsCompleted = value;
+    notifyListeners();
   }
 
   void checkMyVotedIsDefaultFilter() {
@@ -89,10 +106,10 @@ class MyVotedProviders with ChangeNotifier {
     }
   }
 
-  Future<void> setTotalVoted() async {
+  void setTotalVoted() {
     if (_selectedCreatedAt == 'Newest') {
       if (_selectedCategoryFilterList.isNotEmpty) {
-        await Firestore.instance
+        Firestore.instance
             .collection('users')
             .document(_userData.get('uid'))
             .collection('voted')
@@ -100,22 +117,32 @@ class MyVotedProviders with ChangeNotifier {
             .orderBy('createdAt', descending: true)
             .getDocuments()
             .then(
-              (value) => _totalPosts = value.documents.length,
-            );
+          (value) {
+            _totalPosts = value.documents.length;
+            _isWaitingForGetTotalPosts = false;
+            _onGetTotalPostsCompleted();
+            notifyListeners();
+          },
+        );
       } else {
-        await Firestore.instance
+        Firestore.instance
             .collection('users')
             .document(_userData.get('uid'))
             .collection('voted')
             .orderBy('createdAt', descending: true)
             .getDocuments()
             .then(
-              (value) => _totalPosts = value.documents.length,
-            );
+          (value) {
+            _totalPosts = value.documents.length;
+            _isWaitingForGetTotalPosts = false;
+            _onGetTotalPostsCompleted();
+            notifyListeners();
+          },
+        );
       }
     } else {
       if (_selectedCategoryFilterList.isNotEmpty) {
-        await Firestore.instance
+        Firestore.instance
             .collection('users')
             .document(_userData.get('uid'))
             .collection('voted')
@@ -123,18 +150,28 @@ class MyVotedProviders with ChangeNotifier {
             .orderBy('createdAt')
             .getDocuments()
             .then(
-              (value) => _totalPosts = value.documents.length,
-            );
+          (value) {
+            _totalPosts = value.documents.length;
+            _isWaitingForGetTotalPosts = false;
+            _onGetTotalPostsCompleted();
+            notifyListeners();
+          },
+        );
       } else {
-        await Firestore.instance
+        Firestore.instance
             .collection('users')
             .document(_userData.get('uid'))
             .collection('voted')
             .orderBy('createdAt')
             .getDocuments()
             .then(
-              (value) => _totalPosts = value.documents.length,
-            );
+          (value) {
+            _totalPosts = value.documents.length;
+            _isWaitingForGetTotalPosts = false;
+            _onGetTotalPostsCompleted();
+            notifyListeners();
+          },
+        );
       }
     }
     notifyListeners();

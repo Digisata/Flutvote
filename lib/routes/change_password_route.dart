@@ -140,7 +140,7 @@ class ChangePasswordRoute extends StatelessWidget {
         _actionButtonWidget.createActionButtonWidget(
       context,
       ContentColors.orange,
-      Colors.white,
+      ContentColors.white,
       ContentTexts.changePassword,
       () async {
         _changePasswordProviders.newPasswordChange =
@@ -154,12 +154,24 @@ class ChangePasswordRoute extends StatelessWidget {
             final bool _isPasswordValid = await _firebaseService
                 .validatePassword(_changePasswordProviders.oldPasswordChange);
             if (_isPasswordValid) {
-              await _firebaseService
-                  .updatePassword(_changePasswordProviders.newPasswordChange);
+              try {
+                await _firebaseService
+                    .updatePassword(_changePasswordProviders.newPasswordChange);
+              } catch (error) {
+                _appProviders.isLoading = false;
+                _changePasswordProviders.isHasError = true;
+                _alertDialogWidget.createAlertDialogWidget(
+                  context,
+                  ContentTexts.oops,
+                  error,
+                  ContentTexts.ok,
+                );
+              }
               try {
                 await _firestoreService.updateLastPasswordModified();
               } catch (error) {
                 _appProviders.isLoading = false;
+                _changePasswordProviders.isHasError = true;
                 _alertDialogWidget.createAlertDialogWidget(
                   context,
                   ContentTexts.oops,
@@ -170,21 +182,23 @@ class ChangePasswordRoute extends StatelessWidget {
             }
             _hiveProviders
                 .setPassword(_changePasswordProviders.newPasswordChange);
-            _appProviders.isLoading = false;
-            _alertDialogWidget.createAlertDialogWidget(
-              context,
-              ContentTexts.yeay,
-              ContentTexts.changePasswordSuccessfully,
-              ContentTexts.signIn,
-              isOnlyCancelButton: false,
-              isSignOut: true,
-              isChangePassword: true,
-              appProviders: _appProviders,
-              changePasswordProviders: _changePasswordProviders,
-              homeProviders: _homeProviders,
-              myPostsProviders: _myPostsProviders,
-              myVotedProviders: _myVotedProviders,
-            );
+            if (!_changePasswordProviders.isHasError) {
+              _appProviders.isLoading = false;
+              _alertDialogWidget.createAlertDialogWidget(
+                context,
+                ContentTexts.yeay,
+                ContentTexts.changePasswordSuccessfully,
+                ContentTexts.signIn,
+                isOnlyCancelButton: false,
+                isSignOut: true,
+                isChangePassword: true,
+                appProviders: _appProviders,
+                changePasswordProviders: _changePasswordProviders,
+                homeProviders: _homeProviders,
+                myPostsProviders: _myPostsProviders,
+                myVotedProviders: _myVotedProviders,
+              );
+            }
           } catch (error) {
             _appProviders.isLoading = false;
             _alertDialogWidget.createAlertDialogWidget(
@@ -228,7 +242,7 @@ class ChangePasswordRoute extends StatelessWidget {
               appBar: AppBar(
                 elevation: 0.0,
                 leading: _backButton,
-                backgroundColor: Colors.white,
+                backgroundColor: ContentColors.white,
               ),
               body: SingleChildScrollView(
                 child: Padding(

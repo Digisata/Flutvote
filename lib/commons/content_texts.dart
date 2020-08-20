@@ -245,4 +245,5 @@ class ContentTexts {
   static const String haventVotedyet = 'You haven\'t voted to any post yet';
   static const String haventCreatedPostyet =
       'You haven\'t created any posts yet';
+  static const String errorSomething = 'Oops, something went wrong!';
 }

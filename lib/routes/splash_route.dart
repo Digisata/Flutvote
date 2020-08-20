@@ -41,7 +41,7 @@ class _SplashRouteState extends State<SplashRoute> {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          color: Colors.white,
+          color: ContentColors.white,
         ),
       ),
     );
