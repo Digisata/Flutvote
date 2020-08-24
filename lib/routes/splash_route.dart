@@ -24,6 +24,7 @@ class _SplashRouteState extends State<SplashRoute> {
     } else if (!HiveProviders.getIsSetupCompleted()) {
       Navigator.pushReplacementNamed(context, ContentTexts.introductionRoute);
     } else {
+      await _firestoreService.updateLastLaunch();
       await _firestoreService.fetchUserData();
       await HiveProviders.syncUserData();
       Navigator.pushReplacementNamed(context, ContentTexts.homeRoute);

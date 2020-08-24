@@ -39,6 +39,8 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   final MyVotedProviders myVotedProviders;
   final bool isProfile, isMyPosts;
   final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
+  final CreatedAtFilterWidget _createdAtFilterWidget = CreatedAtFilterWidget();
+  final CategoryFilterWidget _categoryFilterWidget = CategoryFilterWidget();
   final Function unOrderedDeepEq = DeepCollectionEquality.unordered().equals;
 
   _BottomSheetWidgetState({
@@ -105,16 +107,16 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
               alignment: Alignment.topCenter,
               textDirection: TextDirection.ltr,
               children: [
-                Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        ContentSizes.width(context) * 0.05,
-                        ContentSizes.width(context) * 0.02,
-                        ContentSizes.width(context) * 0.05,
-                        0,
-                      ),
-                      child: Row(
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    ContentSizes.width(context) * 0.05,
+                    ContentSizes.width(context) * 0.02,
+                    ContentSizes.width(context) * 0.05,
+                    0,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
@@ -127,16 +129,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                           )
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: ContentSizes.height(context) * 0.01,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: ContentSizes.width(context) * 0.05,
-                        right: ContentSizes.width(context) * 0.05,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.01,
                       ),
-                      child: Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
@@ -157,6 +153,12 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                       onTap: () {
                                         myPostsProviders.resetMyPostsFilter();
                                         myPostsProviders.setTotalPosts();
+                                        myPostsProviders
+                                            .isWaitingForGetTotalPosts = true;
+                                        myPostsProviders
+                                            .setOnGetTotalPostsCompleted = () {
+                                          setState(() {});
+                                        };
                                         setState(() {});
                                       },
                                       child: Text(
@@ -181,6 +183,12 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                       onTap: () {
                                         myVotedProviders.resetMyVotedFilter();
                                         myVotedProviders.setTotalVoted();
+                                        myVotedProviders
+                                            .isWaitingForGetTotalPosts = true;
+                                        myVotedProviders
+                                            .setOnGetTotalPostsCompleted = () {
+                                          setState(() {});
+                                        };
                                         setState(() {});
                                       },
                                       child: Text(
@@ -201,26 +209,20 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                     ),
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: ContentSizes.height(context) * 0.015,
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: ContentSizes.height(context) * 0.015,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: ContentSizes.width(context) * 0.05,
-                                right: ContentSizes.width(context) * 0.05,
+                      SizedBox(
+                        height: ContentSizes.height(context) * 0.015,
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: ContentSizes.height(context) * 0.015,
                               ),
-                              child: Row(
+                              Row(
                                 children: [
                                   Text(
-                                    ContentTexts.createdAt,
+                                    ContentTexts.sort,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.start,
@@ -234,30 +236,20 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                   ),
                                 ],
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: ContentSizes.width(context) * 0.05,
-                                right: ContentSizes.width(context) * 0.05,
-                              ),
-                              child: CreatedAtFilterWidget(
-                                () {
-                                  setState(() {});
-                                },
+                              _createdAtFilterWidget
+                                  .createCreatedAtFilterWidget(
+                                context,
                                 myPostsProviders,
                                 myVotedProviders,
                                 isMyPosts,
+                                () {
+                                  setState(() {});
+                                },
                               ),
-                            ),
-                            SizedBox(
-                              height: ContentSizes.height(context) * 0.03,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: ContentSizes.width(context) * 0.05,
-                                right: ContentSizes.width(context) * 0.05,
+                              SizedBox(
+                                height: ContentSizes.height(context) * 0.03,
                               ),
-                              child: Row(
+                              Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -277,7 +269,35 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                         ),
                                   ),
                                   GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      isMyPosts
+                                          ? myPostsProviders
+                                              .setSelectedSeeAllCategoryFilterList()
+                                          : myVotedProviders
+                                              .setSelectedSeeAllCategoryFilterList();
+                                      showModalBottomSheet(
+                                        backgroundColor: ContentColors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20.0),
+                                            topRight: Radius.circular(20.0),
+                                          ),
+                                        ),
+                                        context: context,
+                                        builder: (context) {
+                                          return isMyPosts
+                                              ? SeeAllBottomSheetWidget(
+                                                  myPostsProviders:
+                                                      myPostsProviders,
+                                                  isMyPosts: true,
+                                                )
+                                              : SeeAllBottomSheetWidget(
+                                                  myVotedProviders:
+                                                      myVotedProviders,
+                                                );
+                                        },
+                                      );
+                                    },
                                     child: Text(
                                       ContentTexts.seeAll,
                                       maxLines: 1,
@@ -296,29 +316,24 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                   )
                                 ],
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: ContentSizes.width(context) * 0.05,
-                                right: ContentSizes.width(context) * 0.05,
-                              ),
-                              child: CategoryFilterWidget(
-                                () {
-                                  setState(() {});
-                                },
+                              _categoryFilterWidget.createCategoryFilterWidget(
+                                context,
                                 myPostsProviders,
                                 myVotedProviders,
                                 isMyPosts,
+                                () {
+                                  setState(() {});
+                                },
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 isMyPosts
-                    ? myPostsProviders.selectedCreatedAt ==
+                    ? myPostsProviders.selectedSort ==
                                 myPostsProviders.savedCreatedAt &&
                             unOrderedDeepEq(
                                 myPostsProviders.selectedCategoryFilterList,
@@ -334,63 +349,58 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                 child: Padding(
                                   padding: EdgeInsets.fromLTRB(
                                     ContentSizes.width(context) * 0.05,
-                                    0,
+                                    ContentSizes.width(context) * 0.02,
                                     ContentSizes.width(context) * 0.05,
                                     ContentSizes.width(context) * 0.02,
                                   ),
-                                  child: Container(
-                                    height: ContentSizes.height(context) * 0.06,
-                                    child: myPostsProviders
-                                            .isWaitingForGetTotalPosts
-                                        ? Loading(
-                                            color: ContentColors.orange,
-                                            indicator:
-                                                BallSpinFadeLoaderIndicator(),
-                                            size: ContentSizes.height(context) *
-                                                0.05,
-                                          )
-                                        : myPostsProviders.totalPosts == 0
-                                            ? Text(
-                                                ContentTexts.noResult,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.center,
-                                                textDirection:
-                                                    TextDirection.ltr,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline2
-                                                    .copyWith(
-                                                      color: ContentColors
-                                                          .darkOrange,
-                                                      fontSize:
-                                                          ContentSizes.dp16(
-                                                              context),
-                                                    ),
-                                              )
-                                            : _actionButtonWidget
-                                                .createActionButtonWidget(
-                                                context,
-                                                ContentColors.orange,
-                                                ContentColors.white,
-                                                myPostsProviders.totalPosts == 1
-                                                    ? 'Show ${myPostsProviders.totalPosts} result'
-                                                    : 'Show all ${myPostsProviders.totalPosts} result',
-                                                () {
-                                                  myPostsProviders
-                                                      .saveFilterChanges();
-                                                  myPostsProviders
-                                                      .setMyPostSnapshot();
-                                                  Navigator.pop(context);
-                                                },
-                                                isFilter: true,
-                                              ),
-                                  ),
+                                  child: myPostsProviders
+                                          .isWaitingForGetTotalPosts
+                                      ? Loading(
+                                          color: ContentColors.orange,
+                                          indicator:
+                                              BallSpinFadeLoaderIndicator(),
+                                          size: ContentSizes.height(context) *
+                                              0.05,
+                                        )
+                                      : myPostsProviders.totalPosts == 0
+                                          ? Text(
+                                              ContentTexts.noResult,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                              textDirection: TextDirection.ltr,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline2
+                                                  .copyWith(
+                                                    color: ContentColors
+                                                        .darkOrange,
+                                                    fontSize: ContentSizes.dp16(
+                                                        context),
+                                                  ),
+                                            )
+                                          : _actionButtonWidget
+                                              .createActionButtonWidget(
+                                              context,
+                                              ContentColors.orange,
+                                              ContentColors.white,
+                                              myPostsProviders.totalPosts == 1
+                                                  ? 'Show ${myPostsProviders.totalPosts} result'
+                                                  : 'Show all ${myPostsProviders.totalPosts} result',
+                                              () {
+                                                myPostsProviders
+                                                    .saveFilterChanges();
+                                                myPostsProviders
+                                                    .setMyPostSnapshot();
+                                                Navigator.pop(context);
+                                              },
+                                              isFilter: true,
+                                            ),
                                 ),
                               ),
                             ),
                           )
-                    : myVotedProviders.selectedCreatedAt ==
+                    : myVotedProviders.selectedSort ==
                                 myVotedProviders.savedCreatedAt &&
                             unOrderedDeepEq(
                                 myVotedProviders.selectedCategoryFilterList,
@@ -398,74 +408,65 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                         ? Container()
                         : Align(
                             alignment: Alignment.bottomCenter,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              textDirection: TextDirection.ltr,
-                              children: [
-                                Container(
-                                  color: ContentColors.white,
-                                  height: ContentSizes.height(context) * 0.085,
-                                  width: ContentSizes.width(context),
-                                ),
-                                Padding(
+                            child: Container(
+                              color: ContentColors.white,
+                              height: ContentSizes.height(context) * 0.085,
+                              width: ContentSizes.width(context),
+                              child: Center(
+                                child: Padding(
                                   padding: EdgeInsets.fromLTRB(
                                     ContentSizes.width(context) * 0.05,
-                                    0,
+                                    ContentSizes.width(context) * 0.02,
                                     ContentSizes.width(context) * 0.05,
                                     ContentSizes.width(context) * 0.02,
                                   ),
-                                  child: Container(
-                                    height: ContentSizes.height(context) * 0.06,
-                                    child: myVotedProviders
-                                            .isWaitingForGetTotalPosts
-                                        ? Loading(
-                                            color: ContentColors.orange,
-                                            indicator:
-                                                BallSpinFadeLoaderIndicator(),
-                                            size: ContentSizes.height(context) *
-                                                0.05,
-                                          )
-                                        : myVotedProviders.totalPosts == 0
-                                            ? Text(
-                                                ContentTexts.noResult,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.center,
-                                                textDirection:
-                                                    TextDirection.ltr,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline2
-                                                    .copyWith(
-                                                      color: ContentColors
-                                                          .darkOrange,
-                                                      fontSize:
-                                                          ContentSizes.dp16(
-                                                              context),
-                                                    ),
-                                              )
-                                            : _actionButtonWidget
-                                                .createActionButtonWidget(
-                                                context,
-                                                ContentColors.orange,
-                                                ContentColors.white,
-                                                myVotedProviders.totalPosts == 1
-                                                    ? 'Show ${myVotedProviders.totalPosts} result'
-                                                    : 'Show all ${myVotedProviders.totalPosts} result',
-                                                () {
-                                                  myVotedProviders
-                                                      .saveFilterChanges();
-                                                  myVotedProviders
-                                                      .setMyVotedSnapshot();
-                                                  Navigator.pop(context);
-                                                },
-                                                isFilter: true,
-                                              ),
-                                  ),
+                                  child: myVotedProviders
+                                          .isWaitingForGetTotalPosts
+                                      ? Loading(
+                                          color: ContentColors.orange,
+                                          indicator:
+                                              BallSpinFadeLoaderIndicator(),
+                                          size: ContentSizes.height(context) *
+                                              0.05,
+                                        )
+                                      : myVotedProviders.totalPosts == 0
+                                          ? Text(
+                                              ContentTexts.noResult,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textAlign: TextAlign.center,
+                                              textDirection: TextDirection.ltr,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline2
+                                                  .copyWith(
+                                                    color: ContentColors
+                                                        .darkOrange,
+                                                    fontSize: ContentSizes.dp16(
+                                                        context),
+                                                  ),
+                                            )
+                                          : _actionButtonWidget
+                                              .createActionButtonWidget(
+                                              context,
+                                              ContentColors.orange,
+                                              ContentColors.white,
+                                              myVotedProviders.totalPosts == 1
+                                                  ? 'Show ${myVotedProviders.totalPosts} result'
+                                                  : 'Show all ${myVotedProviders.totalPosts} result',
+                                              () {
+                                                myVotedProviders
+                                                    .saveFilterChanges();
+                                                myVotedProviders
+                                                    .setMyVotedSnapshot();
+                                                Navigator.pop(context);
+                                              },
+                                              isFilter: true,
+                                            ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                          )
               ],
             ),
     );

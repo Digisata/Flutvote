@@ -117,6 +117,7 @@ class FirestoreService {
           'displayName': AppProviders.userModel.displayName,
           'photoUrl': AppProviders.userModel.photoUrl,
           'username': AppProviders.userModel.username,
+          'votedAt': Timestamp.now(),
         },
         merge: true,
       );
@@ -184,6 +185,49 @@ class FirestoreService {
     }
   }
 
+  Future<void> updateIs2FAConfigured(bool is2FAConfigured) async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _usersCollectionReference.document(_user.uid).updateData(
+        {
+          'is2FAConfigured': is2FAConfigured,
+        },
+      );
+    } catch (error) {
+      throw 'update is 2FA configured error: $error';
+    }
+  }
+
+  Future<void> updateIsFingerprintConfigured(
+      bool isFingerprintConfigured) async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _usersCollectionReference.document(_user.uid).updateData(
+        {
+          'isFingerprintConfigured': isFingerprintConfigured,
+        },
+      );
+    } catch (error) {
+      throw 'update is fingerprint configured error: $error';
+    }
+  }
+
+  Future<void> updateIsPinConfigured(bool isPinConfigured) async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _usersCollectionReference.document(_user.uid).updateData(
+        {
+          'isPinConfigured': isPinConfigured,
+        },
+      );
+    } catch (error) {
+      throw 'update is pin configured error: $error';
+    }
+  }
+
   Future<void> updateIsSetupCompleted(bool isSetupCompleted) async {
     try {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
@@ -195,6 +239,20 @@ class FirestoreService {
       );
     } catch (error) {
       throw 'update is setup completed error: $error';
+    }
+  }
+
+  Future<void> updateLastLaunch() async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _usersCollectionReference.document(_user.uid).updateData(
+        {
+          'lastLaunch': Timestamp.now(),
+        },
+      );
+    } catch (error) {
+      throw 'update last launch error: $error';
     }
   }
 
@@ -223,6 +281,20 @@ class FirestoreService {
       );
     } catch (error) {
       throw 'update last profile modified error: $error';
+    }
+  }
+
+  Future<void> updateLastSignedIn() async {
+    try {
+      final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      assert(_user != null);
+      await _usersCollectionReference.document(_user.uid).updateData(
+        {
+          'lastSignedIn': Timestamp.now(),
+        },
+      );
+    } catch (error) {
+      throw 'update last signed in error: $error';
     }
   }
 

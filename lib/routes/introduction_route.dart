@@ -240,25 +240,37 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                           _appProviders.isLoading = true;
                           if (!await _firestoreService.isUsernameExist(
                               _userProfileProviders.username)) {
-                            final String _imageName =
-                                basename(_editProfileProviders.image.path);
-                            final String _photoUrl =
-                                await _firebaseStorageService
-                                    .getPhotoProfileUrl(
-                              _editProfileProviders.image,
-                              _imageName,
-                            );
                             try {
-                              _userProfileProviders.photoUrl = _photoUrl;
-                              _editProfileProviders.image = null;
-                              await _firestoreService
-                                  .updatePhotoProfileUrl(_photoUrl);
+                              final String _imageName =
+                                  basename(_editProfileProviders.image.path);
+                              final String _photoUrl =
+                                  await _firebaseStorageService
+                                      .getPhotoProfileUrl(
+                                _editProfileProviders.image,
+                                _imageName,
+                              );
+                              try {
+                                _userProfileProviders.photoUrl = _photoUrl;
+                                _editProfileProviders.image = null;
+                                await _firestoreService
+                                    .updatePhotoProfileUrl(_photoUrl);
+                              } catch (error) {
+                                _appProviders.isLoading = false;
+                                _editProfileProviders.isHasError = true;
+                                _alertDialogWidget.createAlertDialogWidget(
+                                  context,
+                                  ContentTexts.oops,
+                                  ContentTexts.errorUpdatePhotoProfileUrl,
+                                  ContentTexts.ok,
+                                );
+                              }
                             } catch (error) {
                               _appProviders.isLoading = false;
+                              _editProfileProviders.isHasError = true;
                               _alertDialogWidget.createAlertDialogWidget(
                                 context,
                                 ContentTexts.oops,
-                                ContentTexts.errorUpdatePhotoProfileUrl,
+                                ContentTexts.errorGetPhotoProfileUrl,
                                 ContentTexts.ok,
                               );
                             }
@@ -267,6 +279,7 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                                   _userProfileProviders.displayName);
                             } catch (error) {
                               _appProviders.isLoading = false;
+                              _editProfileProviders.isHasError = true;
                               _alertDialogWidget.createAlertDialogWidget(
                                 context,
                                 ContentTexts.oops,
@@ -279,6 +292,7 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                                   _userProfileProviders.username);
                             } catch (error) {
                               _appProviders.isLoading = false;
+                              _editProfileProviders.isHasError = true;
                               _alertDialogWidget.createAlertDialogWidget(
                                 context,
                                 ContentTexts.oops,
@@ -290,16 +304,18 @@ class _IntroductionRouteState extends State<IntroductionRoute> {
                                 .updateIsSetupCompleted(true);
                             await _firestoreService.fetchUserData();
                             await HiveProviders.syncUserData();
-                            _appProviders.isLoading = false;
-                            _alertDialogWidget.createAlertDialogWidget(
-                              context,
-                              ContentTexts.yeay,
-                              ContentTexts.setupProfileSuccessfully,
-                              ContentTexts.homePage,
-                              okRouteName: ContentTexts.homeRoute,
-                              isOnlyCancelButton: false,
-                              isOnlyOkButton: true,
-                            );
+                            if (!_editProfileProviders.isHasError) {
+                              _appProviders.isLoading = false;
+                              _alertDialogWidget.createAlertDialogWidget(
+                                context,
+                                ContentTexts.yeay,
+                                ContentTexts.setupProfileSuccessfully,
+                                ContentTexts.homePage,
+                                okRouteName: ContentTexts.homeRoute,
+                                isOnlyCancelButton: false,
+                                isOnlyOkButton: true,
+                              );
+                            }
                           } else {
                             _appProviders.isLoading = false;
                             _alertDialogWidget.createAlertDialogWidget(

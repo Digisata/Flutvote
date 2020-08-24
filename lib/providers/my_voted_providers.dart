@@ -4,12 +4,14 @@ import 'package:hive/hive.dart';
 import 'package:collection/collection.dart';
 
 class MyVotedProviders with ChangeNotifier {
-  String _selectedCreatedAt = 'Newest', _savedCreatedAt = 'Newest';
+  String _selectedSort = 'Newest', _savedCreatedAt = 'Newest';
   bool _isDefaultFilter = true,
       _savedIsDefaultFilter = true,
       _isWaitingForGetTotalPosts = false;
   int _totalPosts = 0;
-  List<String> _selectedCategoryFilterList = [], _savedCategoryFilterList = [];
+  List<String> _selectedCategoryFilterList = [],
+      _savedCategoryFilterList = [],
+      _selectedSeeAllCategoryFilterList = [];
   Stream<QuerySnapshot> _myVotedSnapshot = Firestore.instance
       .collection('users')
       .document(_userData.get('uid'))
@@ -20,7 +22,7 @@ class MyVotedProviders with ChangeNotifier {
   final Function unOrderedDeepEq = DeepCollectionEquality.unordered().equals;
   VoidCallback _onGetTotalPostsCompleted = () {};
 
-  String get selectedCreatedAt => _selectedCreatedAt;
+  String get selectedSort => _selectedSort;
 
   String get savedCreatedAt => _savedCreatedAt;
 
@@ -34,17 +36,20 @@ class MyVotedProviders with ChangeNotifier {
 
   List<String> get savedCategoryFilterList => _savedCategoryFilterList;
 
+  List<String> get selectedSeeAllCategoryFilterList =>
+      _selectedSeeAllCategoryFilterList;
+
   Stream<QuerySnapshot> get myVotedSnapshot => _myVotedSnapshot;
 
-  set isWaitingForGetTotalPosts(bool value) {
-    _isWaitingForGetTotalPosts = value;
+  set setSelectedCreatedAt(String value) {
+    if (_selectedSort != value) {
+      _selectedSort = value;
+    }
     notifyListeners();
   }
 
-  set setSelectedCreatedAt(String value) {
-    if (_selectedCreatedAt != value) {
-      _selectedCreatedAt = value;
-    }
+  set isWaitingForGetTotalPosts(bool value) {
+    _isWaitingForGetTotalPosts = value;
     notifyListeners();
   }
 
@@ -56,14 +61,22 @@ class MyVotedProviders with ChangeNotifier {
     _selectedCategoryFilterList.removeWhere((element) => element == value);
   }
 
+  set addSelectedSeeAllCategoryFilterList(String value) {
+    _selectedSeeAllCategoryFilterList.add(value);
+  }
+
+  set removeSelectedSeeAllCategoryFilterList(String value) {
+    _selectedSeeAllCategoryFilterList
+        .removeWhere((element) => element == value);
+  }
+
   set setOnGetTotalPostsCompleted(VoidCallback value) {
     _onGetTotalPostsCompleted = value;
     notifyListeners();
   }
 
   void checkMyVotedIsDefaultFilter() {
-    if (_selectedCreatedAt != 'Newest' ||
-        _selectedCategoryFilterList.isNotEmpty) {
+    if (_selectedSort != 'Newest' || _selectedCategoryFilterList.isNotEmpty) {
       _isDefaultFilter = false;
     } else {
       _isDefaultFilter = true;
@@ -72,8 +85,8 @@ class MyVotedProviders with ChangeNotifier {
   }
 
   void saveFilterChanges() {
-    if (_savedCreatedAt != _selectedCreatedAt) {
-      _savedCreatedAt = _selectedCreatedAt;
+    if (_savedCreatedAt != _selectedSort) {
+      _savedCreatedAt = _selectedSort;
     }
     if (!unOrderedDeepEq(
         _savedCategoryFilterList, _selectedCategoryFilterList)) {
@@ -86,15 +99,24 @@ class MyVotedProviders with ChangeNotifier {
   }
 
   void resetMyVotedFilter() {
-    _selectedCreatedAt = 'Newest';
+    _selectedSort = 'Newest';
     _selectedCategoryFilterList = [];
     _isDefaultFilter = true;
     notifyListeners();
   }
 
+  void resetSeeAllCategoryFilter() {
+    _selectedSeeAllCategoryFilterList = [];
+  }
+
+  void setSelectedSeeAllCategoryFilterList() {
+    _selectedSeeAllCategoryFilterList.clear();
+    _selectedSeeAllCategoryFilterList.addAll(_selectedCategoryFilterList);
+  }
+
   void setSavedFilter() {
-    if (_selectedCreatedAt != _savedCreatedAt) {
-      _selectedCreatedAt = _savedCreatedAt;
+    if (_selectedSort != _savedCreatedAt) {
+      _selectedSort = _savedCreatedAt;
     }
     if (!unOrderedDeepEq(
         _selectedCategoryFilterList, _savedCategoryFilterList)) {
@@ -107,7 +129,7 @@ class MyVotedProviders with ChangeNotifier {
   }
 
   void setTotalVoted() {
-    if (_selectedCreatedAt == 'Newest') {
+    if (_selectedSort == 'Newest') {
       if (_selectedCategoryFilterList.isNotEmpty) {
         Firestore.instance
             .collection('users')

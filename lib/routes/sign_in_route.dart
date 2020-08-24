@@ -48,17 +48,18 @@ class SignInRoute extends StatelessWidget {
 
     Future<void> _signIn({bool isSignInWithFacebook = false}) async {
       final FirebaseUser _user = await _firebaseService.getCurrentUser();
+      
+      await _firestoreService.updateLastSignedIn();
       if (!await _firestoreService.isAlreadyRegistered()) {
         AppProviders.setUserModel = UserModel(
           deviceId: _hiveProviders.deviceId,
           displayName: ContentTexts.displayName,
           email: _user.email,
-          is2FaConfigured: false,
+          is2FAConfigured: false,
           isFingerprintConfigured: false,
           isPinConfigured: false,
           isSetupCompleted: false,
-          lastPasswordModified: Timestamp.now(),
-          lastProfileModified: Timestamp.now(),
+          lastSignedIn: Timestamp.now(),
           photoUrl: ContentTexts.defaultPhotoUrl,
           username: ContentTexts.username,
         );

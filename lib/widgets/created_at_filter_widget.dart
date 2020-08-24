@@ -2,31 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 
-class CreatedAtFilterWidget extends StatelessWidget {
-  final VoidCallback onItemSelected;
-  final MyPostsProviders _myPostsProviders;
-  final MyVotedProviders _myVotedProviders;
-  final _isMyPosts;
-
-  CreatedAtFilterWidget(
-    this.onItemSelected,
-    this._myPostsProviders,
-    this._myVotedProviders,
-    this._isMyPosts,
-  );
-
-  @override
-  Widget build(BuildContext context) {
+class CreatedAtFilterWidget {
+  Align createCreatedAtFilterWidget(
+    BuildContext _context,
+    MyPostsProviders _myPostsProviders,
+    MyVotedProviders _myVotedProviders,
+    bool _isMyPosts,
+    VoidCallback _onItemSelected,
+  ) {
     return Align(
       alignment: Alignment.topLeft,
       child: Wrap(
         textDirection: TextDirection.ltr,
-        spacing: ContentSizes.width(context) * 0.01,
+        spacing: ContentSizes.width(_context) * 0.01,
         children: ContentTexts.createdAtList.map(
           (element) {
             bool _isSelectedCreatedAt = _isMyPosts
-                ? _myPostsProviders.selectedCreatedAt == element
-                : _myVotedProviders.selectedCreatedAt == element;
+                ? _myPostsProviders.selectedSort == element
+                : _myVotedProviders.selectedSort == element;
             return GestureDetector(
               child: Chip(
                 backgroundColor: !_isSelectedCreatedAt
@@ -39,11 +32,11 @@ class CreatedAtFilterWidget extends StatelessWidget {
                   textAlign: TextAlign.center,
                   textDirection: TextDirection.ltr,
                 ),
-                labelStyle: Theme.of(context).textTheme.headline2.copyWith(
+                labelStyle: Theme.of(_context).textTheme.headline2.copyWith(
                       color: !_isSelectedCreatedAt
                           ? ContentColors.darkGrey
                           : ContentColors.orange,
-                      fontSize: ContentSizes.dp16(context),
+                      fontSize: ContentSizes.dp16(_context),
                     ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
@@ -61,7 +54,7 @@ class CreatedAtFilterWidget extends StatelessWidget {
                     _myPostsProviders.setTotalPosts();
                     _myPostsProviders.isWaitingForGetTotalPosts = true;
                     _myPostsProviders.setOnGetTotalPostsCompleted = () {
-                      onItemSelected();
+                      _onItemSelected();
                     };
                     _myPostsProviders.checkMyPostsIsDefaultFilter();
                   }
@@ -71,12 +64,12 @@ class CreatedAtFilterWidget extends StatelessWidget {
                     _myVotedProviders.setTotalVoted();
                     _myVotedProviders.isWaitingForGetTotalPosts = true;
                     _myVotedProviders.setOnGetTotalPostsCompleted = () {
-                      onItemSelected();
+                      _onItemSelected();
                     };
                     _myVotedProviders.checkMyVotedIsDefaultFilter();
                   }
                 }
-                onItemSelected();
+                _onItemSelected();
               },
             );
           },

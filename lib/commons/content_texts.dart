@@ -227,7 +227,7 @@ class ContentTexts {
   static const String myPosts = 'My posts';
   static const String myVoted = 'My voted';
   static const String filter = 'Filter';
-  static const String createdAt = 'Created at';
+  static const String sort = 'Sort';
   static const List<String> createdAtList = [
     'Newest',
     'Oldest',

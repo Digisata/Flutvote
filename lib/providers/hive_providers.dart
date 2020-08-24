@@ -46,6 +46,20 @@ class HiveProviders with ChangeNotifier {
       await _userData.put('email', _userModel.email);
     }
 
+    if (_userData.get('is2FAConfigured') != _userModel.is2FAConfigured) {
+      await _userData.put('is2FAConfigured', _userModel.is2FAConfigured);
+    }
+
+    if (_userData.get('isFingerprintConfigured') !=
+        _userModel.isFingerprintConfigured) {
+      await _userData.put(
+          'isFingerprintConfigured', _userModel.isFingerprintConfigured);
+    }
+
+    if (_userData.get('isPinConfigured') != _userModel.isPinConfigured) {
+      await _userData.put('isPinConfigured', _userModel.isPinConfigured);
+    }
+
     if (_userData.get('isSetupCompleted') != _userModel.isSetupCompleted) {
       await _userData.put('isSetupCompleted', _userModel.isSetupCompleted);
     }
