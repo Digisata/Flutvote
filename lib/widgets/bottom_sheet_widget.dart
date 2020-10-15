@@ -39,7 +39,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   final MyVotedProviders myVotedProviders;
   final bool isProfile, isMyPosts;
   final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
-  final CreatedAtFilterWidget _createdAtFilterWidget = CreatedAtFilterWidget();
+  final SortFilterWidget _sortFilterWidget = SortFilterWidget();
   final CategoryFilterWidget _categoryFilterWidget = CategoryFilterWidget();
   final Function unOrderedDeepEq = DeepCollectionEquality.unordered().equals;
 
@@ -236,8 +236,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                   ),
                                 ],
                               ),
-                              _createdAtFilterWidget
-                                  .createCreatedAtFilterWidget(
+                              _sortFilterWidget.createSortFilterWidget(
                                 context,
                                 myPostsProviders,
                                 myVotedProviders,
@@ -289,12 +288,37 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                               ? SeeAllBottomSheetWidget(
                                                   myPostsProviders:
                                                       myPostsProviders,
-                                                  isMyPosts: true,
+                                                  isMyPosts: isMyPosts,
                                                 )
                                               : SeeAllBottomSheetWidget(
                                                   myVotedProviders:
                                                       myVotedProviders,
                                                 );
+                                        },
+                                      ).then(
+                                        (value) {
+                                          if (isMyPosts) {
+                                            myPostsProviders.categoryFilterList
+                                                .addAll(myPostsProviders
+                                                    .selectedCategoryFilterList);
+                                            myPostsProviders
+                                                    .categoryFilterList =
+                                                myPostsProviders
+                                                    .categoryFilterList
+                                                    .toSet()
+                                                    .toList();
+                                          } else {
+                                            myVotedProviders.categoryFilterList
+                                                .addAll(myVotedProviders
+                                                    .selectedCategoryFilterList);
+                                            myVotedProviders
+                                                    .categoryFilterList =
+                                                myVotedProviders
+                                                    .categoryFilterList
+                                                    .toSet()
+                                                    .toList();
+                                          }
+                                          setState(() {});
                                         },
                                       );
                                     },
@@ -334,7 +358,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                 ),
                 isMyPosts
                     ? myPostsProviders.selectedSort ==
-                                myPostsProviders.savedCreatedAt &&
+                                myPostsProviders.savedSort &&
                             unOrderedDeepEq(
                                 myPostsProviders.selectedCategoryFilterList,
                                 myPostsProviders.savedCategoryFilterList)
@@ -401,7 +425,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                             ),
                           )
                     : myVotedProviders.selectedSort ==
-                                myVotedProviders.savedCreatedAt &&
+                                myVotedProviders.savedSort &&
                             unOrderedDeepEq(
                                 myVotedProviders.selectedCategoryFilterList,
                                 myVotedProviders.savedCategoryFilterList)

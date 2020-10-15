@@ -228,7 +228,7 @@ class ContentTexts {
   static const String myVoted = 'My voted';
   static const String filter = 'Filter';
   static const String sort = 'Sort';
-  static const List<String> createdAtList = [
+  static const List<String> sortList = [
     'Newest',
     'Oldest',
   ];
@@ -240,6 +240,24 @@ class ContentTexts {
     'Health',
     'Sport',
     'Travel',
+  ];
+  static const List<String> seeAllCategoryFilterList = [
+    'Business',
+    'Culture',
+    'Entertainment',
+    'Fashion',
+    'Feature',
+    'Food',
+    'Health',
+    'Lifestyle',
+    'Politic',
+    'Sport',
+    'Style',
+    'Technology',
+    'Tips',
+    'Travel',
+    'Trick',
+    'Weather',
   ];
   static const String noResult = 'There\'s no result found';
   static const String haventVotedyet = 'You haven\'t voted to any post yet';

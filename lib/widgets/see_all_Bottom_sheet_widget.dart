@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 import 'package:flutvote/widgets/widgets.dart';
+import 'package:collection/collection.dart';
 
 class SeeAllBottomSheetWidget extends StatefulWidget {
   final MyPostsProviders myPostsProviders;
@@ -27,6 +28,8 @@ class _SeeAllBottomSheetWidgetState extends State<SeeAllBottomSheetWidget> {
   final MyVotedProviders myVotedProviders;
   final bool isMyPosts;
   final SeeAllCategoryWidget _seeAllCategoryWidget = SeeAllCategoryWidget();
+  final ActionButtonWidget _actionButtonWidget = ActionButtonWidget();
+  final Function unOrderedDeepEq = DeepCollectionEquality.unordered().equals;
 
   _SeeAllBottomSheetWidgetState({
     this.myPostsProviders,
@@ -88,9 +91,8 @@ class _SeeAllBottomSheetWidgetState extends State<SeeAllBottomSheetWidget> {
                           ),
                     ),
                     isMyPosts
-                        ? myPostsProviders.isDefaultFilter ||
-                                myPostsProviders
-                                    .selectedSeeAllCategoryFilterList.isEmpty
+                        ? myPostsProviders
+                                .selectedSeeAllCategoryFilterList.isEmpty
                             ? Container()
                             : GestureDetector(
                                 onTap: () {
@@ -112,9 +114,8 @@ class _SeeAllBottomSheetWidgetState extends State<SeeAllBottomSheetWidget> {
                                       ),
                                 ),
                               )
-                        : myVotedProviders.isDefaultFilter ||
-                                myVotedProviders
-                                    .selectedSeeAllCategoryFilterList.isEmpty
+                        : myVotedProviders
+                                .selectedSeeAllCategoryFilterList.isEmpty
                             ? Container()
                             : GestureDetector(
                                 onTap: () {
@@ -164,6 +165,73 @@ class _SeeAllBottomSheetWidgetState extends State<SeeAllBottomSheetWidget> {
               ],
             ),
           ),
+          isMyPosts
+              ? unOrderedDeepEq(myPostsProviders.selectedCategoryFilterList,
+                      myPostsProviders.selectedSeeAllCategoryFilterList)
+                  ? Container()
+                  : Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        color: ContentColors.white,
+                        height: ContentSizes.height(context) * 0.085,
+                        width: ContentSizes.width(context),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(
+                              ContentSizes.width(context) * 0.05,
+                              ContentSizes.width(context) * 0.02,
+                              ContentSizes.width(context) * 0.05,
+                              ContentSizes.width(context) * 0.02,
+                            ),
+                            child: _actionButtonWidget.createActionButtonWidget(
+                              context,
+                              ContentColors.orange,
+                              ContentColors.white,
+                              ContentTexts.save,
+                              () {
+                                /* myPostsProviders.selectedCategoryFilterList
+                                    .addAll(myPostsProviders
+                                        .selectedSeeAllCategoryFilterList); */
+                                myPostsProviders.selectedCategoryFilterList =
+                                    myPostsProviders
+                                        .selectedSeeAllCategoryFilterList;
+                                Navigator.pop(context);
+                              },
+                              isFilter: true,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+              : unOrderedDeepEq(myVotedProviders.selectedCategoryFilterList,
+                      myVotedProviders.selectedSeeAllCategoryFilterList)
+                  ? Container()
+                  : Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        color: ContentColors.white,
+                        height: ContentSizes.height(context) * 0.085,
+                        width: ContentSizes.width(context),
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(
+                              ContentSizes.width(context) * 0.05,
+                              ContentSizes.width(context) * 0.02,
+                              ContentSizes.width(context) * 0.05,
+                              ContentSizes.width(context) * 0.02,
+                            ),
+                            child: _actionButtonWidget.createActionButtonWidget(
+                              context,
+                              ContentColors.orange,
+                              ContentColors.white,
+                              ContentTexts.save,
+                              () {},
+                              isFilter: true,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
         ],
       ),
     );

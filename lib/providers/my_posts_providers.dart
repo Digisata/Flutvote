@@ -4,13 +4,19 @@ import 'package:hive/hive.dart';
 import 'package:collection/collection.dart';
 
 class MyPostsProviders with ChangeNotifier {
-  String _selectedSort = 'Newest', _savedCreatedAt = 'Newest';
+  String _selectedSort = 'Newest', _savedSort = 'Newest';
   bool _isDefaultFilter = true,
-      _isSeeAllDefaultFilter = true,
       _savedIsDefaultFilter = true,
       _isWaitingForGetTotalPosts = false;
   int _totalPosts = 0;
-  List<String> _selectedCategoryFilterList = [],
+  List<String> _categoryFilterList = [
+        'Fashion',
+        'Food',
+        'Health',
+        'Sport',
+        'Travel',
+      ],
+      _selectedCategoryFilterList = [],
       _savedCategoryFilterList = [],
       _selectedSeeAllCategoryFilterList = [];
   Stream<QuerySnapshot> _myPostSnapshot = Firestore.instance
@@ -24,15 +30,15 @@ class MyPostsProviders with ChangeNotifier {
 
   String get selectedSort => _selectedSort;
 
-  String get savedCreatedAt => _savedCreatedAt;
+  String get savedSort => _savedSort;
 
   bool get isDefaultFilter => _isDefaultFilter;
-
-  bool get isSeeAllDefaultFilter => _isSeeAllDefaultFilter;
 
   bool get isWaitingForGetTotalPosts => _isWaitingForGetTotalPosts;
 
   int get totalPosts => _totalPosts;
+
+  List<String> get categoryFilterList => _categoryFilterList;
 
   List<String> get selectedCategoryFilterList => _selectedCategoryFilterList;
 
@@ -43,7 +49,7 @@ class MyPostsProviders with ChangeNotifier {
 
   Stream<QuerySnapshot> get myPostSnapshot => _myPostSnapshot;
 
-  set setSelectedCreatedAt(String value) {
+  set setSelectedSort(String value) {
     if (_selectedSort != value) {
       _selectedSort = value;
     }
@@ -77,6 +83,16 @@ class MyPostsProviders with ChangeNotifier {
     notifyListeners();
   }
 
+  set categoryFilterList(List<String> value) {
+    _categoryFilterList.clear();
+    _categoryFilterList.addAll(value);
+  }
+
+  set selectedCategoryFilterList(List<String> value) {
+    _selectedCategoryFilterList.clear();
+    _selectedCategoryFilterList.addAll(value);
+  }
+
   void checkMyPostsIsDefaultFilter() {
     if (_selectedSort != 'Newest' || _selectedCategoryFilterList.isNotEmpty) {
       _isDefaultFilter = false;
@@ -87,8 +103,8 @@ class MyPostsProviders with ChangeNotifier {
   }
 
   void saveFilterChanges() {
-    if (_savedCreatedAt != _selectedSort) {
-      _savedCreatedAt = _selectedSort;
+    if (_savedSort != _selectedSort) {
+      _savedSort = _selectedSort;
     }
     if (!unOrderedDeepEq(
         _savedCategoryFilterList, _selectedCategoryFilterList)) {
@@ -117,8 +133,8 @@ class MyPostsProviders with ChangeNotifier {
   }
 
   void setSavedFilter() {
-    if (_selectedSort != _savedCreatedAt) {
-      _selectedSort = _savedCreatedAt;
+    if (_selectedSort != _savedSort) {
+      _selectedSort = _savedSort;
     }
     if (!unOrderedDeepEq(
         _selectedCategoryFilterList, _savedCategoryFilterList)) {
@@ -198,7 +214,7 @@ class MyPostsProviders with ChangeNotifier {
   }
 
   void setMyPostSnapshot() {
-    if (_savedCreatedAt == 'Newest') {
+    if (_savedSort == 'Newest') {
       if (_savedCategoryFilterList.isNotEmpty) {
         _myPostSnapshot = Firestore.instance
             .collection('posts')

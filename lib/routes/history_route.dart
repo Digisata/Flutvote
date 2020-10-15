@@ -63,7 +63,7 @@ class HistoryRoute extends StatelessWidget {
               backgroundColor: ContentColors.white,
               label: Row(
                 children: [
-                  _myPostsProviders.savedCreatedAt == 'Newest' &&
+                  _myPostsProviders.savedSort == 'Newest' &&
                           _myPostsProviders.savedCategoryFilterList.isNotEmpty
                       ? CircleAvatar(
                           backgroundColor: ContentColors.orange,
@@ -81,7 +81,7 @@ class HistoryRoute extends StatelessWidget {
                                     ),
                           ),
                         )
-                      : _myPostsProviders.savedCreatedAt != 'Newest' &&
+                      : _myPostsProviders.savedSort != 'Newest' &&
                               _myPostsProviders
                                   .savedCategoryFilterList.isNotEmpty
                           ? CircleAvatar(
@@ -102,7 +102,7 @@ class HistoryRoute extends StatelessWidget {
                                     ),
                               ),
                             )
-                          : _myPostsProviders.savedCreatedAt != 'Newest'
+                          : _myPostsProviders.savedSort != 'Newest'
                               ? CircleAvatar(
                                   backgroundColor: ContentColors.orange,
                                   radius: ContentSizes.width(context) * 0.025,
@@ -186,7 +186,7 @@ class HistoryRoute extends StatelessWidget {
               backgroundColor: ContentColors.white,
               label: Row(
                 children: [
-                  _myVotedProviders.savedCreatedAt == 'Newest' &&
+                  _myVotedProviders.savedSort == 'Newest' &&
                           _myVotedProviders.savedCategoryFilterList.isNotEmpty
                       ? CircleAvatar(
                           backgroundColor: ContentColors.orange,
@@ -204,7 +204,7 @@ class HistoryRoute extends StatelessWidget {
                                     ),
                           ),
                         )
-                      : _myVotedProviders.savedCreatedAt != 'Newest' &&
+                      : _myVotedProviders.savedSort != 'Newest' &&
                               _myVotedProviders
                                   .savedCategoryFilterList.isNotEmpty
                           ? CircleAvatar(
@@ -225,7 +225,7 @@ class HistoryRoute extends StatelessWidget {
                                     ),
                               ),
                             )
-                          : _myVotedProviders.savedCreatedAt != 'Newest'
+                          : _myVotedProviders.savedSort != 'Newest'
                               ? CircleAvatar(
                                   backgroundColor: ContentColors.orange,
                                   radius: ContentSizes.width(context) * 0.025,

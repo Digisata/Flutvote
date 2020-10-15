@@ -14,7 +14,7 @@ class SeeAllCategoryWidget {
     VoidCallback _onItemSelected,
   ) {
     return Column(
-      children: ContentTexts.categoryList.map(
+      children: ContentTexts.seeAllCategoryFilterList.map(
         (element) {
           bool _isSelectedCategoryFilter = _isMyPosts
               ? _myPostsProviders.selectedSeeAllCategoryFilterList
@@ -43,7 +43,6 @@ class SeeAllCategoryWidget {
                       10) {
                     _myPostsProviders.addSelectedSeeAllCategoryFilterList =
                         element;
-                    _myPostsProviders.checkMyPostsIsDefaultFilter();
                   } else {
                     _alertDialogWidget.createAlertDialogWidget(
                       _context,
@@ -55,7 +54,6 @@ class SeeAllCategoryWidget {
                 } else {
                   _myPostsProviders.removeSelectedSeeAllCategoryFilterList =
                       element;
-                  _myPostsProviders.checkMyPostsIsDefaultFilter();
                 }
               } else {
                 if (!_isSelectedCategoryFilter) {
@@ -64,7 +62,6 @@ class SeeAllCategoryWidget {
                       10) {
                     _myVotedProviders.addSelectedSeeAllCategoryFilterList =
                         element;
-                    _myVotedProviders.checkMyVotedIsDefaultFilter();
                   } else {
                     _alertDialogWidget.createAlertDialogWidget(
                       _context,
@@ -76,7 +73,6 @@ class SeeAllCategoryWidget {
                 } else {
                   _myVotedProviders.removeSelectedSeeAllCategoryFilterList =
                       element;
-                  _myVotedProviders.checkMyVotedIsDefaultFilter();
                 }
               }
               _onItemSelected();

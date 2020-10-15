@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutvote/commons/commons.dart';
 import 'package:flutvote/providers/providers.dart';
 
-class CreatedAtFilterWidget {
-  Align createCreatedAtFilterWidget(
+class SortFilterWidget {
+  Align createSortFilterWidget(
     BuildContext _context,
     MyPostsProviders _myPostsProviders,
     MyVotedProviders _myVotedProviders,
@@ -15,14 +15,14 @@ class CreatedAtFilterWidget {
       child: Wrap(
         textDirection: TextDirection.ltr,
         spacing: ContentSizes.width(_context) * 0.01,
-        children: ContentTexts.createdAtList.map(
+        children: ContentTexts.sortList.map(
           (element) {
-            bool _isSelectedCreatedAt = _isMyPosts
+            bool _isSelectedSort = _isMyPosts
                 ? _myPostsProviders.selectedSort == element
                 : _myVotedProviders.selectedSort == element;
             return GestureDetector(
               child: Chip(
-                backgroundColor: !_isSelectedCreatedAt
+                backgroundColor: !_isSelectedSort
                     ? ContentColors.white
                     : ContentColors.softOrangeWithOpacity,
                 label: Text(
@@ -33,7 +33,7 @@ class CreatedAtFilterWidget {
                   textDirection: TextDirection.ltr,
                 ),
                 labelStyle: Theme.of(_context).textTheme.headline2.copyWith(
-                      color: !_isSelectedCreatedAt
+                      color: !_isSelectedSort
                           ? ContentColors.darkGrey
                           : ContentColors.orange,
                       fontSize: ContentSizes.dp16(_context),
@@ -41,7 +41,7 @@ class CreatedAtFilterWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.0),
                   side: BorderSide(
-                    color: !_isSelectedCreatedAt
+                    color: !_isSelectedSort
                         ? ContentColors.softGrey
                         : ContentColors.orange,
                   ),
@@ -49,8 +49,8 @@ class CreatedAtFilterWidget {
               ),
               onTap: () {
                 if (_isMyPosts) {
-                  if (!_isSelectedCreatedAt) {
-                    _myPostsProviders.setSelectedCreatedAt = element;
+                  if (!_isSelectedSort) {
+                    _myPostsProviders.setSelectedSort = element;
                     _myPostsProviders.setTotalPosts();
                     _myPostsProviders.isWaitingForGetTotalPosts = true;
                     _myPostsProviders.setOnGetTotalPostsCompleted = () {
@@ -59,8 +59,8 @@ class CreatedAtFilterWidget {
                     _myPostsProviders.checkMyPostsIsDefaultFilter();
                   }
                 } else {
-                  if (!_isSelectedCreatedAt) {
-                    _myVotedProviders.setSelectedCreatedAt = element;
+                  if (!_isSelectedSort) {
+                    _myVotedProviders.setSelectedSort = element;
                     _myVotedProviders.setTotalVoted();
                     _myVotedProviders.isWaitingForGetTotalPosts = true;
                     _myVotedProviders.setOnGetTotalPostsCompleted = () {
