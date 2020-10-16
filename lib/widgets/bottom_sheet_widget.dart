@@ -302,16 +302,33 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                                     .categoryFilterList =
                                                 myPostsProviders
                                                     .selectedCategoryFilterList;
+                                            myPostsProviders.setTotalPosts();
+                                            myPostsProviders
+                                                    .isWaitingForGetTotalPosts =
+                                                true;
+                                            myPostsProviders
+                                                    .setOnGetTotalPostsCompleted =
+                                                () {
+                                              setState(() {});
+                                            };
+                                            myPostsProviders
+                                                .checkMyPostsIsDefaultFilter();
                                           } else {
-                                            myVotedProviders.categoryFilterList
-                                                .addAll(myVotedProviders
-                                                    .selectedCategoryFilterList);
                                             myVotedProviders
                                                     .categoryFilterList =
                                                 myVotedProviders
-                                                    .categoryFilterList
-                                                    .toSet()
-                                                    .toList();
+                                                    .selectedCategoryFilterList;
+                                            myVotedProviders.setTotalVoted();
+                                            myVotedProviders
+                                                    .isWaitingForGetTotalPosts =
+                                                true;
+                                            myVotedProviders
+                                                    .setOnGetTotalPostsCompleted =
+                                                () {
+                                              setState(() {});
+                                            };
+                                            myVotedProviders
+                                                .checkMyVotedIsDefaultFilter();
                                           }
                                           setState(() {});
                                         },

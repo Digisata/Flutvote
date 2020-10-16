@@ -222,7 +222,12 @@ class _SeeAllBottomSheetWidgetState extends State<SeeAllBottomSheetWidget> {
                               ContentColors.orange,
                               ContentColors.white,
                               ContentTexts.save,
-                              () {},
+                              () {
+                                myVotedProviders.selectedCategoryFilterList =
+                                    myVotedProviders
+                                        .selectedSeeAllCategoryFilterList;
+                                Navigator.pop(context);
+                              },
                               isFilter: true,
                             ),
                           ),

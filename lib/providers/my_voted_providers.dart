@@ -9,7 +9,14 @@ class MyVotedProviders with ChangeNotifier {
       _savedIsDefaultFilter = true,
       _isWaitingForGetTotalPosts = false;
   int _totalPosts = 0;
-  List<String> _categoryFilterList = [
+  List<String> _defaultCategoryFilterList = [
+        'Fashion',
+        'Food',
+        'Health',
+        'Sport',
+        'Travel',
+      ],
+      _categoryFilterList = [
         'Fashion',
         'Food',
         'Health',
@@ -86,7 +93,9 @@ class MyVotedProviders with ChangeNotifier {
 
   set categoryFilterList(List<String> value) {
     _categoryFilterList.clear();
+    _categoryFilterList.addAll(_defaultCategoryFilterList);
     _categoryFilterList.addAll(value);
+    _categoryFilterList = _categoryFilterList.toSet().toList();
   }
 
   set selectedCategoryFilterList(List<String> value) {
@@ -141,6 +150,12 @@ class MyVotedProviders with ChangeNotifier {
         _selectedCategoryFilterList, _savedCategoryFilterList)) {
       _selectedCategoryFilterList.clear();
       _selectedCategoryFilterList.addAll(_savedCategoryFilterList);
+    }
+    if (!_defaultCategoryFilterList.contains(_savedCategoryFilterList)) {
+      _categoryFilterList.clear();
+      _categoryFilterList.addAll(_defaultCategoryFilterList);
+      _categoryFilterList.addAll(_savedCategoryFilterList);
+      _categoryFilterList = _categoryFilterList.toSet().toList();
     }
     if (_isDefaultFilter != _savedIsDefaultFilter) {
       _isDefaultFilter = _savedIsDefaultFilter;
