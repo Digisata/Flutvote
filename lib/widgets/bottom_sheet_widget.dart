@@ -298,15 +298,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                       ).then(
                                         (value) {
                                           if (isMyPosts) {
-                                            myPostsProviders.categoryFilterList
-                                                .addAll(myPostsProviders
-                                                    .selectedCategoryFilterList);
                                             myPostsProviders
                                                     .categoryFilterList =
                                                 myPostsProviders
-                                                    .categoryFilterList
-                                                    .toSet()
-                                                    .toList();
+                                                    .selectedCategoryFilterList;
                                           } else {
                                             myVotedProviders.categoryFilterList
                                                 .addAll(myVotedProviders

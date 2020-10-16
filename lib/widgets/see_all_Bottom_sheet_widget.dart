@@ -189,9 +189,6 @@ class _SeeAllBottomSheetWidgetState extends State<SeeAllBottomSheetWidget> {
                               ContentColors.white,
                               ContentTexts.save,
                               () {
-                                /* myPostsProviders.selectedCategoryFilterList
-                                    .addAll(myPostsProviders
-                                        .selectedSeeAllCategoryFilterList); */
                                 myPostsProviders.selectedCategoryFilterList =
                                     myPostsProviders
                                         .selectedSeeAllCategoryFilterList;
