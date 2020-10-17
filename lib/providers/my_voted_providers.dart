@@ -93,8 +93,8 @@ class MyVotedProviders with ChangeNotifier {
 
   set categoryFilterList(List<String> value) {
     _categoryFilterList.clear();
-    _categoryFilterList.addAll(_defaultCategoryFilterList);
     _categoryFilterList.addAll(value);
+    _categoryFilterList.addAll(_defaultCategoryFilterList);
     _categoryFilterList = _categoryFilterList.toSet().toList();
   }
 
@@ -153,8 +153,8 @@ class MyVotedProviders with ChangeNotifier {
     }
     if (!_defaultCategoryFilterList.contains(_savedCategoryFilterList)) {
       _categoryFilterList.clear();
-      _categoryFilterList.addAll(_defaultCategoryFilterList);
       _categoryFilterList.addAll(_savedCategoryFilterList);
+      _categoryFilterList.addAll(_defaultCategoryFilterList);
       _categoryFilterList = _categoryFilterList.toSet().toList();
     }
     if (_isDefaultFilter != _savedIsDefaultFilter) {
