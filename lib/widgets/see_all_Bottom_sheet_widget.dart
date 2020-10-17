@@ -144,6 +144,21 @@ class _SeeAllBottomSheetWidgetState extends State<SeeAllBottomSheetWidget> {
                 ),
                 Expanded(
                   child: SingleChildScrollView(
+                    padding: isMyPosts
+                        ? unOrderedDeepEq(
+                                myPostsProviders.selectedCategoryFilterList,
+                                myPostsProviders
+                                    .selectedSeeAllCategoryFilterList)
+                            ? EdgeInsets.all(0.0)
+                            : EdgeInsets.only(
+                                bottom: ContentSizes.height(context) * 0.085)
+                        : unOrderedDeepEq(
+                                myVotedProviders.selectedCategoryFilterList,
+                                myVotedProviders
+                                    .selectedSeeAllCategoryFilterList)
+                            ? EdgeInsets.all(0.0)
+                            : EdgeInsets.only(
+                                bottom: ContentSizes.height(context) * 0.085),
                     child: Column(
                       children: [
                         SizedBox(

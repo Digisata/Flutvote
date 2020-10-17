@@ -214,6 +214,29 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       ),
                       Expanded(
                         child: SingleChildScrollView(
+                          padding: isMyPosts
+                              ? myPostsProviders.selectedSort ==
+                                          myPostsProviders.savedSort &&
+                                      unOrderedDeepEq(
+                                          myPostsProviders
+                                              .selectedCategoryFilterList,
+                                          myPostsProviders
+                                              .savedCategoryFilterList)
+                                  ? EdgeInsets.all(0.0)
+                                  : EdgeInsets.only(
+                                      bottom:
+                                          ContentSizes.height(context) * 0.085)
+                              : myVotedProviders.selectedSort ==
+                                          myVotedProviders.savedSort &&
+                                      unOrderedDeepEq(
+                                          myVotedProviders
+                                              .selectedCategoryFilterList,
+                                          myVotedProviders
+                                              .savedCategoryFilterList)
+                                  ? EdgeInsets.all(0.0)
+                                  : EdgeInsets.only(
+                                      bottom:
+                                          ContentSizes.height(context) * 0.085),
                           child: Column(
                             children: [
                               SizedBox(
